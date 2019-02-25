@@ -3,14 +3,12 @@ import requests
 import os
 
 app = Flask(__name__)
-files = "./htlm"
 
 def readhtlm(filename):
     try:
-        file = open(os.path.join(".",filename,".html"),"r")
+        file = open("./html/%s.html" % filename ,"r")
         ret = file.read()
         file.close()
-
         return ret
     except:
         print("File not found: %s" % filename)
