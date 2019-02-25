@@ -2,7 +2,7 @@ from flask import Flask, request,render_template
 import requests
 import os
 
-app = Flask(__name__)
+app = Flask(__name__,template_folder='html')
 
 def readhtlm(filename):
     try:
@@ -19,4 +19,4 @@ def readhtlm(filename):
 
 @app.route("/", methods=["GET"])
 def homePage():
-    return render_template("/html/main.html")
+    return render_template("main.html")
