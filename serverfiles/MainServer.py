@@ -2,7 +2,7 @@ from flask import Flask, request,render_template
 import requests
 import os
 
-app = Flask(__name__,template_folder='html')
+app = Flask(__name__,template_folder='html',static_folder="html/static")
 
 def readhtlm(filename):
     try:
@@ -19,5 +19,8 @@ def readhtlm(filename):
 
 @app.route("/", methods=["GET"])
 def homePage():
+
     return render_template("main.html")
 
+
+app.run(host="0.0.0.0",port=80)
