@@ -1,1 +1,1 @@
-gunicorn MainServer:app --bind=0.0.0.0:877 --workers=4
+python MainServer.py
