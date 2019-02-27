@@ -1,6 +1,6 @@
 ./kill.sh
-git stash
-git checkout master
+git stash > log.txt
+git checkout master > log.txt
 git pull
-./run.sh
 chmod +x *.sh
+./run.sh
