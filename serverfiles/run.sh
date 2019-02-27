@@ -1,1 +1,1 @@
-python MainServer.py
+tmux new-session -d -s server "python MainServer.py"
