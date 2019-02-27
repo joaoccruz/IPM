@@ -20,7 +20,7 @@ def readhtlm(filename):
 @app.route("/", methods=["GET"])
 def homePage():
 
-    return render_template("main.html")
+    return render_template("index.html")
 
 
 app.run(host="0.0.0.0",port=5000)
