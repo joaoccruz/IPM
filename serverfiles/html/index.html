@@ -18,13 +18,15 @@
 				var cName = document.getElementById("cName");
 				var image = document.getElementById("std" + id);
 				image.width = 250;
+                cName.style.display = "block"
 				cName.innerHTML = nomes[id - 1];
 			}
 			
 			function deflate(id) {
 				var cName = document.getElementById("cName");
 				var image = document.getElementById("std" + id);
-				image.width = 200;
+				cName.style.display = "none"
+                image.width = 200;
 				cName.innerHTML = " ";
 			}
 		</script>
@@ -58,7 +60,7 @@
                 </tr>
             </table>
             
-            <h1 id="cName" onload="declare()" style="visibility: hidden font-size:30px; color:rgb(0,157,224)">INSERT COMPLETE NAME HERE </h1>
+            <h1 id="cName" style="display: none; font-size:30px; color:rgb(0,157,224)">INSERT COMPLETE NAME HERE </h1>
             
             <div id="links">
                 <p>
