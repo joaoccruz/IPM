@@ -17,6 +17,7 @@ body{
 
 
 #container{
+	position: relative;
 	width:800px;
 	height:600px;
 	border:1px solid #000;
@@ -24,4 +25,19 @@ body{
 	background-color:#FFFFFF;
 }
 
+#container *{
+	position: absolute;
+	top:0;
+	visibility: hidden;
+}
+
+
+
+#lockscreen{
+	visibility: visible;	
+}
+
+#lockscreen *{
+	visibility: visible;	
+}
 
