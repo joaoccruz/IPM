@@ -1,0 +1,27 @@
+body{
+	background-color:#F0F0F0;
+}
+
+.inline{
+	display: inline-block;
+	vertical-align: top;
+	margin: auto;
+}
+
+
+#clickType{
+	width: 200px;
+	height:auto;
+	border:1px solid #000;
+}
+
+
+#container{
+	width:800px;
+	height:600px;
+	border:1px solid #000;
+	margin-left: 20%;
+	background-color:#FFFFFF;
+}
+
+
