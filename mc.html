@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+
+<html>
+	<meta charset="utf-8"> <!--Perhaps setting the encoding properly spares us from stuff like &oaccent;-->
+	<head>
+		<title>IPM - Técnico Lisboa</title>
+		<!--<link rel="stylesheet" href="style.css">-->
+		<style type="text/css">
+            
+		</style>
+		<script type="text/javascript">
+			var nomes = [
+				"João Cardoso Pinho da Cruz",
+				"David Ferreira de Sousa Duque",
+				"Pedro Da Silva Freire",
+			];
+			function expand(id) {
+				var cName = document.getElementById("cName");
+				var image = document.getElementById("std" + id);
+				image.width = 250;
+               			cName.style.display = "block"
+				cName.innerHTML = nomes[id - 1];
+			}
+			
+			function deflate(id) {
+				var cName = document.getElementById("cName");
+				var image = document.getElementById("std" + id);
+				cName.style.display = "none"
+               			image.width = 200;
+				cName.innerHTML = " ";
+			}
+		</script>
+	</head>
+	<body bgcolor="#F0F0F0">
+        <svg width="100%" height="20px">
+            <rect width="100%" height="100%" style="fill:rgb(0,157,224); stroke-width:0" />
+        </svg>
+        <!--Main stuff begins here-->
+        
+        <div id="main" style="font-family:klavika, arial; text-align: center; padding-left:10%; padding-right:10%">
+            <img id="tecnico_header" src="../static/img/tecnico_logo.svg" width="800px" style="padding-top:120px; padding-bottom:80px; padding-left:50px; padding-right:50px" >
+            
+            <h1 style="color:rgb(0,157,224); font-size: 70px">Interfaces Pessoa Máquina 2018/19</h1>
+            <h2 style="font-size: 40px">Grupo 25 - Turno IPM17111326L06</h2>
+	    <h2 style="font-size: 25px">Modelos Conceptuais</h2>
+
+            <table align=center style="padding-top:80px; padding-bottom:80px">
+                <tr>
+                    <td width="35%"></td>
+                    <td style="font-size:25px" width="30%">João Cruz</td>
+                    <td width="35%"></td>
+                </tr>
+                <tr>
+                    <td>Ecrã principal</td>
+                    <td>Feed MyWeb</td>
+                    <td>Whatever</td>
+                </tr>
+                <tr>
+                    <td><img id="std1" src="../static/img/mc/s1_0.jpg" width="350"></td>
+                    <td><img id="std2" src="../static/img/mc/s1_1.jpg" width="350"></td>
+                    <td><img id="std3" src="../static/img/mc/s1_2.jpg" width="350"></td>
+                </tr>
+            </table>
+
+	   <table align="center" style="padding-top:80px; padding-bottom:80px">
+		    <tr>
+			    <td width="100%" style="font-size:25px">David Duque</td>
+		    </tr>
+		    <tr>
+			    <td><img src="../static/img/mc/s2.jpg" width=350"></td>
+		    </tr>
+	   </table>
+
+	   <table align="center" style="padding-top:80px; padding-bottom:80px">
+		    <tr>
+			    <td width="100%" style="font-size:25px">Pedro Freire</td>
+		    </tr>
+		    <tr>
+			    <td><img src="../static/img/mc/s3.jpg" width=350"></td>
+		    </tr>
+	   </table>
+	<!-- Go back thot -->
+           <a href="../index.html" style="text-decoration:none"><font color="#000000">Voltar atràs</font></a> 
