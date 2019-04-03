@@ -10,7 +10,7 @@
 	<head>
 		<title>Client</title>
 		<link rel="stylesheet" type="text/css" href="stylesheet.css">
-		<script src="config.js"></script>
+		<script src="utilities.js"></script>
 	</head>
 
 	<body>
@@ -26,9 +26,9 @@
 
        		<div id="lockscreen">
        			<img id="bg" src="bg.jpg" >
-       			<img id="fingerprint" src="fingerprint.png" >
-       			
-
+       			<p id="lockscreenText" class="textCenter" ></p>
+       			<img id="fingerprint" src="fingerprint.png" class="absCenter">
+       			<script>loadLockScreen();</script>
 
        		</div>
 
