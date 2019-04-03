@@ -2,12 +2,6 @@ body{
 	background-color:#F0F0F0;
 }
 
-.center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-}
-
 .inline{
 	display: inline-block;
 	vertical-align: top;
@@ -40,5 +34,12 @@ body{
 }
 
 #fingerprint{
+	margin: auto;
+	display: block;
+	height: 50px;
+	width: 	50px;
+	border:1px solid #0F0;
 
 }
+
+
