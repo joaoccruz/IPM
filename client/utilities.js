@@ -6,14 +6,21 @@ function loadLockScreen(){
 	var d = new Date();
 	var min = d.getMinutes().toString();
 	var hr  = d.getHours().toString();
-	currScreen = "lock";
+
+	if(min < 10)
+		min = "0" + min
+	
+	if(hr < 10)
+		hr = "0" + hr
+	
+	currScreen = "lockscreen";
 	document.getElementById("lockscreenText").innerHTML = hr + ":" + min ;
 }
 
 
 function load(screen){
 	switch(screen){
-		case "lock":
+		case "lockscreen":
 			loadLockScreen();
 			intervals["lock"] = setInterval(loadLockScreen, 1000);
 	}
@@ -22,9 +29,11 @@ function load(screen){
 
 function unload(screen){
 	switch(screen){
-		case "lock":
+		case "lockscreen":
 			clearInterval(intervals["lock"]);
 	}
+
+	document.getElementById("lockscreen").style.display = "none"
 }
 
 
