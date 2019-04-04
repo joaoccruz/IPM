@@ -1,11 +1,13 @@
 body{
 	background-color:#F0F0F0;
+	font-family: Sans-Serif;
 }
 
 .inline{
 	display: inline-block;
 	vertical-align: top;
 	margin: auto;
+
 }
 
 
@@ -40,6 +42,7 @@ body{
 	height:1.8in;
 	margin-left: 20%;
 	background-color:#FFFFFF;
+	border:10px solid #0F0;
 }
 
 
@@ -54,9 +57,12 @@ body{
 	position: absolute;
 }
 
+#bg{
+	width: 100%;
+}
 
 #lockscreen{
-	display: block !important;
+	display: inline-block !important;
 }
 
 
@@ -66,14 +72,14 @@ body{
 
 
 #lockscreenText{
-	margin-top: 30%;
-	font-size: 2in;
+	margin-top: 15%;
+	font-size: 50px;
+	-webkit-text-stroke: 1px black;
 }
 
 #fingerprint{
-	width: 100px;
-	height: 100px;
-	margin-top: 70%;
+	width: 20%;
+	margin-top: 50%;
 }
 
 
