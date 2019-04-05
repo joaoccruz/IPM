@@ -1,8 +1,19 @@
 var currScreen = null;
 var lastScreen = null;
-var intervals = {};
+var screenUpdate = setInterval(update, 1000);
 
-function loadLockScreen(){
+
+
+function update(){
+	switch(currScreen){
+		case "lockscreen":
+			updateLockScreen()
+	}
+}
+
+
+
+function updateLockScreen(){
 	var d = new Date();
 	var min = d.getMinutes().toString();
 	var hr  = d.getHours().toString();
@@ -21,21 +32,19 @@ function loadLockScreen(){
 function load(screen){
 	switch(screen){
 		case "lockscreen":
-			loadLockScreen();
-			intervals["lock"] = setInterval(loadLockScreen, 1000);
+			updateLockScreen();
+			break;
 		case "main":
-		default:
-			document.getElementById(screen).style.display = "block";
-			document.getElementById(screen).style.visibility = "visible";
 			break;
 	}
+	document.getElementById(screen).style.display = "block";
+	document.getElementById(screen).style.visibility = "visible";	
 	
 }
 
 function unload(screen){
 	switch(screen){
 		case "lockscreen":
-			clearInterval(intervals["lock"]);
 			break;
 	}
 	document.getElementById("lockscreen").style.visibility = "hidden";
