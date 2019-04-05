@@ -23,6 +23,11 @@ function load(screen){
 		case "lockscreen":
 			loadLockScreen();
 			intervals["lock"] = setInterval(loadLockScreen, 1000);
+		case "main":
+		default:
+			document.getElementById(screen).style.display = "block";
+			document.getElementById(screen).style.visibility = "visible";
+			break;
 	}
 	
 }
@@ -31,8 +36,9 @@ function unload(screen){
 	switch(screen){
 		case "lockscreen":
 			clearInterval(intervals["lock"]);
+			break;
 	}
-
+	document.getElementById("lockscreen").style.visibility = "hidden";
 	document.getElementById("lockscreen").style.display = "none"
 }
 
