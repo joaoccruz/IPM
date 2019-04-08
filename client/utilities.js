@@ -17,9 +17,8 @@ class post{
 	}
 }
 
-
 var POST_LIST = [];
-POST_LIST.push(new post("beach.png","Nada como o ar da montanha, na praia",{x = 40.3218825, y = -7.6217218}, "Serra da Estrela"))
+POST_LIST.push(new post("beach.png","Nada como o ar da montanha, na praia",{x: 40.3218825, y: -7.6217218}, "Serra da Estrela"));
 
 if(DEBUG_MODE)
 	localStorage.clear();
