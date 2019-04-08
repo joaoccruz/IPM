@@ -1,4 +1,4 @@
-var DEBUG_MODE = true;
+var DEBUG_MODE = false;
 var currScreen = null;
 var lastScreen = null;
 var lastScreenShown = null;
@@ -6,6 +6,20 @@ var screenUpdate = setInterval(update, 1000);
 
 var tutorialEventListeners=[];
 
+
+
+class post{
+	constructor(image, description, location, locationName){
+		this.image = image;
+		this.description = description;
+		this.location = location;
+		this.locationName = locationName;
+	}
+}
+
+
+var POST_LIST = [];
+POST_LIST.push(new post("beach.png","Nada como o ar da montanha, na praia",{x = 40.3218825, y = -7.6217218}, "Serra da Estrela"))
 
 if(DEBUG_MODE)
 	localStorage.clear();
@@ -68,17 +82,14 @@ function runTutorial(){
 
 		case "tutorialMain":
 
-			t1.innerHTML = "";
+			t1.innerHTML = "This is your main screen, it shows current posts, contacts and app screen";
+			t1.style.webkitTextStroke = "0.2px grey";
+			t1.style.right = "25%";
 			t2.innerHTML = ""
 			i3.src = "";
 			skip.innerHTML = "skip";
-			skip.addEventListener("click", function(){
-				localStorage.setItem("tutorial", "complete");
-				unload("tutorial");
-				load("main");
-			});
-
 			load("main");
+
 			break;
 
 	}
@@ -130,6 +141,8 @@ function load(screen){
 			break;
 
 		case "main":
+			document.getElementById("notifications").style.display = "block";
+			document.getElementById("notifications").style.visibility = "visible";	
 			break;
 
 		case "tutorial":
