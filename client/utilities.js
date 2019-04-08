@@ -18,7 +18,9 @@ class post{
 }
 
 var POST_LIST = [];
-POST_LIST.push(new post("beach.png","Nada como o ar da montanha, na praia",{x: 40.3218825, y: -7.6217218}, "Serra da Estrela"));
+POST_LIST.push(new post("beach.jpeg","Nada como o ar da montanha, na praia",{x: 40.3218825, y: -7.6217218}, "Serra da Estrela"));
+POST_LIST.push(new post("montanha.jpg","Imagem genéria de uma montanha",{x: 40.3218825, y: -7.6217218}, "Montanha"));
+POST_LIST.push(new post("gil.jpg","Grande Gil",{x: 40.3218825, y: -7.6217218}, "Parque das Nações"));
 
 if(DEBUG_MODE)
 	localStorage.clear();
@@ -103,7 +105,12 @@ function update(){
 	}
 }
 
-
+function drawPost(){
+	var ID = 0; 
+	document.getElementById("mainImage").src = POST_LIST[ID].image;
+	document.getElementById("postDescription").innerHTML = POST_LIST[ID].description;
+	document.getElementById("postLocation").innerHTML = POST_LIST[ID].locationName;
+}
 
 function updateLockScreen(){
 	var d = new Date();
@@ -132,7 +139,10 @@ function load(screen){
 	currScreen = screen;
 	document.getElementById(screen).style.display = "block";
 	document.getElementById(screen).style.visibility = "visible";	
-	
+	if(screen != "lockscreen" && screen != "tutorial"){
+		document.getElementById("notifications").style.display = "block";
+		document.getElementById("notifications").style.visibility = "visible";	
+	}
 
 	switch(screen){
 		case "lockscreen":
@@ -140,8 +150,7 @@ function load(screen){
 			break;
 
 		case "main":
-			document.getElementById("notifications").style.display = "block";
-			document.getElementById("notifications").style.visibility = "visible";	
+			drawPost();
 			break;
 
 		case "tutorial":

@@ -31,9 +31,9 @@ body{
 #appButton{
 	left:0;
 	right:0;
-	margin-left: 75%;
+	margin-left: 80%;
     margin-right: auto;
-    width: 0.6in;
+    width: 20%;
     height: 50%;
 }
 
@@ -41,18 +41,36 @@ body{
 	left:0;
 	right:0;
     top: 50%;
-	margin-left: 75%;
+	margin-left: 80%;
     margin-right: auto;
-    width: 25%;
+    width: 20%;
     height: 50%;
 }
 
 #mainImage{
-	left:0;
-	right:0;
-	display: block;
-    height: 75%;
-    width: 100%
+	top: 2%;
+	left: 3%;
+    height: 60%;
+    width: 94%;
+}
+
+
+#postDescription{
+	left: 3%;
+	top: 62%;
+	font-size: 10px;
+}
+
+#postLocation{
+	top: 81%;
+	left: 10%;
+	font-size: 10px;
+}
+
+#locationPin{
+	top: 80%;
+	width: 7%;
+	left: 2%;
 }
 
 .textCenter{
@@ -126,17 +144,17 @@ body{
 
 
 #tutorialText2{
-	margin-top: 35%;
+	margin-top: 25%;
 }
 
 
 #tutorialImage{
 	width: 20%;
-	margin-top: 50%;
+	margin-top: 40%;
 }
 
 #post{
-	width: 75%;
+	width: 80%;
 	height: 100%;
 
 }
@@ -150,3 +168,4 @@ body{
 	display: block;
 	-webkit-text-stroke: 0.3px black;
 }
+
