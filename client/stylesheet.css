@@ -83,6 +83,7 @@ body{
 
 #container *{
 	position: absolute;
+
 }
 
 #bg{
@@ -98,7 +99,7 @@ body{
 #lockscreenText{
 	margin-top: 15%;
 	font-size: 50px;
-	-webkit-text-stroke: 1px black;
+	
 }
 
 #fingerprint{
@@ -125,5 +126,6 @@ body{
 	color: 	#0645AD;
 	font-size: 15px; 
 	display: block;
-
+	z-index: 100;
+	-webkit-text-stroke: 0.3px black;
 }

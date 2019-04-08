@@ -46,7 +46,15 @@ function runTutorial(){
 
 	
 		case "tutorial1":
-			tutorial.addEventListener("click", function(){		
+			skip.addEventListener("click", function(){
+				localStorage.setItem("tutorial", "complete");
+				unload("tutorial");
+				load("main");
+			}, {once : true});
+
+			tutorial.addEventListener("click", function(){
+				if(localStorage.getItem("tutorial") == "complete")
+					return;
 				t1.innerHTML = "";
 				t2.innerHTML = ""
 				i3.src = "";
@@ -55,11 +63,6 @@ function runTutorial(){
 				runTutorial();
 			}, {once : true});
 
-			skip.addEventListener("click", function(){
-				localStorage.setItem("tutorial", "complete");
-				unload("tutorial");
-				load("main");
-			}, {once : true});
 
 			break;
 
