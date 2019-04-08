@@ -1,13 +1,92 @@
+var DEBUG_MODE = true;
 var currScreen = null;
 var lastScreen = null;
+var lastScreenShown = null;
 var screenUpdate = setInterval(update, 1000);
 
+var tutorialEventListeners=[];
+
+
+if(DEBUG_MODE)
+	localStorage.clear();
+	
+
+function runTutorial(){
+	var tutorial = document.getElementById("tutorial");
+
+	var t1 = document.getElementById("tutorialText1");
+	var t2 = document.getElementById("tutorialText2");
+	var skip = document.getElementById("skip");
+	var i3 = document.getElementById("tutorialImage");
+
+
+	switch(localStorage.getItem("tutorial")){
+		case null:
+			lastScreenShown = "tutorialNull";
+			tutorial.addEventListener("click", function(){
+				t1.innerHTML = "Place one of your fingers on the screen to configure the fingerprint sensor";
+				t2.innerHTML = "";
+				skip.innerHTML = ""
+				i3.src = "fingerprint.png";
+				localStorage.setItem("tutorial", "fingerprint");
+				runTutorial();
+			}, {once : true});
+			break;
+
+		case "fingerprint":
+			tutorial.addEventListener("click", function(){		
+				t1.innerHTML = "The next few screens will be a tutorial on how to use the device";
+				t2.innerHTML = "You can skip them if you have used this before"
+				i3.src = "";
+				skip.innerHTML = "skip";
+				localStorage.setItem("tutorial", "tutorial1");
+				runTutorial();
+			}, {once : true});
+			break;
+
+	
+		case "tutorial1":
+			tutorial.addEventListener("click", function(){		
+				t1.innerHTML = "";
+				t2.innerHTML = ""
+				i3.src = "";
+				skip.innerHTML = "skip";
+				localStorage.setItem("tutorial", "tutorialMain");
+				runTutorial();
+			}, {once : true});
+
+			skip.addEventListener("click", function(){
+				localStorage.setItem("tutorial", "complete");
+				unload("tutorial");
+				load("main");
+			}, {once : true});
+
+			break;
+
+		case "tutorialMain":
+
+			t1.innerHTML = "";
+			t2.innerHTML = ""
+			i3.src = "";
+			skip.innerHTML = "skip";
+			skip.addEventListener("click", function(){
+				localStorage.setItem("tutorial", "complete");
+				unload("tutorial");
+				load("main");
+			});
+
+			load("main");
+			break;
+
+	}
+	
+}
 
 
 function update(){
 	switch(currScreen){
 		case "lockscreen":
-			updateLockScreen()
+			updateLockScreen();
 	}
 }
 
@@ -30,25 +109,41 @@ function updateLockScreen(){
 
 
 function load(screen){
+	var tut = localStorage.getItem("tutorial");
+	if( tut == "fingerprint" || tut == null) {
+		screen = "tutorial";
+	}
+
+	lastScreenShown = screen;
+
+	currScreen = screen;
+	document.getElementById(screen).style.display = "block";
+	document.getElementById(screen).style.visibility = "visible";	
+	
+
 	switch(screen){
 		case "lockscreen":
 			updateLockScreen();
 			break;
+
 		case "main":
 			break;
+
+		case "tutorial":
+			runTutorial();
+			break;
+
+		case "tutorialMain":
+			
+			break;	
 	}
-	document.getElementById(screen).style.display = "block";
-	document.getElementById(screen).style.visibility = "visible";	
 	
 }
 
 function unload(screen){
-	switch(screen){
-		case "lockscreen":
-			break;
-	}
-	document.getElementById("lockscreen").style.visibility = "hidden";
-	document.getElementById("lockscreen").style.display = "none"
+	currScreen = null;
+	document.getElementById(screen).style.visibility = "hidden";
+	document.getElementById(screen).style.display = "none"
 }
 
 

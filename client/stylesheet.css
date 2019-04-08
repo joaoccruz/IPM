@@ -1,6 +1,7 @@
 body{
 	background-color:#F0F0F0;
 	font-family: Sans-Serif;
+	cursor: default;
 }
 
 .inline{
@@ -40,6 +41,7 @@ body{
     width: 25%;
     height: 50%;
 }
+
 #mainImage{
 	left:0;
 	right:0;
@@ -52,7 +54,7 @@ body{
 	left:0;
 	right:0;
 	display: block;
-	text-align: center;
+	margin-left: auto; margin-right: auto; text-align: center;
 }
 
 #clickType{
@@ -106,4 +108,22 @@ body{
 
 
 
+#tutorialText2{
+	margin-top: 35%;
+}
 
+
+#tutorialImage{
+	width: 20%;
+	margin-top: 50%;
+}
+
+
+#skip{
+	bottom:0;
+	right:0;
+	color: 	#0645AD;
+	font-size: 15px; 
+	display: block;
+
+}

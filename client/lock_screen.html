@@ -4,7 +4,7 @@
 
 
 <html>
-	<meta charset="utf-8"> <!--Perhaps setting the encoding properly spares us from stuff like &oaccent;-->
+	<meta charset="utf-8">
 	<head>
 		<title>Client</title>
 		<link rel="stylesheet" type="text/css" href="stylesheet.css">
@@ -22,6 +22,13 @@
 
        <div id="container" class="inline">
        		<!--    screen      -->
+       		<div id="tutorial">
+       			<p id="skip"></p>
+       			<p id="tutorialText1" class="textCenter"> It looks like this is your first time using this device</p>
+       			<p id="tutorialText2" class="textCenter"> (click)</p>
+       			<img id="tutorialImage" class="absCenter">
+       		</div>
+
 
        		<div id="lockscreen" onclick="loadLastScreen('lockscreen')">
        			<img id="bg" src="bg.jpg" >
@@ -32,13 +39,20 @@
        		</div>
 
        		<div id="main">
-       			<img id="mainImage" src="wifi.png">
-       			<p id="postTitle"> </p>
-       			<p id="postDescription"> </p>
-       			
+       			<div id="post">
+
+	       			<img id="mainImage" src="wifi.png">
+	       			<p id="postTitle"> </p>
+	       			<p id="postDescription"> </p>
+	
+       			</div>
+
        			<img id="appButton" src="appIcon.png" >
        			<img id="contactsButton" src="contacts.png" >
        		</div>
+
+
+
 
        </div>
 
