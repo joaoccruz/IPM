@@ -126,47 +126,69 @@ function updateLockScreen(){
 
 
 function enableSwipe(target, directions, f, args=[]){
-	// Add drag
-
-
-	function isSwipeValid(direction, target, pos, minDist = 20){
-		switch(direction){
-			case "up"   : return pos["yi"] - pos["yf"] > minDist; 
-			case "right": return pos["xi"] - pos["xf"] > minDist;
-			case "down" : return pos["yi"] - pos["yf"] < minDist;
-			case "left" : return pos["xi"] - pos["xf"] < minDist;
+	// TODO: Add drag
+	var pos = {};
+	function iterateIfNeeded(object, f){
+		if(object.constructor === Array){
+			for (var i = 0; i < object.length; i++) {
+				f(object[i]);	
+			}
+		}else{
+			f(object);
 		}
 	}
 
 
+	function getSwipeDir(pos, minDistX = 30, minDistY = 20){
+		var dx = pos["xf"] - pos["xi"];
+		var dy = pos["yf"] - pos["yi"];
+		var dir = null;
 
-	var pos = {};
-	target.addEventListener("mousedown",function(event){
-		pos["xi"] = event.clientX;
-		pos["yi"] = event.clientY;
-	}, false);
+		
+		 
+		var d, dist, dir;
+		
+		(Math.abs(dx) >= Math.abs(dy)) ? (d = dx, dist = minDistX, dir = "x") : (d = dy, dist = minDistY, dir = "y");
 
-	target.addEventListener("mouseup",function(event){
-		pos["xf"] = event.clientX;
-		pos["yf"] = event.clientY;
-		if(directions.constructor === Array){
-			for (var i = 0; i < directions.length; i++) {
-				if(isSwipeValid(directions[i], target, pos));{
-					f(directions[i]);
-					break;
-				}
-			}
-		}else if(isSwipeValid(directions)){
-			f(directions);
+		if(Math.abs(d) < dist){
+			return null;
 		}
 
 
-	}, false);
+		var ret = (d > 0 ? 0 : 1);
+		if(dir == "x"){
+			return (ret == 0 ? "right" : "left");
+		}else if(dir == "y"){
+			return (ret == 0 ? "down" : "up");
+		}
+
+						
+	}
+
+	function storeVal(event){
+		pos["xi"] = event.clientX;
+		pos["yi"] = event.clientY;
+	}
+
+	function validate(event){
+		pos["xf"] = event.clientX;
+		pos["yf"] = event.clientY;
+		
+		var swipeDir = getSwipeDir(pos)
+		alert(swipeDir);
+	}
+
+	target.addEventListener("mousedown" , storeVal, false);
+	target.addEventListener("touchstart", storeVal, false);
+
+	target.addEventListener("mouseup", validate, false);
+	target.addEventListener("touchend", validate, false);
+	
 }
 
 function loadMain(){
 	var pn = 0;
-	enableSwipe(document.getElementById("post"),["right","left"], null);
+	enableSwipe(document.getElementById("post"),["right","left"], alert);
 
 }
 
