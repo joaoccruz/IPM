@@ -1,4 +1,6 @@
-const DEBUG_MODE = false;
+import * as swipe from "./js-libs/swipe.js"
+
+var DEBUG_MODE = false;
 var currScreen = null;
 var lastScreen = null;
 var lastScreenShown = null;
@@ -23,74 +25,9 @@ POST_LIST.push(new post("img/gil.jpg","Grande Gil >.> <.<",{x: 40.3218825, y: -7
 
 if(DEBUG_MODE)
 	localStorage.clear();
+
 	
 
-function enableSwipe(target, directions, f){
-	// TODO: Add drag
-	var pos = {};
-	function getSwipeDir(pos, f, minDistX = 30, minDistY = 20){
-		var dx = pos["xf"] - pos["xi"];
-		var dy = pos["yf"] - pos["yi"];
-		var dir = null;
-
-		
-		 
-		var d, dist, dir;
-		
-		(Math.abs(dx) >= Math.abs(dy)) ? (d = dx, dist = minDistX, dir = "x") : (d = dy, dist = minDistY, dir = "y");
-
-		if(Math.abs(d) < dist){
-			return null;
-		}
-
-
-		var ret = (d > 0 ? 0 : 1);
-		if(dir == "x"){
-			return (ret == 0 ? "right" : "left");
-		}else if(dir == "y"){
-			return (ret == 0 ? "down" : "up");
-		}
-
-						
-	}
-
-	function storeVal(event){
-		pos["xi"] = event.clientX;
-		pos["yi"] = event.clientY;
-	}
-
-	function validate(event){
-		pos["xf"] = event.clientX;
-		pos["yf"] = event.clientY;
-		
-		var swipeDir = getSwipeDir(pos)
-		if(directions.constructor === Array){
-			for (var i = 0; i < directions.length; i++) {
-				if(directions[i] == swipeDir){
-					var func = f[i];
-					func(swipeDir);
-				}
-			}
-		}else if(swipeDir == directions){
-			f(swipeDir);
-		}
-
-	}
-
-	target.addEventListener("mousedown" , storeVal, false);
-	target.addEventListener("touchstart", storeVal, false);
-
-	target.addEventListener("mouseup", validate, false);
-	target.addEventListener("touchend", validate, false);
-	
-}
-
-function disableSwipe(target){
-	target.removeEventListener("mousedown");
-	target.removeEventListener("touchstart");
-	target.removeEventListener("mouseup");
-	target.removeEventListener("touchend");
-}
 
 function runTutorial(){
 	var tutorial = document.getElementById("tutorial");
@@ -209,9 +146,8 @@ function loadMain(){
 			return;
 		drawPost(--CURR_POST);
 	}
-	enableSwipe(document.getElementById("post"),["left","right"],[loadNext,loadPrev]);
-
 	drawPost(CURR_POST);
+	swipe.enable(document.getElementById("post"),["left","right"],[loadNext,loadPrev]);
 }
 
 function load(screen){
@@ -233,6 +169,7 @@ function load(screen){
 	switch(screen){
 		case "lockscreen":
 			updateLockScreen();
+			document.getElementById("lockscreen").addEventListener("click", loadLastScreen, {once: true});
 			break;
 
 		case "main":
@@ -253,13 +190,17 @@ function unload(screen){
 	ele.style.visibility = "hidden";
 	ele.style.display = "none"
 	if(screen == "main")
-		disableSwipe(document.getElementById("post"));
+		swipe.disable(document.getElementById("post"));
 }
 
 
-function loadLastScreen(screen){
+function loadLastScreen(){
 	if(lastScreen == null)
 		lastScreen = "main";
-	unload(screen);
+	unload(currScreen);
 	load(lastScreen);
 }
+
+
+load("lockscreen");
+export {load, loadLastScreen};

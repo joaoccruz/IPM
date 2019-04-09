@@ -12,6 +12,8 @@ img{
   -o-user-drag: none;
   user-drag: none;
 }
+
+
 .inline{
 	display: inline-block;
 	vertical-align: top;
@@ -37,11 +39,10 @@ img{
 }
 
 #mainButtons{
-	left:0;
+	left:80%;
 	right:0;
-	margin-left: 80%;
 	width: 20%;
-	height: 80%
+	height: 80%;
     margin-right: auto;
 }
 
@@ -51,9 +52,10 @@ img{
 
 #mainApps{
 	width: 100%;
-	
-
+	top: 30%
 }
+
+
 #mainImage{
 	top: 2%;
 	left: 3%;
