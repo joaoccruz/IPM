@@ -1,8 +1,8 @@
-var DEBUG_MODE = false;
+const DEBUG_MODE = false;
 var currScreen = null;
 var lastScreen = null;
 var lastScreenShown = null;
-var screenUpdate = setInterval(update, 1000);
+const screenUpdate = setInterval(update, 1000);
 
 var tutorialEventListeners=[];
 
@@ -40,7 +40,7 @@ function runTutorial(){
 				t1.innerHTML = "Place one of your fingers on the screen to configure the fingerprint sensor";
 				t2.innerHTML = "";
 				skip.innerHTML = ""
-				i3.src = "fingerprint.png";
+				i3.src = "img/fingerprint.png";
 				localStorage.setItem("tutorial", "fingerprint");
 				runTutorial();
 			}, {once : true});
@@ -103,8 +103,7 @@ function update(){
 	}
 }
 
-function drawPost(){
-	var ID = 0; 
+function drawPost(ID){ 
 	document.getElementById("mainImage").src = POST_LIST[ID].image;
 	document.getElementById("postDescription").innerHTML = POST_LIST[ID].description;
 	document.getElementById("postLocation").innerHTML = POST_LIST[ID].locationName;
@@ -125,6 +124,51 @@ function updateLockScreen(){
 	document.getElementById("lockscreenText").innerHTML = hr + ":" + min ;
 }
 
+
+function enableSwipe(target, directions, f, args=[]){
+	// Add drag
+
+
+	function isSwipeValid(direction, target, pos, minDist = 20){
+		switch(direction){
+			case "up"   : return pos["yi"] - pos["yf"] > minDist; 
+			case "right": return pos["xi"] - pos["xf"] > minDist;
+			case "down" : return pos["yi"] - pos["yf"] < minDist;
+			case "left" : return pos["xi"] - pos["xf"] < minDist;
+		}
+	}
+
+
+
+	var pos = {};
+	target.addEventListener("mousedown",function(event){
+		pos["xi"] = event.clientX;
+		pos["yi"] = event.clientY;
+	}, false);
+
+	target.addEventListener("mouseup",function(event){
+		pos["xf"] = event.clientX;
+		pos["yf"] = event.clientY;
+		if(directions.constructor === Array){
+			for (var i = 0; i < directions.length; i++) {
+				if(isSwipeValid(directions[i], target, pos));{
+					f(directions[i]);
+					break;
+				}
+			}
+		}else if(isSwipeValid(directions)){
+			f(directions);
+		}
+
+
+	}, false);
+}
+
+function loadMain(){
+	var pn = 0;
+	enableSwipe(document.getElementById("post"),["right","left"], null);
+
+}
 
 function load(screen){
 	var tut = localStorage.getItem("tutorial");
@@ -148,7 +192,7 @@ function load(screen){
 			break;
 
 		case "main":
-			drawPost();
+			loadMain();
 			break;
 
 		case "tutorial":
