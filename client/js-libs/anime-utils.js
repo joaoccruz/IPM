@@ -1,6 +1,6 @@
 // OWO
 
-import tween from "./js-libs/anime-master/lib/anime.es.js";
+import tween from "./anime-master/lib/anime.es.js";
 
 function a() {
 	console.log("hi!")
