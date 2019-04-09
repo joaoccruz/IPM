@@ -9,7 +9,7 @@
 		<title>Client</title>
 		<link rel="stylesheet" type="text/css" href="stylesheet.css">
 		<script src="utilities.js"></script>
-		<script src="anime-utils.js"></script>
+		<script id="anim" type="module" src="anime-utils.js"></script>
 	</head>
 
 	<body>
@@ -41,7 +41,7 @@
        			<img id="bg" src="img/bg.jpg" >
        			<p id="lockscreenText" class="textCenter" ></p>
 
-       			<img id="fingerprint" src="img/fingerprint.png" class="absCenter" onmouseover=a() onmouseout=b()>
+       			<img id="fingerprint" src="img/fingerprint.png" class="absCenter">
        			<script>load("lockscreen");</script>
        		</div>
 
@@ -102,7 +102,10 @@
 		 </div>   
        </div>
 
-
+		<script type="text/javascript">
+			document.getElementById("fingerprint").addEventListener("onmouseover", anim.a);
+			document.getElementById("fingerprint").addEventListener("onmouseout", anim.b);
+		</script>
 	</body>
 </html>
 
