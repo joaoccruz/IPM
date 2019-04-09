@@ -41,7 +41,7 @@
        			<img id="bg" src="img/bg.jpg" >
        			<p id="lockscreenText" class="textCenter" ></p>
 
-       			<img id="fingerprint" src="img/fingerprint.png" class="absCenter">
+       			<img id="fingerprint" src="img/fingerprint.png" class="absCenter" onmouseover="anim.a()" onmouseout="anim.b()">
        			<script>load("lockscreen");</script>
        		</div>
 
@@ -102,10 +102,7 @@
 		 </div>   
        </div>
 
-		<script type="text/javascript">
-			document.getElementById("fingerprint").addEventListener("onmouseover", anim.a);
-			document.getElementById("fingerprint").addEventListener("onmouseout", anim.b);
-		</script>
+
 	</body>
 </html>
 
