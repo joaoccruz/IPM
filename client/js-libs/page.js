@@ -196,8 +196,4 @@ function loadNotifications(){
 	document.getElementById("notifications").style.visibility = "visible";	
 }
 
-
-
-
-
 export {load};
