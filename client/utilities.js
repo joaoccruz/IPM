@@ -1,4 +1,4 @@
-const DEBUG_MODE = true;
+const DEBUG_MODE = false;
 var currScreen = null;
 var lastScreen = null;
 var lastScreenShown = null;
@@ -123,7 +123,10 @@ function updateLockScreen(){
 
 
 function enableSwipe(target, directions, f){
+
 	// TODO: Add drag
+
+
 	var pos = {};
 	function getSwipeDir(pos, f, minDistX = 30, minDistY = 20){
 		var dx = pos["xf"] - pos["xi"];
