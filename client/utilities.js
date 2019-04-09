@@ -1,3 +1,6 @@
+// Proudly using anime.js
+// Owo what's this?
+
 var DEBUG_MODE = false;
 var currScreen = null;
 var lastScreen = null;
@@ -6,7 +9,7 @@ var screenUpdate = setInterval(update, 1000);
 
 var tutorialEventListeners=[];
 
-
+// const anime = require('js-libs/anime-master/lib/anime.js');
 
 class post{
 	constructor(image, description, location, locationName){
@@ -18,9 +21,9 @@ class post{
 }
 
 var POST_LIST = [];
-POST_LIST.push(new post("beach.jpeg","Nada como o ar da montanha, na praia",{x: 40.3218825, y: -7.6217218}, "Serra da Estrela"));
-POST_LIST.push(new post("montanha.jpg","Imagem genéria de uma montanha",{x: 40.3218825, y: -7.6217218}, "Montanha"));
-POST_LIST.push(new post("gil.jpg","Grande Gil",{x: 40.3218825, y: -7.6217218}, "Parque das Nações"));
+POST_LIST.push(new post("img/beach.jpeg","Nada como o ar da montanha, na praia",{x: 40.3218825, y: -7.6217218}, "Serra da Estrela"));
+POST_LIST.push(new post("img/montanha.jpg","Imagem genéria de uma montanha",{x: 40.3218825, y: -7.6217218}, "Montanha"));
+POST_LIST.push(new post("img/gil.jpg","Grande Gil",{x: 40.3218825, y: -7.6217218}, "Parque das Nações"));
 
 if(DEBUG_MODE)
 	localStorage.clear();
