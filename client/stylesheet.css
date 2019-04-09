@@ -13,6 +13,13 @@ img{
   user-drag: none;
 }
 
+.textCenter{
+	left:0;
+	right:0;
+	display: block;
+	margin-left: auto; margin-right: auto; text-align: center;
+}
+
 
 .inline{
 	display: inline-block;
@@ -30,76 +37,93 @@ img{
 }
 
 
-
-#notifications{
-	top: 0 !important;
-	left:0;
-	background-color: black;
-	height: 10% !important;
-}
-
-#mainButtons{
-	left:80%;
-	right:0;
-	width: 20%;
-	height: 80%;
-    margin-right: auto;
-}
-
-#mainCamera{
-	width: 100%
-}
-
-#mainApps{
-	width: 100%;
-	top: 30%
-}
-
-
-#mainImage{
-	top: 2%;
-	left: 3%;
-    height: 60%;
-    width: 94%;
-}
-
-#postDescription{
-	left: 3%;
-	top: 62%;
-	font-size: 10px;
-}
-
-#postLocation{
-	top: 91%;
-	left: 8%;
-	font-size: 10px;
-}
-
-#locationPin{
-	top: 92%;
-	width: 5%;
-	left: 2%;
-}
-
-.textCenter{
-	left:0;
-	right:0;
-	display: block;
-	margin-left: auto; margin-right: auto; text-align: center;
-}
-
-#clickType{
-	width: 200px;
-	height: 1;
-	border:1px solid #000;
-}
-
 #container{
 	position: relative;
 	width:2.4in;
 	height:1.8in;
 	margin-left: 20%;
 	background-color:#FFFFFF;
+}
+
+
+#notifications{
+	top: 0 !important;
+	left:0;
+	background-color: black;
+	height: 10% !important;
+	opacity: 0.9;
+	border-radius: 0 0 15px 15px;
+}
+
+#mainButtons{
+	margin-left: 80%;
+	width: 20%;
+	height: 80%;
+    margin-right: auto;
+}
+
+	#mainCamera{
+		top: 2%;
+		right: 2%;
+		width: 96%;
+		height: 33%;
+	}
+
+	#mainApps{
+		width: 100%;
+		right: 3%;
+		top: 40%;
+	}
+
+
+
+#post{
+	width: 80%;
+	height: 90%;
+}
+
+	#mainImage{
+		margin-top: 2%;
+		margin-left: 3%;
+	    height: 60%;
+	    width: 94%;
+	}
+
+	#postLocationContainer{
+		margin-top: 50%;
+		margin-left: 2%;
+		font-size: 10px;
+		width: 100%;
+
+	}
+		#locationPin{
+			margin-top: 1%;
+			width: 5%;
+		}
+
+		#postLocation{
+			vertical-align: top;
+			width: 94%;
+			margin-left: 6%;
+		}
+
+		#postDescription{
+			margin-top: 8%;
+			width: 95%;
+			vertical-align: top;
+		}
+
+		#postHandle{
+			font-size: 9px;
+			margin-top: 24%;
+			vertical-align: top;
+		}
+
+
+#clickType{
+	width: 200px;
+	height: 1;
+	border:1px solid #000;
 }
 
 #container>div{
@@ -158,11 +182,7 @@ img{
 	margin-top: 40%;
 }
 
-#post{
-	width: 80%;
-	height: 100%;
 
-}
 
 
 #skip{

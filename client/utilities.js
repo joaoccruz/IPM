@@ -8,10 +8,12 @@ const screenUpdate = setInterval(update, 1000);
 var CURR_POST = 0;
 var POST_LIST = [];
 
-var tutorialEventListeners=[];
+if(DEBUG_MODE)
+	localStorage.clear();
+
 
 class post{
-	constructor(image, description, location, locationName, handle){
+	constructor(image, description, location, handle){
 		this.image = image;
 		this.description = description;
 		this.location = location;
@@ -19,12 +21,9 @@ class post{
 	}
 }
 
-POST_LIST.push(new post("img/beach.jpeg","Nada como o ar da montanha, na praia... Wait.",{x: 40.3218825, y: -7.6217218, description: "Serra da Estrela"}, "Senhor_Malaquias"));
+POST_LIST.push(new post("img/beach.jpeg","Nada como o ar da montanha, na praia",{x: 40.3218825, y: -7.6217218, description: "Serra da Estrela"}, "Senhor_Malaquias"));
 POST_LIST.push(new post("img/montanha.jpg","Imagem genérica de uma montanha",{x: 40.3218825, y: -7.6217218, description: "Montanha"}, "Senhor_José"));
 POST_LIST.push(new post("img/gil.jpg","Grande Gil >.> <.<",{x: 40.3218825, y: -7.6217218, description: "Parque das Nações"}, "Senhor_António"));
-
-if(DEBUG_MODE)
-	localStorage.clear();
 
 	
 
@@ -133,6 +132,7 @@ function loadMain(){
 		document.getElementById("mainImage").src = POST_LIST[ID].image;
 		document.getElementById("postDescription").innerHTML = POST_LIST[ID].description;
 		document.getElementById("postLocation").innerHTML = POST_LIST[ID].location.description;
+		document.getElementById("postHandle").innerHTML = "@" + POST_LIST[ID].handle;
 	}
 
 	function loadNext(){
@@ -203,4 +203,3 @@ function loadLastScreen(){
 
 
 load("lockscreen");
-export {load, loadLastScreen};
