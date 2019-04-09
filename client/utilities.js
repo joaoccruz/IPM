@@ -3,27 +3,94 @@ var currScreen = null;
 var lastScreen = null;
 var lastScreenShown = null;
 const screenUpdate = setInterval(update, 1000);
+var CURR_POST = 0;
+var POST_LIST = [];
 
 var tutorialEventListeners=[];
 
 class post{
-	constructor(image, description, location, locationName){
+	constructor(image, description, location, locationName, handle){
 		this.image = image;
 		this.description = description;
 		this.location = location;
-		this.locationName = locationName;
+		this.handle = handle;
 	}
 }
 
-var CURR_POST = 0;
-var POST_LIST = [];
-POST_LIST.push(new post("img/beach.jpeg","Nada como o ar da montanha, na praia... Wait.",{x: 40.3218825, y: -7.6217218}, "Serra da Estrela"));
-POST_LIST.push(new post("img/montanha.jpg","Imagem genérica de uma montanha",{x: 40.3218825, y: -7.6217218}, "Montanha"));
-POST_LIST.push(new post("img/gil.jpg","Grande Gil >.> <.<",{x: 40.3218825, y: -7.6217218}, "Parque das Nações"));
+POST_LIST.push(new post("img/beach.jpeg","Nada como o ar da montanha, na praia... Wait.",{x: 40.3218825, y: -7.6217218, description: "Serra da Estrela"}, "Senhor_Malaquias"));
+POST_LIST.push(new post("img/montanha.jpg","Imagem genérica de uma montanha",{x: 40.3218825, y: -7.6217218, description: "Montanha"}, "Senhor_José"));
+POST_LIST.push(new post("img/gil.jpg","Grande Gil >.> <.<",{x: 40.3218825, y: -7.6217218, description: "Parque das Nações"}, "Senhor_António"));
 
 if(DEBUG_MODE)
 	localStorage.clear();
 	
+
+function enableSwipe(target, directions, f){
+	// TODO: Add drag
+	var pos = {};
+	function getSwipeDir(pos, f, minDistX = 30, minDistY = 20){
+		var dx = pos["xf"] - pos["xi"];
+		var dy = pos["yf"] - pos["yi"];
+		var dir = null;
+
+		
+		 
+		var d, dist, dir;
+		
+		(Math.abs(dx) >= Math.abs(dy)) ? (d = dx, dist = minDistX, dir = "x") : (d = dy, dist = minDistY, dir = "y");
+
+		if(Math.abs(d) < dist){
+			return null;
+		}
+
+
+		var ret = (d > 0 ? 0 : 1);
+		if(dir == "x"){
+			return (ret == 0 ? "right" : "left");
+		}else if(dir == "y"){
+			return (ret == 0 ? "down" : "up");
+		}
+
+						
+	}
+
+	function storeVal(event){
+		pos["xi"] = event.clientX;
+		pos["yi"] = event.clientY;
+	}
+
+	function validate(event){
+		pos["xf"] = event.clientX;
+		pos["yf"] = event.clientY;
+		
+		var swipeDir = getSwipeDir(pos)
+		if(directions.constructor === Array){
+			for (var i = 0; i < directions.length; i++) {
+				if(directions[i] == swipeDir){
+					var func = f[i];
+					func(swipeDir);
+				}
+			}
+		}else if(swipeDir == directions){
+			f(swipeDir);
+		}
+
+	}
+
+	target.addEventListener("mousedown" , storeVal, false);
+	target.addEventListener("touchstart", storeVal, false);
+
+	target.addEventListener("mouseup", validate, false);
+	target.addEventListener("touchend", validate, false);
+	
+}
+
+function disableSwipe(target){
+	target.removeEventListener("mousedown");
+	target.removeEventListener("touchstart");
+	target.removeEventListener("mouseup");
+	target.removeEventListener("touchend");
+}
 
 function runTutorial(){
 	var tutorial = document.getElementById("tutorial");
@@ -122,74 +189,13 @@ function updateLockScreen(){
 }
 
 
-function enableSwipe(target, directions, f){
 
-	// TODO: Add drag
-
-
-	var pos = {};
-	function getSwipeDir(pos, f, minDistX = 30, minDistY = 20){
-		var dx = pos["xf"] - pos["xi"];
-		var dy = pos["yf"] - pos["yi"];
-		var dir = null;
-
-		
-		 
-		var d, dist, dir;
-		
-		(Math.abs(dx) >= Math.abs(dy)) ? (d = dx, dist = minDistX, dir = "x") : (d = dy, dist = minDistY, dir = "y");
-
-		if(Math.abs(d) < dist){
-			return null;
-		}
-
-
-		var ret = (d > 0 ? 0 : 1);
-		if(dir == "x"){
-			return (ret == 0 ? "right" : "left");
-		}else if(dir == "y"){
-			return (ret == 0 ? "down" : "up");
-		}
-
-						
-	}
-
-	function storeVal(event){
-		pos["xi"] = event.clientX;
-		pos["yi"] = event.clientY;
-	}
-
-	function validate(event){
-		pos["xf"] = event.clientX;
-		pos["yf"] = event.clientY;
-		
-		var swipeDir = getSwipeDir(pos)
-		if(directions.constructor === Array){
-			for (var i = 0; i < directions.length; i++) {
-				if(directions[i] == swipeDir){
-					var func = f[i];
-					func(swipeDir);
-				}
-			}
-		}else if(swipeDir == directions){
-			f(swipeDir);
-		}
-
-	}
-
-	target.addEventListener("mousedown" , storeVal, false);
-	target.addEventListener("touchstart", storeVal, false);
-
-	target.addEventListener("mouseup", validate, false);
-	target.addEventListener("touchend", validate, false);
-	
-}
 
 function loadMain(){
 	function drawPost(ID){ 
 		document.getElementById("mainImage").src = POST_LIST[ID].image;
 		document.getElementById("postDescription").innerHTML = POST_LIST[ID].description;
-		document.getElementById("postLocation").innerHTML = POST_LIST[ID].locationName;
+		document.getElementById("postLocation").innerHTML = POST_LIST[ID].location.description;
 	}
 
 	function loadNext(){
@@ -204,6 +210,7 @@ function loadMain(){
 		drawPost(--CURR_POST);
 	}
 	enableSwipe(document.getElementById("post"),["left","right"],[loadNext,loadPrev]);
+
 	drawPost(CURR_POST);
 }
 
@@ -236,17 +243,17 @@ function load(screen){
 			runTutorial();
 			break;
 
-		case "tutorialMain":
-			
-			break;	
 	}
 	
 }
 
 function unload(screen){
 	currScreen = null;
-	document.getElementById(screen).style.visibility = "hidden";
-	document.getElementById(screen).style.display = "none"
+	var ele = document.getElementById(screen);
+	ele.style.visibility = "hidden";
+	ele.style.display = "none"
+	if(screen == "main")
+		disableSwipe(document.getElementById("post"));
 }
 
 

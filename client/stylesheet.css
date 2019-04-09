@@ -27,6 +27,8 @@ img{
     margin-right: auto;
 }
 
+
+
 #notifications{
 	top: 0 !important;
 	left:0;
@@ -34,25 +36,24 @@ img{
 	height: 10% !important;
 }
 
-#appButton{
+#mainButtons{
 	left:0;
 	right:0;
 	margin-left: 80%;
+	width: 20%;
+	height: 80%
     margin-right: auto;
-    width: 20%;
-    height: 50%;
 }
 
-#contactsButton{
-	left:0;
-	right:0;
-    top: 50%;
-	margin-left: 80%;
-    margin-right: auto;
-    width: 20%;
-    height: 50%;
+#mainCamera{
+	width: 100%
 }
 
+#mainApps{
+	width: 100%;
+	
+
+}
 #mainImage{
 	top: 2%;
 	left: 3%;
