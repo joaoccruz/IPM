@@ -1,4 +1,4 @@
-const DEBUG_MODE = false;
+const DEBUG_MODE = true;
 var currScreen = null;
 var lastScreen = null;
 var lastScreenShown = null;
@@ -15,6 +15,7 @@ class post{
 	}
 }
 
+var CURR_POST = 0;
 var POST_LIST = [];
 POST_LIST.push(new post("img/beach.jpeg","Nada como o ar da montanha, na praia... Wait.",{x: 40.3218825, y: -7.6217218}, "Serra da Estrela"));
 POST_LIST.push(new post("img/montanha.jpg","Imagem genérica de uma montanha",{x: 40.3218825, y: -7.6217218}, "Montanha"));
@@ -103,11 +104,7 @@ function update(){
 	}
 }
 
-function drawPost(ID){ 
-	document.getElementById("mainImage").src = POST_LIST[ID].image;
-	document.getElementById("postDescription").innerHTML = POST_LIST[ID].description;
-	document.getElementById("postLocation").innerHTML = POST_LIST[ID].locationName;
-}
+
 
 function updateLockScreen(){
 	var d = new Date();
@@ -125,21 +122,10 @@ function updateLockScreen(){
 }
 
 
-function enableSwipe(target, directions, f, args=[]){
+function enableSwipe(target, directions, f){
 	// TODO: Add drag
 	var pos = {};
-	function iterateIfNeeded(object, f){
-		if(object.constructor === Array){
-			for (var i = 0; i < object.length; i++) {
-				f(object[i]);	
-			}
-		}else{
-			f(object);
-		}
-	}
-
-
-	function getSwipeDir(pos, minDistX = 30, minDistY = 20){
+	function getSwipeDir(pos, f, minDistX = 30, minDistY = 20){
 		var dx = pos["xf"] - pos["xi"];
 		var dy = pos["yf"] - pos["yi"];
 		var dir = null;
@@ -175,7 +161,17 @@ function enableSwipe(target, directions, f, args=[]){
 		pos["yf"] = event.clientY;
 		
 		var swipeDir = getSwipeDir(pos)
-		alert(swipeDir);
+		if(directions.constructor === Array){
+			for (var i = 0; i < directions.length; i++) {
+				if(directions[i] == swipeDir){
+					var func = f[i];
+					func(swipeDir);
+				}
+			}
+		}else if(swipeDir == directions){
+			f(swipeDir);
+		}
+
 	}
 
 	target.addEventListener("mousedown" , storeVal, false);
@@ -187,9 +183,25 @@ function enableSwipe(target, directions, f, args=[]){
 }
 
 function loadMain(){
-	var pn = 0;
-	enableSwipe(document.getElementById("post"),["right","left"], alert);
+	function drawPost(ID){ 
+		document.getElementById("mainImage").src = POST_LIST[ID].image;
+		document.getElementById("postDescription").innerHTML = POST_LIST[ID].description;
+		document.getElementById("postLocation").innerHTML = POST_LIST[ID].locationName;
+	}
 
+	function loadNext(){
+		if(CURR_POST == POST_LIST.length)
+			return;
+		drawPost(++CURR_POST);
+	}
+
+	function loadPrev(){
+		if(CURR_POST == 0)
+			return;
+		drawPost(--CURR_POST);
+	}
+	enableSwipe(document.getElementById("post"),["left","right"],[loadNext,loadPrev]);
+	drawPost(CURR_POST);
 }
 
 function load(screen){
