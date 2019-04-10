@@ -17,7 +17,7 @@ class post{
 }
 
 
-var CURR_POST = 0;
+localStorage.setItem("currentPost", "0");
 var POST_LIST = [];
 
 
@@ -73,7 +73,6 @@ function loadLastScreen(){
 	if(lastScreen == undefined)
 		lastScreen = "main";
 
-	alert(lastScreen == null);
 	unload(localStorage.getItem("currScreen"));
 	load(lastScreen);
 }
@@ -168,7 +167,7 @@ function updateLockScreen(){
 }
 
 
-function main(){
+function main(id = 0){
 	function drawPost(ID){ 
 		document.getElementById("mainImage").src = POST_LIST[ID].image;
 		document.getElementById("postDescription").innerHTML = POST_LIST[ID].description;
@@ -177,17 +176,24 @@ function main(){
 	}
 
 	function loadNext(){
-		if(CURR_POST == POST_LIST.length)
+		var cp = localStorage.getItem("currentPost");
+		if(localStorage.getItem("currentPost") == POST_LIST.length)
 			return;
-		drawPost(++CURR_POST);
+		drawPost(++cp);
+		localStorage.setItem("currentPost",cp);
+
+
 	}
 
 	function loadPrev(){
-		if(CURR_POST == 0)
+		var cp = localStorage.getItem("currentPost");
+		if(localStorage.getItem("currentPost") == 0)
 			return;
-		drawPost(--CURR_POST);
+		drawPost(--cp);
+
+		localStorage.setItem("currentPost",cp);
 	}
-	drawPost(CURR_POST);
+	drawPost(localStorage.getItem("currentPost"));
 	swipe.enable(document.getElementById("post"),["left","right"],[loadNext,loadPrev]);
 }
 
