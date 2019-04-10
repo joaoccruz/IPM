@@ -17,7 +17,6 @@ class post{
 }
 
 
-localStorage.setItem("currentPost", "0");
 var POST_LIST = [];
 
 
@@ -152,18 +151,88 @@ function tutorial(){
 
 
 function updateLockScreen(){
+	String.prototype.format = function () {
+        var args = [].slice.call(arguments);
+        return this.replace(/(\{\d+\})/g, function (a){
+            return args[+(a.substr(1,a.length-2))||0];
+        });
+	};
 	var d = new Date();
 	var min = d.getMinutes().toString();
 	var hr  = d.getHours().toString();
-
+	var day = d.getDate();
+	var month = d.getMonth();
+	var week = d.getDay();
+	var year = d.getYear();
 	if(min < 10)
 		min = "0" + min
 	
 	if(hr < 10)
 		hr = "0" + hr
 
-	document.getElementById("lockscreenText").innerHTML = hr + ":" + min ;
 
+	switch(week){
+        case 1: 
+            var dayW = ("Monday");
+            break;
+        case 2: 
+            var dayW = ("Tuesday");
+            break;
+        case 3: 
+            var dayW = ("Wednesday");
+            break;
+        case 4: 
+            var dayW = ("Thursday");
+            break;
+        case 5: 
+            var dayW = ("Friday");
+            break;
+        case 6: 
+            var dayW = ("Saturday");
+            break;
+        case 7: 
+            var dayW = ("Sunday");
+            break;
+    }
+    switch(month){
+        case 1: 
+        	month = "January";
+            break;
+        case 2: 
+        	month = "February";
+            break;
+        case 3: 
+        	month = "March";
+            break;
+        case 4:
+        	 month = "April";
+            break;
+        case 5: 
+        	month = "May";
+            break;
+        case 6: month = "June"; 
+            break;
+        case 7: 
+        	month = "July";
+            break;
+        case 8: 
+        	month = "August";
+            break;
+        case 9: 
+        	month = "September";
+            break;
+        case 10: 
+        	month = "October";
+            break;
+        case 11: 
+        	month = "November";
+            break;
+        case 12: 
+        	month = "December";
+            break;
+       }
+	document.getElementById("lockscreenText").innerHTML = hr + ":" + min ;
+	document.getElementById("lockscreenDate").innerHTML = "{0}, {1} {2}".format(dayW, day,month);
 }
 
 

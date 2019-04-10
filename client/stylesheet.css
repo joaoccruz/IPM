@@ -157,9 +157,15 @@ img{
 
 
 #lockscreenText{
-	margin-top: 15%;
+	margin-top: 9%;
 	font-size: 50px;
 	
+}
+
+#lockscreenDate{
+	color: #FFF;
+	margin-top: 35%;
+	font-size: 20px;
 }
 
 #fingerprint{
