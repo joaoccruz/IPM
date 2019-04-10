@@ -37,7 +37,7 @@ function load(screen){
 	document.getElementById(screen).style.display = "block";
 	document.getElementById(screen).style.visibility = "visible";	
 
-	if(screen != "lockscreen" && screen != "tutorial"){
+	if(screen != "lockscreen" && screen != "tutorial" && screen != "numpadScreen"){
 		loadNotifications();
 	}
 
@@ -52,7 +52,13 @@ function load(screen){
 
 		case "tutorial":
 			tutorial();	break;
-
+	    case "numpadScreen":
+	    	pin(function(pin){
+	    		localStorage.setItem("pin",pin)	
+				localStorage.setItem("tutorial", "tutorial1");
+				tutorial();
+	    	});
+	    	break;
 	}
 	
 }
@@ -87,6 +93,8 @@ function tutorial(){
 	const i3 = document.getElementById("tutorialImage");
 	const main = document.getElementById("main");
 	const post = document.getElementById("post");
+	const numpadScreen = document.getElementById("numpadScreen");
+
 	switch(localStorage.getItem("tutorial")){
 		case null:
 			localStorage.setItem("lastScreen","tutorial");
@@ -104,17 +112,28 @@ function tutorial(){
 		case "fingerprint":
 			tut.addEventListener("click", function(){
 				// CONTINUE		
-				t1.innerHTML = "The next few screens will be a tutorial on how to use the device";
-				t2.innerHTML = "You can skip them if you have used this before"
-				i3.src = "";
-				skip.innerHTML = "skip";
-				localStorage.setItem("tutorial", "tutorial1");
+				localStorage.setItem("tutorial", "tutorialPin");
 				tutorial();
 			}, {once : true});
 			break;
 
-	
+		case "tutorialPin":
+			i3.src = "";
+			t1.innerHTML = "Enter a pin, don't forget it";
+			t1.style.top = "0%";
+			tut.style.zIndex = 0;
+			load("numpadScreen");
+			break;
+			
+
 		case "tutorial1":
+			t1.style.top = "05%"
+			t1.innerHTML = "The next few screens will be a tutorial on how to use the device";
+			t2.innerHTML = "You can skip them if you have used this before"
+			i3.src = "";
+			skip.innerHTML = "skip";
+			tut.style.zIndex = 100;
+			unload("numpadScreen");
 			skip.addEventListener("click", function(){
 				// SKIP
 				localStorage.setItem("tutorial", "complete");
@@ -291,19 +310,21 @@ function loadNotifications(){
 	document.getElementById("notifications").style.visibility = "visible";	
 }
 
-function pin(){	
+function pin(f){	
 	const buttons = document.getElementById("numpadScreen").getElementsByTagName("input");
 	const textbox = document.getElementById("numpadText");
 	const textboxCharLimit = 8;
 	var pw = "";
 
 	function type(a,key){
-		if(key != 10 && pw.length <= textboxCharLimit){
+		if(key != 11 && key != 10 && pw.length <= textboxCharLimit){
 			pw = pw + key;
 			textbox.innerHTML += "●"
 		}else if(textbox.innerHTML.length != 0 && key ==10){
 			pw = pw.slice(0,-1);
 			textbox.innerHTML = textbox.innerHTML.slice(0,-1);
+		}else if(key == 11){
+			f(pw);
 		}
 	}
 
@@ -330,6 +351,13 @@ function pin(){
 	buttons[10].style.marginLeft = "57.5%";
 	buttons[10].style.marginTop = "50%";
 	buttons[10].addEventListener("click",(event) => type(event, 10));
+
+	buttons[11].value = "Enter";
+	buttons[11].style.marginLeft = "72.5%";
+	buttons[11].style.marginTop = "40%";
+	buttons[11].style.height = "30%";
+	buttons[11].style.width = "25%";
+	buttons[11].addEventListener("click",(event) => type(event, 11));
 }
 
 
