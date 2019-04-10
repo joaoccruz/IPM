@@ -1,4 +1,13 @@
 import * as swipe from "./swipe.js";
+import * as post  from "./post.js";
+import * as pin   from "./pin.js" 
+
+String.prototype.format = function () {
+        var args = [].slice.call(arguments);
+        return this.replace(/(\{\d+\})/g, function (a){
+            return args[+(a.substr(1,a.length-2))||0];
+    });
+};
 
 function update(){
 	switch(localStorage.getItem("currScreen")){
@@ -6,34 +15,6 @@ function update(){
 			updateLockScreen();
 	}
 }
-
-class post{
-	constructor(image, description, location, handle){
-		this.image = image;
-		this.description = description;
-		this.location = location;
-		this.handle = handle;
-	}
-}
-
-
-var POST_LIST = [];
-
-
-POST_LIST.push(new post("img/beach.jpeg","Nada como o ar da montanha, na praia",{x: 40.3218825, y: -7.6217218, description: "Serra da Estrela"}, "Senhor_Malaquias"));
-POST_LIST.push(new post("img/montanha.jpg","Imagem genérica de uma montanha",{x: 40.3218825, y: -7.6217218, description: "Montanha"}, "Senhor_José"));
-POST_LIST.push(new post("img/gil.jpg","Grande Gil >.> <.<",{x: 40.3218825, y: -7.6217218, description: "Parque das Nações"}, "Senhor_António"));
-
-function validatePin(){
-	unload("lockscreen");
-	load("numpadScreen",function(pin){
-		if(pin == localStorage.getItem("pin")){
-			unload("numpadScreen");
-			loadLastScreen();
-		}
-	});
-}
-
 
 function unlock(){
 	var radios = document.getElementsByName('CT');
@@ -44,6 +25,7 @@ function unlock(){
 	 	}
 	}
 }
+
 function load(screen,f = null){
 	var tut = localStorage.getItem("tutorial");
 	if( tut == "fingerprint" || tut == undefined) {
@@ -65,7 +47,7 @@ function load(screen,f = null){
 		case "lockscreen":
 			updateLockScreen();
 			swipe.enable(document.getElementById("lockscreen"),"down",function(){
-				validatePin();
+				pin.validate();
 			});
 			document.getElementById("lockscreen").addEventListener("click", unlock);
 			break;
@@ -76,7 +58,7 @@ function load(screen,f = null){
 		case "tutorial":
 			tutorial();	break;
 	    case "numpadScreen":
-	    	pin(f);
+	    	pin.main(f);
 	    	break;
 	}
 	
@@ -94,7 +76,6 @@ function unload(screen){
 
 	if(screen == "numpadScreen")
 		swipe.disable(document.getElementById("numpadScreen"));
-
 }
 
 function loadLastScreen(){
@@ -207,19 +188,13 @@ function tutorial(){
 
 		case "tutorialSwipeMain":
 			t1.innerHTML = "Try to swipe left";
-			swipe.enable(tut,"left", function(){loadNext(); skip.click();});
+			swipe.enable(tut,"left", function(){post.loadNext(); skip.click();});
 	}
 	
 }
 
 
 function updateLockScreen(){
-	String.prototype.format = function () {
-        var args = [].slice.call(arguments);
-        return this.replace(/(\{\d+\})/g, function (a){
-            return args[+(a.substr(1,a.length-2))||0];
-        });
-	};
 	var d = new Date();
 	var min = d.getMinutes().toString();
 	var hr  = d.getHours().toString();
@@ -258,80 +233,51 @@ function updateLockScreen(){
             break;
     }
     switch(month){
-        case 1: 
+        case 0: 
         	month = "January";
             break;
-        case 2: 
+        case 1: 
         	month = "February";
             break;
-        case 3: 
+        case 2: 
         	month = "March";
             break;
-        case 4:
+        case 3:
         	 month = "April";
             break;
-        case 5: 
+        case 4: 
         	month = "May";
             break;
-        case 6: month = "June"; 
+        case 5: month = "June"; 
             break;
-        case 7: 
+        case 6: 
         	month = "July";
             break;
-        case 8: 
+        case 7: 
         	month = "August";
             break;
-        case 9: 
+        case 8: 
         	month = "September";
             break;
-        case 10: 
+        case 9: 
         	month = "October";
             break;
-        case 11: 
+        case 10: 
         	month = "November";
             break;
-        case 12: 
+        case 11: 
         	month = "December";
             break;
        }
 	document.getElementById("lockscreenText").innerHTML = hr + ":" + min ;
-	document.getElementById("lockscreenDate").innerHTML = "{0}, {1} {2}".format(dayW, day,month);
+	document.getElementById("lockscreenDate").innerHTML = "{0}, {1} {2}".format(dayW, month, day);
+
 }
 
-function drawPost(ID){
-		// CHANGE TO OTHER FILE
-		if(ID == undefined){
-			ID = 0;
-			localStorage.setItem("currentPost",0); 
-		}
-		document.getElementById("mainImage").src = POST_LIST[ID].image;
-		document.getElementById("postDescription").innerHTML = POST_LIST[ID].description;
-		document.getElementById("postLocation").innerHTML = POST_LIST[ID].location.description;
-		document.getElementById("postHandle").innerHTML = "@" + POST_LIST[ID].handle;
-	}
-
-	function loadNext(){
-		var cp = localStorage.getItem("currentPost");
-		if(localStorage.getItem("currentPost") == POST_LIST.length)
-			return;
-		drawPost(++cp);
-		localStorage.setItem("currentPost",cp);
-
-
-	}
-
-	function loadPrev(){
-		var cp = localStorage.getItem("currentPost");
-		if(localStorage.getItem("currentPost") == 0)
-			return;
-		drawPost(--cp);
-
-		localStorage.setItem("currentPost",cp);
-	}
 
 function main(){
-	drawPost(localStorage.getItem("currentPost"));
-	swipe.enable(document.getElementById("post"),["left","right"],[loadNext,loadPrev]);
+	post.draw(localStorage.getItem("currentPost"));
+	swipe.enable(document.getElementById("post"),["left","right"],[post.loadNext,post.loadPrev]);
 }
 
 function loadNotifications(){
@@ -339,55 +285,7 @@ function loadNotifications(){
 	document.getElementById("notifications").style.visibility = "visible";	
 }
 
-	var pw = "";
-function pin(f){	
-	const buttons = document.getElementById("numpadScreen").getElementsByTagName("input");
-	const textbox = document.getElementById("numpadText");
-	const textboxCharLimit = 8;
 
-	function type(a,key){
-		if(key != 11 && key != 10 && pw.length <= textboxCharLimit){
-			pw = pw + key;
-			textbox.innerHTML += "●"
-		}else if(textbox.innerHTML.length != 0 && key ==10){
-			pw = pw.slice(0,-1);
-			textbox.innerHTML = textbox.innerHTML.slice(0,-1);
-		}else if(key == 11){
-			f(pw);
-		}
-	}
-
-
-	function renderButton(i,line, column){
-		buttons[i].value = i.toString();
-		buttons[i].style.marginTop  = (20 + (line * 10)).toString()+"%"
-		buttons[i].style.marginLeft = (27.5 + (column * 15)).toString()+"%";
-		buttons[i].addEventListener("click",(event) => type(event, i));
-	}
-
-
-	for (var i = 1; i+1 < buttons.length; i++) {
-		renderButton(i,Math.floor((i-1) / 3),(i-1) % 3);
-	}
-
-	buttons[0].value = 0;
-	buttons[0].style.marginTop = "50%";
-	buttons[0].style.marginLeft = "27.5%";
-	buttons[0].style.width = "30%";
-	buttons[0].addEventListener("click",(event) => type(event, 0));
-
-	buttons[10].value = "←";
-	buttons[10].style.marginLeft = "57.5%";
-	buttons[10].style.marginTop = "50%";
-	buttons[10].addEventListener("click",(event) => type(event, 10));
-
-	buttons[11].value = "Enter";
-	buttons[11].style.marginLeft = "72.5%";
-	buttons[11].style.marginTop = "40%";
-	buttons[11].style.height = "30%";
-	buttons[11].style.width = "25%";
-	buttons[11].addEventListener("click",(event) => type(event, 11));
-}
 
 
 

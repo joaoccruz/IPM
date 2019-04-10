@@ -64,7 +64,6 @@ img{
 	background-color: black;
 	height: 10% !important;
 	opacity: 0.9;
-	border-radius: 0 0 10px 10px;
 	z-index: 200%;
 }
 
@@ -83,6 +82,15 @@ img{
 		width: 100%;
 		top: 40%;
 	}
+
+#post2{
+	z-index: 1;
+	top: 1%;
+	width: 80%;
+	display: none;
+	visibility: hidden;
+	height: 100%;
+}
 
 #post{
 	z-index: 1;
@@ -128,6 +136,10 @@ img{
 			vertical-align: top;
 		}
 
+		#postTime{
+			margin-top: 23%;
+			margin-left: 10%;
+		}
 
 #clickType{
 	width: 200px;
