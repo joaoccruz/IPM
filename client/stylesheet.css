@@ -68,30 +68,26 @@ img{
 }
 
 #mainButtons{
-	margin-left: 80%;
+	left: 80%;
 	width: 20%;
 	height: 80%;
-    margin-right: auto;
 }
 
 	#mainCamera{
 		top: 2%;
-		right: 2%;
-		width: 96%;
-		height: 33%;
+		width: 80%;
 	}
 
 	#mainApps{
 		width: 100%;
-		right: 3%;
 		top: 40%;
 	}
 
-
-
 #post{
+	z-index: 1;
+	top: 1%;
 	width: 80%;
-	height: 90%;
+	height: 100%;
 }
 
 	#mainImage{
@@ -102,7 +98,7 @@ img{
 	}
 
 	#postLocationContainer{
-		margin-top: 50%;
+		margin-top: 55%;
 		margin-left: 2%;
 		font-size: 10px;
 		width: 100%;
@@ -127,7 +123,7 @@ img{
 
 		#postHandle{
 			font-size: 9px;
-			margin-top: 24%;
+			margin-top: 23%;
 			vertical-align: top;
 		}
 
@@ -175,7 +171,6 @@ img{
 
 #tutorial{
 	z-index: 100;
-	
 }
 
 

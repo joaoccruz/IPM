@@ -80,17 +80,18 @@ function loadLastScreen(){
 
 
 function tutorial(){
-	var tut = document.getElementById("tutorial");
-	var t1 = document.getElementById("tutorialText1");
-	var t2 = document.getElementById("tutorialText2");
-	var skip = document.getElementById("skip");
-	var i3 = document.getElementById("tutorialImage");
-
-
+	const tut = document.getElementById("tutorial");
+	const t1 = document.getElementById("tutorialText1");
+	const t2 = document.getElementById("tutorialText2");
+	const skip = document.getElementById("skip");
+	const i3 = document.getElementById("tutorialImage");
+	const main = document.getElementById("main");
+	const post = document.getElementById("post");
 	switch(localStorage.getItem("tutorial")){
 		case null:
 			localStorage.setItem("lastScreen","tutorial");
 			tut.addEventListener("click", function(){
+				// CONTINUE
 				t1.innerHTML = "Place one of your fingers on the screen to configure the fingerprint sensor";
 				t2.innerHTML = "";
 				skip.innerHTML = ""
@@ -101,7 +102,8 @@ function tutorial(){
 			break;
 
 		case "fingerprint":
-			tut.addEventListener("click", function(){		
+			tut.addEventListener("click", function(){
+				// CONTINUE		
 				t1.innerHTML = "The next few screens will be a tutorial on how to use the device";
 				t2.innerHTML = "You can skip them if you have used this before"
 				i3.src = "";
@@ -114,37 +116,50 @@ function tutorial(){
 	
 		case "tutorial1":
 			skip.addEventListener("click", function(){
+				// SKIP
 				localStorage.setItem("tutorial", "complete");
+				post.style.outline = "none";
+				swipe.disable(tut);
 				unload("tutorial");
+				unload(localStorage.getItem("currScreen"));
 				load("main");
 			}, {once : true});
 
+
 			tut.addEventListener("click", function(){
+				// CONTINUE
 				if(localStorage.getItem("tutorial") == "complete")
 					return;
-				t1.innerHTML = "";
-				t2.innerHTML = ""
-				i3.src = "";
-				skip.innerHTML = "skip";
-				localStorage.setItem("tutorial", "tutorialMain");
+				localStorage.setItem("tutorial", "tutorialPost");
 				tutorial();
 			}, {once : true});
 
 
 			break;
 
-		case "tutorialMain":
-
-			t1.innerHTML = "This is your main screen, it shows current posts, contacts and app screen";
+		case "tutorialPost":
+			t1.innerHTML = "This is your main screen";
+			post.style.outline = "1px solid black";
 			t1.style.webkitTextStroke = "0.2px grey";
 			t1.style.right = "25%";
 			t2.innerHTML = ""
 			i3.src = "";
 			skip.innerHTML = "skip";
 			load("main");
+			tut.addEventListener("click", function(){
+				t1.innerHTML = "It shows the current posts";
+				tut.addEventListener("click", function(){
+					localStorage.setItem("tutorial", "tutorialSwipeMain");
+					tutorial();
+				}, {once : true});
+			}, {once : true});
+
 
 			break;
 
+		case "tutorialSwipeMain":
+			t1.innerHTML = "Try to swipe left";
+			swipe.enable(tut,"left", function(){loadNext(); skip.click();});
 	}
 	
 }
@@ -235,9 +250,12 @@ function updateLockScreen(){
 	document.getElementById("lockscreenDate").innerHTML = "{0}, {1} {2}".format(dayW, day,month);
 }
 
-
-function main(id = 0){
-	function drawPost(ID){ 
+function drawPost(ID){
+		// CHANGE TO OTHER FILE
+		if(ID == undefined){
+			ID = 0;
+			localStorage.setItem("currentPost",0); 
+		}
 		document.getElementById("mainImage").src = POST_LIST[ID].image;
 		document.getElementById("postDescription").innerHTML = POST_LIST[ID].description;
 		document.getElementById("postLocation").innerHTML = POST_LIST[ID].location.description;
@@ -262,6 +280,8 @@ function main(id = 0){
 
 		localStorage.setItem("currentPost",cp);
 	}
+
+function main(){
 	drawPost(localStorage.getItem("currentPost"));
 	swipe.enable(document.getElementById("post"),["left","right"],[loadNext,loadPrev]);
 }

@@ -60,9 +60,8 @@ function enable(target, directions, f){
 }
 
 function disable(target){
-	target.removeEventListener("mousedown");
-	target.removeEventListener("touchstart");
-	target.removeEventListener("mouseup");
-	target.removeEventListener("touchend");
+    var clone = target.cloneNode(target);
+
+	target.parentNode.replaceChild(clone, target);
 }
 export {enable,disable};

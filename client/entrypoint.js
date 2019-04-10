@@ -1,7 +1,7 @@
 import * as page  from "./js-libs/page.js";
 
 
-var DEBUG_MODE = false;
+var DEBUG_MODE = true;
 
 if(DEBUG_MODE)
 	localStorage.clear();
