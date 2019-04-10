@@ -1,0 +1,5 @@
+M	client/lock_screen.html
+M	client/stylesheet.css
+M	serverfiles/update.sh
+Your branch is behind 'origin/master' by 34 commits, and can be fast-forwarded.
+  (use "git pull" to update your local branch)
