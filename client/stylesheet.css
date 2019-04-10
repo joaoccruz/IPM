@@ -45,6 +45,18 @@ img{
 	background-color:#FFFFFF;
 }
 
+#container>div{
+	top:10%;
+	width: 100%;
+	height: 90%;
+	display: none;
+	visibility: hidden;
+}
+
+#container *{
+	position: absolute;
+
+}
 
 #notifications{
 	top: 0 !important;
@@ -126,18 +138,7 @@ img{
 	border:1px solid #000;
 }
 
-#container>div{
-	top:10%;
-	width: 100%;
-	height: 90%;
-	display: none;
-	visibility: hidden;
-}
 
-#container *{
-	position: absolute;
-
-}
 
 #bg{
 	width: 100%;
@@ -298,3 +299,20 @@ img{
 
 
 
+#numpadScreen{
+	width: 100%;
+	height: 100%;
+}
+
+#numpadScreen>p{
+	margin-top: 10%;
+	background-color: #d1d1d1;
+	margin-left: 10%;
+	width: 80%;
+	height: 10%;
+}
+#numpadScreen>input{
+	display: inline-block;
+	height: 15%;
+	width: 15%;
+}
