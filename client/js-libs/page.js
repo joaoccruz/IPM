@@ -24,14 +24,34 @@ POST_LIST.push(new post("img/beach.jpeg","Nada como o ar da montanha, na praia",
 POST_LIST.push(new post("img/montanha.jpg","Imagem genérica de uma montanha",{x: 40.3218825, y: -7.6217218, description: "Montanha"}, "Senhor_José"));
 POST_LIST.push(new post("img/gil.jpg","Grande Gil >.> <.<",{x: 40.3218825, y: -7.6217218, description: "Parque das Nações"}, "Senhor_António"));
 
+function validatePin(){
+	unload("lockscreen");
+	load("numpadScreen",function(pin){
+		if(pin == localStorage.getItem("pin")){
+			unload("numpadScreen");
+			loadLastScreen();
+		}
+	});
+}
 
-function load(screen){
+
+function unlock(){
+	var radios = document.getElementsByName('CT');
+	for (var i = 0, length = radios.length; i < length; i++){
+		if (radios[i].checked && radios[i].value == "Fingerprint"){
+			loadLastScreen();
+			break;
+	 	}
+	}
+}
+function load(screen,f = null){
 	var tut = localStorage.getItem("tutorial");
 	if( tut == "fingerprint" || tut == undefined) {
 		screen = "tutorial";
 	}
 
-	screen != "lockscreen" ? localStorage.setItem("lastScreen",screen) : null;
+	(screen != "lockscreen" && screen != "numpadScreen") ? localStorage.setItem("lastScreen",screen) : null;
+	
 	localStorage.setItem("currScreen",screen);
 
 	document.getElementById(screen).style.display = "block";
@@ -44,7 +64,10 @@ function load(screen){
 	switch(screen){
 		case "lockscreen":
 			updateLockScreen();
-			document.getElementById("lockscreen").addEventListener("click", loadLastScreen, {once: true});
+			swipe.enable(document.getElementById("lockscreen"),"down",function(){
+				validatePin();
+			});
+			document.getElementById("lockscreen").addEventListener("click", unlock);
 			break;
 
 		case "main":
@@ -53,23 +76,25 @@ function load(screen){
 		case "tutorial":
 			tutorial();	break;
 	    case "numpadScreen":
-	    	pin(function(pin){
-	    		localStorage.setItem("pin",pin)	
-				localStorage.setItem("tutorial", "tutorial1");
-				tutorial();
-	    	});
+	    	pin(f);
 	    	break;
 	}
 	
 }
 
 function unload(screen){
-	localStorage.removeItem("currScreen");
+	if(screen == null)
+		return;
+
 	var ele = document.getElementById(screen);
 	ele.style.visibility = "hidden";
 	ele.style.display = "none"
 	if(screen == "main")
 		swipe.disable(document.getElementById("post"));
+
+	if(screen == "numpadScreen")
+		swipe.disable(document.getElementById("numpadScreen"));
+
 }
 
 function loadLastScreen(){
@@ -122,7 +147,11 @@ function tutorial(){
 			t1.innerHTML = "Enter a pin, don't forget it";
 			t1.style.top = "0%";
 			tut.style.zIndex = 0;
-			load("numpadScreen");
+			load("numpadScreen", function(pin){
+	    		localStorage.setItem("pin",pin)	
+				localStorage.setItem("tutorial", "tutorial1");
+				tutorial();
+	    	});
 			break;
 			
 
@@ -310,11 +339,11 @@ function loadNotifications(){
 	document.getElementById("notifications").style.visibility = "visible";	
 }
 
+	var pw = "";
 function pin(f){	
 	const buttons = document.getElementById("numpadScreen").getElementsByTagName("input");
 	const textbox = document.getElementById("numpadText");
 	const textboxCharLimit = 8;
-	var pw = "";
 
 	function type(a,key){
 		if(key != 11 && key != 10 && pw.length <= textboxCharLimit){
