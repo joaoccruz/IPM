@@ -343,14 +343,16 @@ function loadNotifications(){
 function pin(f){	
 	const buttons = document.getElementById("numpadScreen").getElementsByTagName("input");
 	const textbox = document.getElementById("numpadText");
-	const textboxCharLimit = 8;
+	const textboxCharLimit = 7;
 
 	function type(a,key){
 		if(key != 11 && key != 10 && pw.length <= textboxCharLimit){
 			pw = pw + key;
 			textbox.innerHTML += "●"
 		}else if(textbox.innerHTML.length != 0 && key ==10){
+			console.log(pw);
 			pw = pw.slice(0,-1);
+			console.log(pw);
 			textbox.innerHTML = textbox.innerHTML.slice(0,-1);
 		}else if(key == 11){
 			f(pw);
@@ -366,7 +368,7 @@ function pin(f){
 	}
 
 
-	for (var i = 1; i+1 < buttons.length; i++) {
+	for (var i = 1; i+2 < buttons.length; i++) {
 		renderButton(i,Math.floor((i-1) / 3),(i-1) % 3);
 	}
 
