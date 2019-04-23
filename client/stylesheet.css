@@ -136,9 +136,10 @@ img{
 			vertical-align: top;
 		}
 
-		#postTime{
+		#postTimestamp{
+			font-size: 8px;
 			margin-top: 23%;
-			margin-left: 10%;
+			margin-left: 50%;
 		}
 
 #clickType{

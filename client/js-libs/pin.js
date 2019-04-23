@@ -1,9 +1,12 @@
+import * as page from "./page.js";
+
+
 function validate(){
-	unload("lockscreen");
-	load("numpadScreen",function(pin){
+	page.unload("lockscreen");
+	page.load("numpadScreen",function(pin){
 		if(pin == localStorage.getItem("pin")){
-			unload("numpadScreen");
-			loadLastScreen();
+			page.unload("numpadScreen");
+			page.loadLastScreen();
 		}
 	});
 }

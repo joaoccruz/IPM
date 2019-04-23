@@ -1,6 +1,7 @@
 import * as swipe from "./swipe.js";
 import * as post  from "./post.js";
-import * as pin   from "./pin.js" 
+import * as pin   from "./pin.js" ;
+import * as date  from "./date.js";
 
 String.prototype.format = function () {
         var args = [].slice.call(arguments);
@@ -207,68 +208,8 @@ function updateLockScreen(){
 	
 	if(hr < 10)
 		hr = "0" + hr
-
-
-	switch(week){
-        case 1: 
-            var dayW = ("Monday");
-            break;
-        case 2: 
-            var dayW = ("Tuesday");
-            break;
-        case 3: 
-            var dayW = ("Wednesday");
-            break;
-        case 4: 
-            var dayW = ("Thursday");
-            break;
-        case 5: 
-            var dayW = ("Friday");
-            break;
-        case 6: 
-            var dayW = ("Saturday");
-            break;
-        case 7: 
-            var dayW = ("Sunday");
-            break;
-    }
-    switch(month){
-        case 0: 
-        	month = "January";
-            break;
-        case 1: 
-        	month = "February";
-            break;
-        case 2: 
-        	month = "March";
-            break;
-        case 3:
-        	 month = "April";
-            break;
-        case 4: 
-        	month = "May";
-            break;
-        case 5: month = "June"; 
-            break;
-        case 6: 
-        	month = "July";
-            break;
-        case 7: 
-        	month = "August";
-            break;
-        case 8: 
-        	month = "September";
-            break;
-        case 9: 
-        	month = "October";
-            break;
-        case 10: 
-        	month = "November";
-            break;
-        case 11: 
-        	month = "December";
-            break;
-       }
+	
+    var dayW = date.getWeek(d);
 	document.getElementById("lockscreenText").innerHTML = hr + ":" + min ;
 	document.getElementById("lockscreenDate").innerHTML = "{0}, {1} {2}".format(dayW, month, day);
 
@@ -289,4 +230,4 @@ function loadNotifications(){
 
 
 
-export {load};
+export {load,unload, loadLastScreen};
