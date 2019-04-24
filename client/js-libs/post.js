@@ -26,7 +26,7 @@ if (!String.prototype.format) {
 
 
 POST_LIST.push(new myPost("img/beach.jpeg", "Nada como o ar da montanha, na praia", {x: 40.3218825, y: -7.6217218, description: "Serra da Estrela"}, "Senhor_Malaquias", new Date()));
-POST_LIST.push(new myPost("img/montanha.jpg", "Imagem genérica de uma montanha", {x: 40.3218825, y: -7.6217218, description: "Montanha"}, "Senhor_José", new Date()));
+POST_LIST.push(new myPost("img/montanha.jpg", "Imagem genérica de uma montanha", {x: 40.3218825, y: -7.6217218, description: "Montanha"}, "Senhor_José", new Date(new Date()-604800000)));
 POST_LIST.push(new myPost("img/gil.jpg", "Grande Gil >.> <.<", {x: 40.3218825, y: -7.6217218, description: "Parque das Nações"}, "Senhor_António", new Date(2019, 3, 18)));
 
 
@@ -57,15 +57,16 @@ function draw(ID){
 		var week = d.getDay();
 		var year = d.getYear();
 		var diff = new Date()-d;
+		diff = Math.floor(diff /1000);
 
-		if(diff > 604800000)
-			return("{0}/{1}/{2}".format(day,month,year));
-		else if(diff > 8640000)
+		if(diff > 7*24*3600)
+			return(date.getDate(d));
+		else if(diff > 24*3600)
 			return("{0}".format(date.getWeek(d)));
-		else if(diff > 3600000)
-			return("{0}:{1}".format(hr,min));
-		else if(diff > 60000)
-			return("{0} minutes ago".format(Math.floor(diff/1000/3600)+1));
+		else if(diff > 3600)
+			return(date.getTime(d));
+		else if(diff > 1)
+			return("{0} minutes ago".format(Math.floor(diff/60)+1));
 		else{
 			diff = Math.floor(diff/1000);
 			if(diff == 0)

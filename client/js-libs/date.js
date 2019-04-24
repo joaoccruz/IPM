@@ -26,6 +26,18 @@ function getWeek(date){
     return dayW;
 }
 
+function getTime(date = new Date()){
+    var min = date.getMinutes().toString();
+    var hr  = date.getHours().toString();
+    if(min < 10)
+        min = "0" + min
+    
+    if(hr < 10)
+        hr = "0" + hr
+
+    return hr + ":" + min;
+}
+
 function getMonth(date){
     var month = date.getMonth();
     switch(month){
@@ -66,19 +78,27 @@ function getMonth(date){
             month = "December";
             break;
        }
+    return month;
 }
 
 
-function showDate(date = new Date()){
+
+
+function getDate(date = new Date()){
     var d = new Date();
-    var min = d.getMinutes().toString();
-    var hr  = d.getHours().toString();
     var day = d.getDate();
     var month = d.getMonth();
-    var week = d.getDay();
-    var year = d.getYear();
+    var year = d.getFullYear();
     
+    if(day < 10)
+        day = "0" + day; 
+
+    month += 1;
     
-    
+    if(month < 10)
+        month = "0" + month; 
+
+    return "{0}/{1}/{2}".format(day,month,year);
+
 }
-export {getWeek,getMonth,showDate}
+export {getWeek, getMonth, getTime, getDate}

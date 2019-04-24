@@ -60,8 +60,7 @@ function enable(target, directions, f){
 }
 
 function disable(target){
-    var clone = target.cloneNode(target);
-
+    var clone = target.cloneNode(true);
 	target.parentNode.replaceChild(clone, target);
 }
 export {enable,disable};

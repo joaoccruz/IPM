@@ -3,6 +3,15 @@ import * as post  from "./post.js";
 import * as pin   from "./pin.js" ;
 import * as date  from "./date.js";
 
+var HISTORY = [];
+function historyAdd(screen){
+	if(HISTORY.length > 50){
+		HISTORY.shift();
+	}
+
+	HISTORY.push(screen);
+}
+
 String.prototype.format = function () {
         var args = [].slice.call(arguments);
         return this.replace(/(\{\d+\})/g, function (a){
@@ -27,7 +36,59 @@ function unlock(){
 	}
 }
 
+function privateLoad(screen){
+	// For child divs(qp 1, 2, etc)
+	document.getElementById(screen).style.display = "block";
+	document.getElementById(screen).style.visibility = "visible";
+	switch(screen){
+		case "quickPostImagePick":
+			var f = function(){
+				var sel = opt.options[opt.selectedIndex].value;
+				img.src = "cameraSim/"+sel+".png";
+			}
+
+			var nextScreen = function(){
+				privateLoad("quickPostTextAdd");
+			}
+
+			var opt = document.getElementById("cameraSelected");
+			var img = document.getElementById("quickPostCameraImage");
+			var sel = opt.options[opt.selectedIndex].value;
+			img.src = "cameraSim/"+sel+".png";
+			opt.addEventListener("change",f);
+			document.getElementById("quickPostNextArrow").addEventListener("click", nextScreen);
+			break;
+
+		case "quickPostTextAdd":
+			
+			break;
+	}	
+
+}
+
+function privateUnload(screen){
+	document.getElementById(screen).style.display = "none";
+	document.getElementById(screen).style.visibility = "hidden";	
+}
+
+function enableSwipeBack(){
+	var f = function(){
+		swipe.disable(document.getElementById("container"));
+		var lastScreen = HISTORY.pop();
+		if(lastScreen != undefined){
+			unload(localStorage.getItem("currScreen"));
+			load(lastScreen);
+		}else{
+			unload(localStorage.getItem("currScreen"));
+			load("main");
+		}
+	}
+	swipe.enable(document.getElementById("container"),["left","right"],[f,f]);
+}
+
+
 function load(screen,f = null){
+	// For top tier divs(Lockscreen, tutorial, main, quickpost)
 	var tut = localStorage.getItem("tutorial");
 	if( tut == "fingerprint" || tut == undefined) {
 		screen = "tutorial";
@@ -54,12 +115,25 @@ function load(screen,f = null){
 			break;
 
 		case "main":
-			main();	break;
+			main();	
+			break;
 
 		case "tutorial":
-			tutorial();	break;
+			tutorial();	
+			break;
+	    
 	    case "numpadScreen":
 	    	pin.main(f);
+	    	break;
+	    
+	    case "quickPost":
+	    	privateLoad("cameraSimulation");
+	    	privateLoad("quickPostImagePick");
+	    	enableSwipeBack();
+	    	break;
+
+	    default: 
+	    	alert("Defaulted at load: " + screen);
 	    	break;
 	}
 	
@@ -72,11 +146,30 @@ function unload(screen){
 	var ele = document.getElementById(screen);
 	ele.style.visibility = "hidden";
 	ele.style.display = "none"
-	if(screen == "main")
-		swipe.disable(document.getElementById("post"));
+	switch(screen){
+		case "lockscreen":
+			break;
 
-	if(screen == "numpadScreen")
-		swipe.disable(document.getElementById("numpadScreen"));
+		case "main":
+			swipe.disable(document.getElementById("post"));
+			break;
+
+		case "tutorial":
+			break;
+	    
+	    case "numpadScreen":
+	    	swipe.disable(document.getElementById("numpadScreen"));
+	    	break;
+	    
+	    case "quickPost":
+	   		privateUnload("cameraSimulation");
+	    	//needs rest of divs
+	    	break;
+
+	    default: 
+	    	alert("Defaulted at unload: " + screen);
+	    	break;
+	}
 }
 
 function loadLastScreen(){
@@ -197,20 +290,11 @@ function tutorial(){
 
 function updateLockScreen(){
 	var d = new Date();
-	var min = d.getMinutes().toString();
-	var hr  = d.getHours().toString();
 	var day = d.getDate();
-	var month = d.getMonth();
-	var week = d.getDay();
-	var year = d.getYear();
-	if(min < 10)
-		min = "0" + min
-	
-	if(hr < 10)
-		hr = "0" + hr
-	
+	var month = date.getMonth(d);
     var dayW = date.getWeek(d);
-	document.getElementById("lockscreenText").innerHTML = hr + ":" + min ;
+   
+	document.getElementById("lockscreenText").innerHTML = date.getTime(d);
 	document.getElementById("lockscreenDate").innerHTML = "{0}, {1} {2}".format(dayW, month, day);
 
 }
@@ -219,11 +303,14 @@ function updateLockScreen(){
 function main(){
 	post.draw(localStorage.getItem("currentPost"));
 	swipe.enable(document.getElementById("post"),["left","right"],[post.loadNext,post.loadPrev]);
+	document.getElementById("mainCamera").addEventListener("click",()=>{unload("main");load("quickPost");});
 }
 
 function loadNotifications(){
 	document.getElementById("notifications").style.display = "block";
 	document.getElementById("notifications").style.visibility = "visible";	
+	document.getElementById("notificationsTime").innerHTML = date.getTime();
+
 }
 
 

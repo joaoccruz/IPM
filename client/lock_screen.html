@@ -20,11 +20,13 @@
 		</div>
 
 
+
        <div id="container" class="inline">
 
        		<div id="notifications">
-       			
+       			<p id="notificationsTime">
        		</div>
+
        		<!--    screen      -->
        		<div id="tutorial">
        			<p id="skip"></p>
@@ -43,6 +45,7 @@
        			<img id="fingerprint" src="img/fingerprint.png" class="absCenter">
        			
        		</div>
+		
 
        		<div id="main" class="normalScreen">
        			<div id="post">	
@@ -70,8 +73,23 @@
        			<div id="mainButtons">
 	       			<img id="mainApps" src="img/ReverseAppIcon.png" class="absCenter" >
 	       			<img id="mainCamera" src="img/cameraIcon.png" class="absCenter">
+       				<img id="mainContacts" src="" class="absCenter">	
        			</div>
+       			
+			
+			</div>
 
+   			<div id="quickPost" class="normalScreen">
+				<div id="quickPostImagePick">
+					<img id="quickPostCameraImage" src="">
+					<img id="quickPostStorageImages" src="img/stddImg.png">
+					<img id="quickPostNextArrow" src="img/next.png">	
+				</div>
+				
+	 		</div>
+
+			<div id="cameraScreen"> 
+				<img id="takePictureButton" src="img/takePictureIcon.png" >
 			</div>
 
 			<div id="appScreen">
@@ -82,23 +100,14 @@
 				<img id="appButton" src="img/ReverseAppIcon.png" >
 				<img id="contactsButton" src="img/contacts.png" >
 		 	</div>
-		<div id="quickPostScreen">
-					   <img id="folderButton" src="img/folderIcon.png" >
-					   <img id="cameraButton" src="img/cameraIcon.png" >
-					   <img id="keyboardButton" src="img/keyboardIcon.png" >
-					   <img id="appButton" src="img/appIcon.png" >
-					   <img id="contactsButton" src="img/contacts.png" >
-		 </div>
+
+		
 		 
 		 <div id="keyboardScreen">
 
 		 </div>
 
 		 
-
-		 <div id="cameraScreen"> 
-				<img id="takePictureButton" src="img/takePictureIcon.png" >
-		 </div>
 
 		 <div id="confirmPostScreen">
 				<div id="post">
@@ -133,6 +142,17 @@
 		 	<input type="button">
 		 	<input type="button">
 		</div>
+	</div>
+
+
+	<div id="cameraSimulation">
+		<p>Camera simulator</p>
+		<select id="cameraSelected">
+		  <option value="Location1">Location1</option>
+		  <option value="Location2">Location2</option>
+		  <option value="Location3">Location3</option>
+		  <option value="Location4">Location4</option>
+		</select>
 	</div>
 	</body>
 </html>

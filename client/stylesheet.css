@@ -7,10 +7,10 @@ body{
 
 img{
 	-webkit-user-drag: none;
-  -khtml-user-drag: none;
-  -moz-user-drag: none;
-  -o-user-drag: none;
-  user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
 }
 
 .textCenter{
@@ -45,27 +45,68 @@ img{
 	background-color:#FFFFFF;
 }
 
-#container>div{
+.normalScreen{
 	top:10%;
 	width: 100%;
 	height: 90%;
+}
+
+#container>div{
 	display: none;
 	visibility: hidden;
 }
 
 #container *{
 	position: absolute;
-
+	display:block;
 }
+
+#lockscreen{
+	top: 0% !important;
+	width: 100%;
+	height: 100%;
+}
+
+	#lockscreenText{
+		color: #FFF;
+	}
+
+
+	#lockscreenText{
+		margin-top: 9%;
+		font-size: 50px;
+		
+	}
+
+	#lockscreenDate{
+		color: #FFF;
+		margin-top: 35%;
+		font-size: 20px;
+	}
+
+	#fingerprint{
+		width: 20%;
+		margin-top: 50%;
+	}
+
 
 #notifications{
-	top: 0 !important;
+	top: 0;
 	left:0;
 	background-color: black;
-	height: 10% !important;
+	height: 10%;
+	width: 100%;
 	opacity: 0.9;
-	z-index: 200%;
+	z-index: 200;
+	text-align: center;
 }
+	#notificationsTime{
+		margin-top: 1.8% !important;
+
+		font-size: 10px;
+		color: white;
+	}
+
 
 #mainButtons{
 	left: 80%;
@@ -142,6 +183,47 @@ img{
 			margin-left: 50%;
 		}
 
+#quickPostImagePick{
+	width: 100%;
+	height: 100%;
+
+}
+
+	#quickPostCameraImage{
+		width: 100%;
+		height: 100%;
+	}
+
+	#quickPostStorageImages{
+		border: 2px solid white;
+		width: 10%;
+		right: 0;
+		bottom: 45%;
+		z-index: 1;
+	}
+
+	#quickPostNextArrow{
+		width: 10%;
+		right: 0;
+		bottom: 25%;
+		z-index: 1;
+	}
+
+
+
+#cameraSimulation{
+	padding: 5px;
+	width: 150px;
+	height: 80px;
+	display: block;
+	border: solid black 1px;
+	visibility: hidden;
+	display: none;
+
+}
+
+
+
 #clickType{
 	width: 200px;
 	height: 1;
@@ -155,34 +237,6 @@ img{
 }
 
 
-#lockscreen{
-	top: 0% !important;
-	width: 100%;
-	height: 100%;
-}
-
-#lockscreenText{
-	color: #FFF;
-}
-
-
-#lockscreenText{
-	margin-top: 9%;
-	font-size: 50px;
-	
-}
-
-#lockscreenDate{
-	color: #FFF;
-	margin-top: 35%;
-	font-size: 20px;
-}
-
-#fingerprint{
-	width: 20%;
-	margin-top: 50%;
-}
-
 #tutorial{
 	top: 0% !important;
 	width: 100%;
@@ -191,27 +245,27 @@ img{
 }
 
 
-#tutorialText2{
-	margin-top: 25%;
-}
+	#tutorialText2{
+		margin-top: 25%;
+	}
 
 
-#tutorialImage{
-	width: 20%;
-	margin-top: 40%;
-}
+	#tutorialImage{
+		width: 20%;
+		margin-top: 40%;
+	}
 
 
 
 
-#skip{
-	bottom:0;
-	right:0;
-	color: 	#0645AD;
-	font-size: 15px; 
-	display: block;
-	-webkit-text-stroke: 0.3px black;
-}
+	#skip{
+		bottom:0;
+		right:0;
+		color: 	#0645AD;
+		font-size: 15px; 
+		display: block;
+		-webkit-text-stroke: 0.3px black;
+	}
 
 #postButton{
 	left:0;
