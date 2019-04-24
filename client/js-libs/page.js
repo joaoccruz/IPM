@@ -2,6 +2,7 @@ import * as swipe from "./swipe.js";
 import * as post  from "./post.js";
 import * as pin   from "./pin.js" ;
 import * as date  from "./date.js";
+import * as kb    from "./keyboard.js";
 
 var HISTORY = [];
 function historyAdd(screen){
@@ -36,67 +37,38 @@ function unlock(){
 	}
 }
 
-function privateLoad(screen){
-	// For child divs(qp 1, 2, etc)
-	document.getElementById(screen).style.display = "block";
-	document.getElementById(screen).style.visibility = "visible";
-	switch(screen){
-		case "quickPostImagePick":
-			var f = function(){
-				var sel = opt.options[opt.selectedIndex].value;
-				img.src = "cameraSim/"+sel+".png";
-			}
-
-			var nextScreen = function(){
-				privateLoad("quickPostTextAdd");
-			}
-
-			var opt = document.getElementById("cameraSelected");
-			var img = document.getElementById("quickPostCameraImage");
-			var sel = opt.options[opt.selectedIndex].value;
-			img.src = "cameraSim/"+sel+".png";
-			opt.addEventListener("change",f);
-			document.getElementById("quickPostNextArrow").addEventListener("click", nextScreen);
-			break;
-
-		case "quickPostTextAdd":
-			
-			break;
-	}	
-
-}
-
-function privateUnload(screen){
-	document.getElementById(screen).style.display = "none";
-	document.getElementById(screen).style.visibility = "hidden";	
-}
 
 function enableSwipeBack(){
 	var f = function(){
 		swipe.disable(document.getElementById("container"));
+		HISTORY.pop();
 		var lastScreen = HISTORY.pop();
+		console.log("unloading "+ localStorage.getItem("currScreen"));
+		console.log("loading" + lastScreen);
 		if(lastScreen != undefined){
 			unload(localStorage.getItem("currScreen"));
-			load(lastScreen);
+			load(lastScreen, undefined,  true);
 		}else{
 			unload(localStorage.getItem("currScreen"));
-			load("main");
+			load("main",undefined, true);
 		}
 	}
+
 	swipe.enable(document.getElementById("container"),["left","right"],[f,f]);
 }
 
 
-function load(screen,f = null){
+function load(screen,f = null, swiped = false){
 	// For top tier divs(Lockscreen, tutorial, main, quickpost)
 	var tut = localStorage.getItem("tutorial");
 	if( tut == "fingerprint" || tut == undefined) {
 		screen = "tutorial";
 	}
 
-	(screen != "lockscreen" && screen != "numpadScreen") ? localStorage.setItem("lastScreen",screen) : null;
+	(screen != "lockscreen" && screen != "numpadScreen" && screen != "cameraSimulation") ? localStorage.setItem("lastScreen",screen) : null;
 	
-	localStorage.setItem("currScreen",screen);
+	if(screen != "cameraSimulation")
+		localStorage.setItem("currScreen",screen);
 
 	document.getElementById(screen).style.display = "block";
 	document.getElementById(screen).style.visibility = "visible";	
@@ -104,6 +76,11 @@ function load(screen,f = null){
 	if(screen != "lockscreen" && screen != "tutorial" && screen != "numpadScreen"){
 		loadNotifications();
 	}
+
+	var noSwipe = ["tutorial","lockscreen","cameraSimulation","numpadScreen"];
+
+	if(!swiped && !noSwipe.includes(screen))
+		historyAdd(screen);
 
 	switch(screen){
 		case "lockscreen":
@@ -115,7 +92,7 @@ function load(screen,f = null){
 			break;
 
 		case "main":
-			main();	
+			main();
 			break;
 
 		case "tutorial":
@@ -124,13 +101,42 @@ function load(screen,f = null){
 	    
 	    case "numpadScreen":
 	    	pin.main(f);
-	    	break;
-	    
-	    case "quickPost":
-	    	privateLoad("cameraSimulation");
-	    	privateLoad("quickPostImagePick");
 	    	enableSwipeBack();
 	    	break;
+	    
+	    case "quickPostImagePick":
+	    	enableSwipeBack();
+			var f = function(){
+				var sel = opt.options[opt.selectedIndex].value;
+				img.src = "cameraSim/"+sel+".png";
+			}
+
+			var nextScreen = function(){
+				unload(screen)
+				load("quickPostTextAdd");
+			}
+
+			load("cameraSimulation");
+			var opt = document.getElementById("cameraSelected");
+			var img = document.getElementById("quickPostCameraImage");
+			var sel = opt.options[opt.selectedIndex].value;
+			img.src = "cameraSim/"+sel+".png";
+			opt.addEventListener("change",f);
+			document.getElementById("quickPostNextArrow").addEventListener("click", nextScreen);
+			break;
+
+		case "quickPostTextAdd":
+			kb.main(document.getElementById("quickPostTextAdd"), function(){
+
+			});
+			break;
+
+		case "cameraSimulation":
+			break;
+
+		case "quickPostImagePick":
+			enableSwipeBack();
+			break;
 
 	    default: 
 	    	alert("Defaulted at load: " + screen);
@@ -161,12 +167,15 @@ function unload(screen){
 	    	swipe.disable(document.getElementById("numpadScreen"));
 	    	break;
 	    
-	    case "quickPost":
-	   		privateUnload("cameraSimulation");
+	    case "quickPostImagePick":
+	   		unload("cameraSimulation");
 	    	//needs rest of divs
 	    	break;
 
-	    default: 
+	    case "cameraSimulation":
+	    	break;
+	    	
+	    default:
 	    	alert("Defaulted at unload: " + screen);
 	    	break;
 	}
@@ -303,7 +312,7 @@ function updateLockScreen(){
 function main(){
 	post.draw(localStorage.getItem("currentPost"));
 	swipe.enable(document.getElementById("post"),["left","right"],[post.loadNext,post.loadPrev]);
-	document.getElementById("mainCamera").addEventListener("click",()=>{unload("main");load("quickPost");});
+	document.getElementById("mainCamera").addEventListener("click",()=>{unload("main");load("quickPostImagePick");});
 }
 
 function loadNotifications(){
