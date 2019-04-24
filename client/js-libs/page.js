@@ -21,9 +21,11 @@ String.prototype.format = function () {
 };
 
 function update(){
+	loadNotifications();
 	switch(localStorage.getItem("currScreen")){
 		case "lockscreen":
 			updateLockScreen();
+
 	}
 }
 
@@ -62,7 +64,7 @@ var imgForPost;
 function load(screen,f = null, swiped = false){
 	// For top tier divs(Lockscreen, tutorial, main, quickpost)
 	var textForPost;
-
+	loadNotifications();
 	var tut = localStorage.getItem("tutorial");
 	if( tut == "fingerprint" || tut == undefined) {
 		screen = "tutorial";
@@ -76,10 +78,8 @@ function load(screen,f = null, swiped = false){
 	document.getElementById(screen).style.display = "block";
 	document.getElementById(screen).style.visibility = "visible";	
 
-	if(screen != "lockscreen" && screen != "tutorial" && screen != "numpadScreen"){
-		loadNotifications();
-	}
-
+	
+	
 	var noSwipe = ["tutorial","lockscreen","cameraSimulation","numpadScreen"];
 
 	if(!swiped && !noSwipe.includes(screen))
@@ -326,18 +326,25 @@ function main(){
 	post.draw(localStorage.getItem("currentPost"));
 	swipe.enable(document.getElementById("post"),["left","right"],[post.loadNext,post.loadPrev]);
 	document.getElementById("mainCamera").addEventListener("click",()=>{unload("main");load("quickPostImagePick");});
-	document.getElementById("postLikesContainer").addEventListener("click", post.like(localStorage.getItem("currentPost")));
+	document.getElementById("postLikes").addEventListener("click", ()=>{post.like(localStorage.getItem("currentPost"))});
 }
 
 function loadNotifications(){
-	document.getElementById("notifications").style.display = "block";
-	document.getElementById("notifications").style.visibility = "visible";	
-	document.getElementById("notificationsTime").innerHTML = date.getTime();
-
+	var screen = localStorage.getItem("currScreen"); 
+	if(screen != "lockscreen" && screen != "tutorial" && screen != "numpadScreen"){
+		document.getElementById("notifications").style.display = "block";
+		document.getElementById("notifications").style.visibility = "visible";	
+		document.getElementById("notificationsTime").innerHTML = date.getTime();	
+	}else{
+		document.getElementById("notifications").style.display = "none";
+		document.getElementById("notifications").style.visibility = "hidden";	
+		
+	}
+	
 }
 
 
 
 
 
-export {load, unload, loadLastScreen};
+export {load, unload, loadLastScreen,update};

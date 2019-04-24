@@ -1,6 +1,6 @@
 import * as page  from "./js-libs/page.js";
 
-
+localStorage.setItem("user", "user");
 var DEBUG_MODE = false;
 
 if(DEBUG_MODE){
@@ -10,6 +10,7 @@ if(DEBUG_MODE){
 	});
 	localStorage.clear();
 }
+
 
 const screenUpdate = setInterval(page.update, 1000);
 page.load("lockscreen");

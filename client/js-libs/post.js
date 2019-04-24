@@ -6,7 +6,7 @@ class myPost{
 		this.location = location;
 		this.handle = handle;
 		this.timestamp = timestamp;
-		this.likes = 0;
+		this.likes = likes;
 		this.comments = comments;
 	}
 }
@@ -89,18 +89,32 @@ function draw(ID){
 	document.getElementById("postLocation").innerHTML = POST_LIST[ID].location.description;
 	document.getElementById("postHandle").innerHTML = "@" + POST_LIST[ID].handle;
 	document.getElementById("postTimestamp").innerHTML = generateDate(POST_LIST[ID].timestamp);
+	document.getElementById("postLikes").src = (POST_LIST[ID].likes.includes("user") ? "img/likedIcon.png" : "img/heart.png");
+	document.getElementById("postLikesNumber").innerHTML = POST_LIST[ID].likes.length
 }
 
 function newPost(img,text){
 	function getGPSData(){
 		return {x: 40.3218825, y: -7.6217218, description: "Needs maps integration"};
 	}
-	POST_LIST.push(new myPost(img, text, getGPSData(), "Zé", new Date()));
+	POST_LIST.push(new myPost(img, text, getGPSData(), "user", new Date(), [], []));
 }
 
 
 function like(id){
+	
 
+	if(POST_LIST[id].likes.includes("user")){
+		var index = POST_LIST[id].likes.indexOf("user");
+		if (index > -1) {
+		  POST_LIST[id].likes.splice(index, 1);
+		}
+		
+	}else{
+		POST_LIST[id].likes.push("user");
+	}
+			
+	draw(id);
 }
 
 export {loadPrev, loadNext, draw, newPost, like}	
