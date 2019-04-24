@@ -27,7 +27,7 @@ if (!String.prototype.format) {
 }
 
 
-POST_LIST.push(new myPost("img/beach.jpeg", "Nada como o ar da montanha, na praia", {x: 40.3218825, y: -7.6217218, description: "Serra da Estrela"}, "Senhor_Malaquias", new Date(), [], []));
+POST_LIST.push(new myPost("img/beach.jpeg", "Nada como o ar da montanha, na praia", {x: 40.3218825, y: -7.6217218, description: "Serra da Estrela"}, "Senhor_Malaquias", new Date(), ["Senhor_António","Senhor_Malaquias"], []));
 POST_LIST.push(new myPost("img/montanha.jpg", "Imagem genérica de uma montanha", {x: 40.3218825, y: -7.6217218, description: "Montanha"}, "Senhor_José", new Date(new Date()-604800000), [], []));
 POST_LIST.push(new myPost("img/gil.jpg", "Grande Gil >.> <.<", {x: 40.3218825, y: -7.6217218, description: "Parque das Nações"}, "Senhor_António", new Date(2019, 3, 18), [], []));
 
@@ -90,7 +90,7 @@ function draw(ID){
 	document.getElementById("postHandle").innerHTML = "@" + POST_LIST[ID].handle;
 	document.getElementById("postTimestamp").innerHTML = generateDate(POST_LIST[ID].timestamp);
 	document.getElementById("postLikes").src = (POST_LIST[ID].likes.includes("user") ? "img/likedIcon.png" : "img/heart.png");
-	document.getElementById("postLikesNumber").innerHTML = POST_LIST[ID].likes.length
+	document.getElementById("postLikesNumber").innerHTML = POST_LIST[ID].likes.length;
 }
 
 function newPost(img,text){

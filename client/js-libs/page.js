@@ -59,11 +59,10 @@ function enableSwipeBack(){
 	swipe.enable(document.getElementById("container"),["left","right"],[f,f]);
 }
 
-var imgForPost;
 
 function load(screen,f = null, swiped = false){
 	// For top tier divs(Lockscreen, tutorial, main, quickpost)
-	var textForPost;
+	
 	loadNotifications();
 	var tut = localStorage.getItem("tutorial");
 	if( tut == "fingerprint" || tut == undefined) {
@@ -117,7 +116,7 @@ function load(screen,f = null, swiped = false){
 			}
 
 			var nextScreen = function(){
-				imgForPost = img.src;
+				localStorage.setItem("imgForPost",img.src);
 				unload(screen);
 				load("quickPostTextAdd");
 			}
@@ -133,8 +132,9 @@ function load(screen,f = null, swiped = false){
 
 		case "quickPostTextAdd":	
 				kb.main(document.getElementById("quickPostTextAdd"), function(){
-				textForPost = document.getElementById("quickPostTextAdd").getElementsByTagName("p")[0].innerHTML;
-				post.newPost(imgForPost,textForPost);
+				localStorage.setItem("textForPost",document.getElementById("quickPostTextAdd").getElementsByTagName("p")[0].innerHTML);
+				document.getElementById("quickPostTextAdd").getElementsByTagName("p")[0].innerHTML = "";
+				post.newPost(localStorage.getItem("imgForPost"),localStorage.getItem("textForPost"));
 				unload("quickPostTextAdd");
 				load("main");
 			},90);
