@@ -289,4 +289,4 @@ function loadNotifications(){
 
 
 
-export {load};
+export {load, unload, loadLastScreen};

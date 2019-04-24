@@ -19,8 +19,9 @@ POST_LIST.push(new myPost("img/gil.jpg", "Grande Gil >.> <.<", {x: 40.3218825, y
 
 function loadNext(){
 	var cp = localStorage.getItem("currentPost");
-	if(localStorage.getItem("currentPost") == POST_LIST.length)
+	if(localStorage.getItem("currentPost") == POST_LIST.length-1){
 		return;
+	}
 	draw(++cp);
 	localStorage.setItem("currentPost",cp);
 }
