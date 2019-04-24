@@ -11,6 +11,9 @@ if(DEBUG_MODE){
 	localStorage.clear();
 }
 
+document.addEventListener('dragstart', function (e) {
+    e.preventDefault();
+});
 
 const screenUpdate = setInterval(page.update, 1000);
 page.load("lockscreen");

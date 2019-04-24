@@ -69,14 +69,12 @@ function main(div, f = null, chatlimit){
 		CHARLIMIT = Math.max();
 	}
 
-	CONTAINER.getElementsByTagName("div")[0].style.width = "100%";
-	CONTAINER.getElementsByTagName("div")[0].style.height = "100%";
 	
-	renderRow(["1","2","3","4","5","6","7","8","9","0"],40);
-	renderRow(["q","w","e","r","t","y","u","i","o","p"], 55);
-	renderRow(["a","s","d","f","g","h","j","k","l"], 70);
-	renderRow(["z","x","c","v","b","n","m",",","."], 85);
 	renderRow(["Shift","←","Enter"],25,["Shift","←","Enter"],[1,1,1]);
+	renderRow(["1","2","3","4","5","6","7","8","9","0"],41);
+	renderRow(["q","w","e","r","t","y","u","i","o","p"], 56);
+	renderRow(["a","s","d","f","g","h","j","k","l"], 71);
+	renderRow(["z","x","c","v","b","n","m",",","."], 86);
 
 	CONTAINER.addEventListener("Enter", f);
 	

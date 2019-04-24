@@ -63,7 +63,6 @@ function enableSwipeBack(){
 function load(screen,f = null, swiped = false){
 	// For top tier divs(Lockscreen, tutorial, main, quickpost)
 	
-	loadNotifications();
 	var tut = localStorage.getItem("tutorial");
 	if( tut == "fingerprint" || tut == undefined) {
 		screen = "tutorial";
@@ -76,6 +75,7 @@ function load(screen,f = null, swiped = false){
 
 	document.getElementById(screen).style.display = "block";
 	document.getElementById(screen).style.visibility = "visible";	
+	loadNotifications();
 
 	
 	
