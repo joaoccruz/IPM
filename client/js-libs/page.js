@@ -57,9 +57,12 @@ function enableSwipeBack(){
 	swipe.enable(document.getElementById("container"),["left","right"],[f,f]);
 }
 
+var imgForPost;
 
 function load(screen,f = null, swiped = false){
 	// For top tier divs(Lockscreen, tutorial, main, quickpost)
+	var textForPost;
+
 	var tut = localStorage.getItem("tutorial");
 	if( tut == "fingerprint" || tut == undefined) {
 		screen = "tutorial";
@@ -92,6 +95,7 @@ function load(screen,f = null, swiped = false){
 			break;
 
 		case "main":
+			swipe.disable(document.getElementById("container"));
 			main();
 			break;
 
@@ -105,6 +109,7 @@ function load(screen,f = null, swiped = false){
 	    	break;
 	    
 	    case "quickPostImagePick":
+			var img = document.getElementById("quickPostCameraImage");
 	    	enableSwipeBack();
 			var f = function(){
 				var sel = opt.options[opt.selectedIndex].value;
@@ -112,23 +117,27 @@ function load(screen,f = null, swiped = false){
 			}
 
 			var nextScreen = function(){
-				unload(screen)
+				imgForPost = img.src;
+				unload(screen);
 				load("quickPostTextAdd");
 			}
 
 			load("cameraSimulation");
 			var opt = document.getElementById("cameraSelected");
-			var img = document.getElementById("quickPostCameraImage");
 			var sel = opt.options[opt.selectedIndex].value;
 			img.src = "cameraSim/"+sel+".png";
+
 			opt.addEventListener("change",f);
 			document.getElementById("quickPostNextArrow").addEventListener("click", nextScreen);
 			break;
 
-		case "quickPostTextAdd":
-			kb.main(document.getElementById("quickPostTextAdd"), function(){
-
-			});
+		case "quickPostTextAdd":	
+				kb.main(document.getElementById("quickPostTextAdd"), function(){
+				textForPost = document.getElementById("quickPostTextAdd").getElementsByTagName("p")[0].innerHTML;
+				post.newPost(imgForPost,textForPost);
+				unload("quickPostTextAdd");
+				load("main");
+			},90);
 			break;
 
 		case "cameraSimulation":
@@ -169,12 +178,14 @@ function unload(screen){
 	    
 	    case "quickPostImagePick":
 	   		unload("cameraSimulation");
-	    	//needs rest of divs
+	    	break;
+
+	    case "quickPostTextAdd":
 	    	break;
 
 	    case "cameraSimulation":
 	    	break;
-	    	
+
 	    default:
 	    	alert("Defaulted at unload: " + screen);
 	    	break;
@@ -228,8 +239,9 @@ function tutorial(){
 
 		case "tutorialPin":
 			i3.src = "";
-			t1.innerHTML = "Enter a pin, don't forget it";
-			t1.style.top = "0%";
+			t2.innerHTML = "Enter a pin, don't forget it";
+			t2.style.marginTop = "0%";
+			t1.style.visibility = "hidden";
 			tut.style.zIndex = 0;
 			load("numpadScreen", function(pin){
 	    		localStorage.setItem("pin",pin)	
@@ -245,7 +257,8 @@ function tutorial(){
 			t2.innerHTML = "You can skip them if you have used this before"
 			i3.src = "";
 			skip.innerHTML = "skip";
-			tut.style.zIndex = 100;
+			tut.style.zIndex = 300;
+			skip.style.zIndex = 400;
 			unload("numpadScreen");
 			skip.addEventListener("click", function(){
 				// SKIP
@@ -313,6 +326,7 @@ function main(){
 	post.draw(localStorage.getItem("currentPost"));
 	swipe.enable(document.getElementById("post"),["left","right"],[post.loadNext,post.loadPrev]);
 	document.getElementById("mainCamera").addEventListener("click",()=>{unload("main");load("quickPostImagePick");});
+	document.getElementById("postLikesContainer").addEventListener("click", post.like(localStorage.getItem("currentPost")));
 }
 
 function loadNotifications(){

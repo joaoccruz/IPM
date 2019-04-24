@@ -33,6 +33,11 @@
        			<p id="tutorialText1" class="textCenter"> It looks like this is your first time using this device</p>
        			<p id="tutorialText2" class="textCenter"> (Tap to continue)</p>
        			<img id="tutorialImage" class="absCenter">
+       			<div id="tutorialKb">
+					<p id="tutText"></p>
+					<p></p>
+	 				<div ></div>
+			</div>
 
        		</div>
 
@@ -50,10 +55,24 @@
        		<div id="main" class="normalScreen">
        			<div id="post">	
        				<img id="mainImage">
+       				<div id="postSocial">
+       					<div id="postLikesContainer">
+		       				<img id="postLikes" src="img/heart.png" class="absCenter">
+		       				<p id="postLikesNumber" class="textCenter">0</p>
+       					</div>
+
+       					<div id="postCommentsContainer">
+		       				<img id="postComments" src="img/comments.png" class="absCenter">
+		       				<p id="postCommentsNumber" class="textCenter">0</p>
+       					</div>
+
+       					<img src="img/shareIcon.png" id="postShareIcon" class="absCenter">
+       				</div>
 	       			<div id="postLocationContainer">
 		       			<p id="postDescription"> </p>
 		       			<p id="postHandle"> </p>
 	       				<img src="img/locationpin.png" id="locationPin" class="inline">
+	       				
 		       			<p id="postLocation" class="inline"> </p>
 	       				<p id="postTimestamp"></p>
 	       			</div>
@@ -61,6 +80,9 @@
 
 				<div id="post2">	
        				<img id="mainImage2">
+       				<div id="postSocial2">
+		       			<img id="postLikes2" src="img/heart.png">
+       				</div>
 	       			<div id="postLocationContainer2">
 		       			<p id="postDescription2"> </p>
 		       			<p id="postHandle2"> </p>
@@ -113,7 +135,6 @@
 
 		 <div id="confirmPostScreen">
 				<div id="post">
-
 					   <img id="mainImage" src="img/wifi.png">
 					   <p id="postTitle"> </p>
 					   <p id="postDescription"> </p>

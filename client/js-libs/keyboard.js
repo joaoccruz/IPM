@@ -1,21 +1,20 @@
 import * as page from "./page.js";
 
 var CONTAINER;
-
+var CHARLIMIT;
 function addE(btn,key,specials){
 	var textbox = CONTAINER.getElementsByTagName("p")[0];
 	var charsLeft = CONTAINER.getElementsByTagName("p")[1];
 
 	function f(a, key){
-		
-		if(!(specials.includes(key)) &&  textbox.innerHTML.length < 90)
+		if(!(specials.includes(key)) &&  textbox.innerHTML.length < CHARLIMIT)
 			textbox.innerHTML = textbox.innerHTML + key;
 		else if(key == "←")
 			textbox.innerHTML = textbox.innerHTML.slice(0,-1); 
 		else if(key == "Enter"){
 			CONTAINER.dispatchEvent(new Event("Enter"));
 		}
-		var cl = 90 - textbox.innerHTML.length;
+		var cl = CHARLIMIT - textbox.innerHTML.length;
 		charsLeft.innerHTML = "(" + cl + ")"; 
 	}
 	btn.addEventListener("click", (event) => f(event, key));
@@ -61,9 +60,18 @@ function renderRow(keys, pos, specials =[], sWidtH=[]){
 
 
 
-function main(div, f = null){
+function main(div, f = null, chatlimit){
 	CONTAINER = div;
-	CONTAINER.getElementsByTagName("p")[1].innerHTML = "(90)";
+	if(chatlimit != undefined){
+		CONTAINER.getElementsByTagName("p")[1].innerHTML = "(90)";
+		CHARLIMIT = 90;
+	}else{
+		CHARLIMIT = Math.max();
+	}
+
+	CONTAINER.getElementsByTagName("div")[0].style.width = "100%";
+	CONTAINER.getElementsByTagName("div")[0].style.height = "100%";
+	
 	renderRow(["1","2","3","4","5","6","7","8","9","0"],40);
 	renderRow(["q","w","e","r","t","y","u","i","o","p"], 55);
 	renderRow(["a","s","d","f","g","h","j","k","l"], 70);
