@@ -7,10 +7,20 @@ body{
 
 img{
 	-webkit-user-drag: none;
-  -khtml-user-drag: none;
-  -moz-user-drag: none;
-  -o-user-drag: none;
-  user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
+}
+
+button{
+	box-sizing: content-box;
+	width: 250px;
+    height: 50px;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    display: table-cell;
+    vertical-align: middle;
 }
 
 .textCenter{
@@ -45,27 +55,68 @@ img{
 	background-color:#FFFFFF;
 }
 
-#container>div{
+.normalScreen{
 	top:10%;
 	width: 100%;
 	height: 90%;
+}
+
+#container>div{
 	display: none;
 	visibility: hidden;
 }
 
 #container *{
 	position: absolute;
-
+	display:block;
 }
+
+#lockscreen{
+	top: 0% !important;
+	width: 100%;
+	height: 100%;
+}
+
+	#lockscreenText{
+		color: #FFF;
+	}
+
+
+	#lockscreenText{
+		margin-top: 9%;
+		font-size: 50px;
+		
+	}
+
+	#lockscreenDate{
+		color: #FFF;
+		margin-top: 35%;
+		font-size: 20px;
+	}
+
+	#fingerprint{
+		width: 20%;
+		margin-top: 50%;
+	}
+
 
 #notifications{
-	top: 0 !important;
+	top: 0;
 	left:0;
 	background-color: black;
-	height: 10% !important;
+	height: 10%;
+	width: 100%;
 	opacity: 0.9;
-	z-index: 200%;
+	z-index: 200;
+	text-align: center;
 }
+	#notificationsTime{
+		margin-top: 1.8% !important;
+
+		font-size: 10px;
+		color: white;
+	}
+
 
 #mainButtons{
 	left: 80%;
@@ -98,14 +149,65 @@ img{
 	width: 80%;
 	height: 100%;
 }
-
+	
 	#mainImage{
 		margin-top: 2%;
 		margin-left: 3%;
 	    height: 60%;
-	    width: 94%;
+	    width: 80%;
 	}
 
+	#postSocial{
+		margin-left: 83%;
+		width: 17%;
+		height: 60%;
+	}
+		#postLikesContainer{
+			text-align: center;	
+			left: 1%;
+			width: 100%;
+			height: 33%;
+			border: 1px solid gray;
+		}
+			#postLikes{
+				height: 70%;
+			}
+
+			#postLikesNumber{
+				font-size: 70%;
+				margin-top: 0;
+				margin-bottom: 0;
+				bottom: 0;
+			}
+
+		#postCommentsContainer{
+			text-align: center;	
+			left: 1%;
+			width: 100%;
+			height: 33%;
+			top: 35%;
+			border: 1px solid gray;
+		}
+			#postComments{
+				top: 2%	;
+				height: 70%;
+				}
+
+			#postCommentsNumber{
+				font-size: 70%;
+				margin-top: 0;
+				margin-bottom: 0;
+				bottom: 0;
+			}
+
+		#postShareIcon{
+			text-align: center;	
+			left: 1%;
+			width: 100%;
+			height: 33%;
+			top: 70%;
+			border: 1px solid gray;
+		}
 	#postLocationContainer{
 		margin-top: 55%;
 		margin-left: 2%;
@@ -136,10 +238,84 @@ img{
 			vertical-align: top;
 		}
 
-		#postTime{
+		#postTimestamp{
+			font-size: 8px;
 			margin-top: 23%;
-			margin-left: 10%;
+			margin-left: 50%;
 		}
+
+
+
+#quickPostImagePick{
+	width: 100%;
+	height: 100%;
+}
+
+	#quickPostCameraImage{
+		width: 100%;
+		height: 100%;
+	}
+
+	#quickPostStorageImages{
+		border: 2px solid white;
+		width: 10%;
+		right: 0;
+		bottom: 45%;
+		z-index: 1;
+	}
+
+	#quickPostNextArrow{
+		width: 10%;
+		right: 0;
+		bottom: 25%;
+		z-index: 1;
+	}
+
+#quickPostTextAdd{
+	height: 100%;
+	width: 100%;
+}
+
+	
+	#quickPostTextAdd>div{
+		top: 30%;
+		height: 70%;
+		width: 100%;
+	}
+
+	#postText{
+		margin-top: 0;
+		font-size: 15px; 
+		left: 1%;
+		height: 15%;
+		width: 98%;
+		word-wrap: break-word;
+	}
+
+	#charsLeft{
+		bottom: 45%;
+		right: 0;
+	}
+
+	#quickPostTextAdd>div>p{
+		margin: 0 !important;
+		text-align: center;
+		vertical-align: center;
+		top: 0%;
+	}
+
+#cameraSimulation{
+	padding: 5px;
+	width: 150px;
+	height: 80px;
+	display: block;
+	border: solid black 1px;
+	visibility: hidden;
+	display: none;
+
+}
+
+
 
 #clickType{
 	width: 200px;
@@ -154,34 +330,6 @@ img{
 }
 
 
-#lockscreen{
-	top: 0% !important;
-	width: 100%;
-	height: 100%;
-}
-
-#lockscreenText{
-	color: #FFF;
-}
-
-
-#lockscreenText{
-	margin-top: 9%;
-	font-size: 50px;
-	
-}
-
-#lockscreenDate{
-	color: #FFF;
-	margin-top: 35%;
-	font-size: 20px;
-}
-
-#fingerprint{
-	width: 20%;
-	margin-top: 50%;
-}
-
 #tutorial{
 	top: 0% !important;
 	width: 100%;
@@ -190,27 +338,36 @@ img{
 }
 
 
-#tutorialText2{
-	margin-top: 25%;
-}
+	#tutorialText2{
+		margin-top: 25%;
+	}
 
 
-#tutorialImage{
-	width: 20%;
-	margin-top: 40%;
-}
+	#tutorialImage{
+		width: 20%;
+		margin-top: 40%;
+	}
 
 
 
 
-#skip{
-	bottom:0;
-	right:0;
-	color: 	#0645AD;
-	font-size: 15px; 
-	display: block;
-	-webkit-text-stroke: 0.3px black;
-}
+	#skip{
+		bottom:0;
+		right:0;
+		color: 	#0645AD;
+		font-size: 15px; 
+		display: block;
+		-webkit-text-stroke: 0.3px black;
+	}
+
+	#tutorialKb{
+		top:0;
+		width: 100%;
+		height: 100%;
+	}
+		#tutText{
+			top: 5%;
+		}
 
 #postButton{
 	left:0;

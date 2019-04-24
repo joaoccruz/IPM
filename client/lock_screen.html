@@ -14,18 +14,18 @@
 
 	<body>
 		<div id="clickType" class="inline">
-			<input type="radio" name="CT" value="Fingerprint">  Fingerprint<br>
+			<input type="radio" name="CT" value="Fingerprint" checked="checked">  Fingerprint<br>
 			<input type="radio" name="CT" value="Click"> 		Click<br>
 			<input type="radio" name="CT" value="Full hand">	Full Hand<br>
 		</div>
 
 
+
        <div id="container" class="inline">
 
        		<div id="notifications">
-       			
+       			<p id="notificationsTime">
        		</div>
-
 
        		<!--    screen      -->
        		<div id="tutorial">
@@ -33,6 +33,11 @@
        			<p id="tutorialText1" class="textCenter"> It looks like this is your first time using this device</p>
        			<p id="tutorialText2" class="textCenter"> (Tap to continue)</p>
        			<img id="tutorialImage" class="absCenter">
+       			<div id="tutorialKb">
+					<p id="tutText"></p>
+					<p></p>
+	 				<div ></div>
+			</div>
 
        		</div>
 
@@ -45,14 +50,29 @@
        			<img id="fingerprint" src="img/fingerprint.png" class="absCenter">
        			
        		</div>
+		
 
        		<div id="main" class="normalScreen">
        			<div id="post">	
        				<img id="mainImage">
+       				<div id="postSocial">
+       					<div id="postLikesContainer">
+		       				<img id="postLikes" src="img/heart.png" class="absCenter">
+		       				<p id="postLikesNumber" class="textCenter">0</p>
+       					</div>
+
+       					<div id="postCommentsContainer">
+		       				<img id="postComments" src="img/comments.png" class="absCenter">
+		       				<p id="postCommentsNumber" class="textCenter">0</p>
+       					</div>
+
+       					<img src="img/shareIcon.png" id="postShareIcon" class="absCenter">
+       				</div>
 	       			<div id="postLocationContainer">
 		       			<p id="postDescription"> </p>
 		       			<p id="postHandle"> </p>
 	       				<img src="img/locationpin.png" id="locationPin" class="inline">
+	       				
 		       			<p id="postLocation" class="inline"> </p>
 	       				<p id="postTimestamp"></p>
 	       			</div>
@@ -60,21 +80,45 @@
 
 				<div id="post2">	
        				<img id="mainImage2">
+       				<div id="postSocial2">
+		       			<img id="postLikes2" src="img/heart.png">
+       				</div>
 	       			<div id="postLocationContainer2">
 		       			<p id="postDescription2"> </p>
 		       			<p id="postHandle2"> </p>
 	       				<img src="img/locationpin.png" id="locationPin2" class="inline">
 		       			<p id="postLocation2" class="inline"> </p>
-		       			<p id="postTimestamp"></p>
+		       			<p id="postTimestamp2" class="inline"></p>
 	       			</div>
        			</div>
 
        			<div id="mainButtons">
 	       			<img id="mainApps" src="img/ReverseAppIcon.png" class="absCenter" >
 	       			<img id="mainCamera" src="img/cameraIcon.png" class="absCenter">
+       				<img id="mainContacts" src="" class="absCenter">	
        			</div>
-
+       			
+			
 			</div>
+
+   			
+			<div id="quickPostImagePick" class="normalScreen">
+				<img id="quickPostCameraImage" src="">
+				<img id="quickPostStorageImages" src="img/stddImg.png">
+				<img id="quickPostNextArrow" src="img/next.png">	
+			</div>
+			
+			<div id="quickPostTextAdd" class="normalScreen">
+				<p id="postText"></p>
+				<p id="charsLeft"></p>
+	 			<div ></div>
+			</div>
+	 		
+
+			<div id="cameraScreen"> 
+				<img id="takePictureButton" src="img/takePictureIcon.png" >
+			</div>
+
 			<div id="appScreen">
 				<img id="shareButton" src="img/shareIcon.png" >
 				<img id="findButton" src="img/findIcon.jpg" >
@@ -82,28 +126,15 @@
 				<img id="GPSButton" src="img/GPSIcon.png" >
 				<img id="appButton" src="img/ReverseAppIcon.png" >
 				<img id="contactsButton" src="img/contacts.png" >
-		 </div>
-		<div id="quickPostScreen">
-					   <img id="folderButton" src="img/folderIcon.png" >
-					   <img id="cameraButton" src="img/cameraIcon.png" >
-					   <img id="keyboardButton" src="img/keyboardIcon.png" >
-					   <img id="appButton" src="img/appIcon.png" >
-					   <img id="contactsButton" src="img/contacts.png" >
-		 </div>
+		 	</div>
+
+		
 		 
-		 <div id="keyboardScreen">
-
-		 </div>
-
+	
 		 
-
-		 <div id="cameraScreen"> 
-				<img id="takePictureButton" src="img/takePictureIcon.png" >
-		 </div>
 
 		 <div id="confirmPostScreen">
 				<div id="post">
-
 					   <img id="mainImage" src="img/wifi.png">
 					   <p id="postTitle"> </p>
 					   <p id="postDescription"> </p>
@@ -134,6 +165,17 @@
 		 	<input type="button">
 		 	<input type="button">
 		</div>
+	</div>
+
+
+	<div id="cameraSimulation">
+		<p>Camera simulator</p>
+		<select id="cameraSelected">
+		  <option value="Location1">Location1</option>
+		  <option value="Location2">Location2</option>
+		  <option value="Location3">Location3</option>
+		  <option value="Location4">Location4</option>
+		</select>
 	</div>
 	</body>
 </html>
