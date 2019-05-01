@@ -1,4 +1,5 @@
 import * as page from "./page.js";
+import * as colors from "./_colors.js";
 
 var CONTAINER;
 var CHARLIMIT;
@@ -7,7 +8,7 @@ function addE(btn,key,specials){
 	var charsLeft = CONTAINER.getElementsByTagName("p")[1];
 
 	function f(a, key){
-		if(!(specials.includes(key)) &&  textbox.innerHTML.length < CHARLIMIT)
+		if(!(specials.includes(key)) && textbox.innerHTML.length < CHARLIMIT)
 			textbox.innerHTML = textbox.innerHTML + key;
 		else if(key == "←")
 			textbox.innerHTML = textbox.innerHTML.slice(0,-1); 
@@ -33,7 +34,7 @@ function renderRow(keys, pos, specials =[], sWidtH=[]){
 	var cont = CONTAINER.getElementsByTagName("div")[0];
 	for(var i = 0; i < keys.length; i++){
 		var btn = document.createElement("p");   
-		btn.style.backgroundColor = "grey";
+		btn.style.backgroundColor = "white";
 		btn.style.border = "black solid 1px";
 		btn.innerHTML = keys[i];                   
 		var w;
@@ -56,9 +57,6 @@ function renderRow(keys, pos, specials =[], sWidtH=[]){
 
 	}
 }
-
-
-
 
 function main(div, f = null, chatlimit){
 	CONTAINER = div;
