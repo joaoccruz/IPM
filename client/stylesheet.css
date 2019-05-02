@@ -283,12 +283,7 @@ button{
 	height: 100%;
 	width: 100%;
 }
-	#quickPostTextAdd>div{
-		top: 35%;
-		height: 65% !important;
-		width: 100% !important;
-	}
-
+	
 	#postText{
 		margin-top: 0;
 		font-size: 12px; 
@@ -298,19 +293,6 @@ button{
 		word-wrap: break-word;
 	}
 
-	#charsLeft{
-		top:0% !important;
-		right: 0;
-	}
-
-	#quickPostTextAdd>div>p{
-		font-size: 12px;
-		display: flex;
-		align-items: center;
-		margin: 0 !important;
-     	justify-content: center;;
-		top: 0%;
-	}
 
 #cameraSimulation{
 	padding: 5px;

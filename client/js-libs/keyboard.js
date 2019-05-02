@@ -29,8 +29,8 @@ function release(b){
 	b.style.color = colors["white"];
 }
 function addE(btn,key,specials){
-	var charsLeft = CONTAINER.getElementsByTagName("p")[1];
-
+	var charsLeft = document.getElementById("charsLeft")
+	//"margin-top: 0;	font-size: 12px; left: 1%; height: 35;	width: 98%; word-wrap: break-word;"
 	function f(_, key){
 		if(!(specials.includes(key)) && content.length < CHARLIMIT){
 			var val = key;
@@ -68,18 +68,19 @@ function addE(btn,key,specials){
 	btn.addEventListener("mousedown", (event) => press(btn));
 	btn.addEventListener("mouseup", (event) => release(btn));
 	btn.addEventListener("mouseleave", (event) => release(btn));
+
 }
 
 function renderRow(keys, pos, specials =[], sizes=[]){
 	var left = 0;
-	var cont = CONTAINER.getElementsByTagName("div")[0];
+	var kbContainer = document.getElementById("kbContainer")
 	for(var i = 0; i < keys.length; i++){
 		var btn = document.createElement("p");   
+		btn.setAttribute("style", "font-size: 10pt; display: flex;	align-items: center; margin: 0 !important; 	justify-content: center; top: 0%;");               
 		btn.style.backgroundColor = colors['nearBlack'];
 		btn.style.border = colors["blackishGrey"] + " solid 0.5px";
 		btn.style.color = colors["white"];
-		btn.style.fontSize = "10pt" 
-		btn.innerHTML = keys[i];                   
+		btn.innerHTML = keys[i];    
 		var w;
 
 		if(sizes[i]){
@@ -96,7 +97,7 @@ function renderRow(keys, pos, specials =[], sizes=[]){
 		left += w;
 		addE(btn, keys[i], specials);
 		
-		cont.appendChild(btn);
+		kbContainer.appendChild(btn);
 		buttonCollection.push(btn);
 	}
 }
@@ -104,11 +105,28 @@ function renderRow(keys, pos, specials =[], sizes=[]){
 function main(div, f = null, chatlimit){
 	CONTAINER = div;
 	content = "";
-	textbox = CONTAINER.getElementsByTagName("p")[0];
+	
+	var kbContainer = document.createElement("div");
+	kbContainer.style.top = "35%";
+	kbContainer.style.height = "65%";
+	kbContainer.style.width = "100%";
+	kbContainer.id = "kbContainer";
+	CONTAINER.appendChild(kbContainer);
+
+	var charsLeft = document.createElement("p");
+	charsLeft.id = "charsLeft";
+	kbContainer.appendChild(charsLeft);
+	charsLeft.setAttribute("style", "top: 0; right:0; margin: 0; font-size: 10px");
+
+	textbox = document.createElement("p");
+	textbox.id = "textbox";
+	CONTAINER.appendChild(textbox);
+	textbox.setAttribute("style", "margin-top: 0;	font-size: 12px; left: 1%; height: 35;	width: 98%; word-wrap: break-word;");
+
 
 	if(chatlimit != undefined){
 		CHARLIMIT = 90;
-		CONTAINER.getElementsByTagName("p")[1].innerHTML = "(" + CHARLIMIT + " remaining)";
+		charsLeft.innerHTML = "(" + CHARLIMIT + " remaining)";
 	}else{
 		CHARLIMIT = Math.max();
 	}

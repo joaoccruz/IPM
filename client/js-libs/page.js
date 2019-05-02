@@ -56,6 +56,7 @@ function enableSwipeBack(){
 		if(HISTORY[HISTORY.length-1] != screen)
 		console.log(	"unloading "+ localStorage.getItem("currScreen"));
 		console.log("loading" + lastScreen);
+		
 		if(lastScreen != undefined){
 			unload(localStorage.getItem("currScreen"));
 			load(lastScreen, undefined,  true);
@@ -165,11 +166,9 @@ function load(screen,f = null, swiped = false){
 
 		case "commentsScreen":
 			post.loadComments(localStorage.getItem("currentPost"));
+			enableSwipeBack();
 			break;
 		case "cameraCrop":
-			break;
-
-		case "commentsScreen":
 			break;
 
 	    default: 

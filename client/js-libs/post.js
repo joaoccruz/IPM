@@ -118,14 +118,15 @@ function like(id){
 
 
 function loadComments(id){
-	var POST_LIST = JSON.parse(localStorage.getItem("postlist"));
-	console.log(id);
-	var comments = POST_LIST[id][6];
-	if(comments == []){
+	var comments = JSON.parse(localStorage.getItem("postlist"))[id][6];
+	if(JSON.stringify(comments) == JSON.stringify([])){
 		var noComments = document.createElement("p");
 		noComments.innerHTML = "This post has no comments yet, add one!";
-		noComments.style.display = "flex";
-		noComments.style.alignItems = "center";
+		noComments.style.display = "block";
+		noComments.id = "noComments";
+		noComments.className = "textCenter"
+		noComments.style.top = "36%";
+		noComments.style.fontSize = "12px"
 		noComments.style.color = "black";
 		document.getElementById("commentsScreen").appendChild(noComments);
 	}
