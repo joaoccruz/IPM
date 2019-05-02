@@ -3,6 +3,7 @@ import * as post  from "./post.js";
 import * as pin   from "./pin.js" ;
 import * as date  from "./date.js";
 import * as kb    from "./keyboard.js";
+import { colors } from "./_colors.js";
 
 var HISTORY = [];
 function historyAdd(screen){
@@ -131,8 +132,8 @@ function load(screen,f = null, swiped = false){
 			break;
 
 		case "quickPostTextAdd":	
-				kb.main(document.getElementById("quickPostTextAdd"), function(){
-					localStorage.setItem("textForPost",document.getElementById("quickPostTextAdd").getElementsByTagName("p")[0].innerHTML);
+				kb.main(document.getElementById("quickPostTextAdd"), function(msg){
+					localStorage.setItem("textForPost", msg);
 					document.getElementById("quickPostTextAdd").getElementsByTagName("p")[0].innerHTML = "";
 					post.newPost(localStorage.getItem("imgForPost"),localStorage.getItem("textForPost"));
 					unload("quickPostTextAdd");
@@ -343,8 +344,6 @@ function loadNotifications(){
 	
 }
 
-
-
-
+document.getElementById("notifications").style.backgroundColor = colors["nearBlack"];
 
 export {load, unload, loadLastScreen,update};
