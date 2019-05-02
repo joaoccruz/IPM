@@ -130,11 +130,7 @@ function load(screen,f = null, swiped = false){
 			var opt = document.getElementById("cameraSelected");
 			var sel = opt.options[opt.selectedIndex].value;
 			img.src = "cameraSim/"+sel+".png";
-			img2.src = "cameraSim/"+sel+".png";
 
-			const cropper = new Cropper.Cropper(img2, {
-				aspectration: 16/9
-			});
 			opt.addEventListener("change",f);
 			document.getElementById("quickPostNextArrow").addEventListener("click", nextScreen);
 			break;
@@ -157,6 +153,9 @@ function load(screen,f = null, swiped = false){
 			enableSwipeBack();
 			break;
 
+		case "commentsScreen":
+			post.loadComments(localStorage.getItem("currentPost");
+			break;
 		case "cameraCrop":
 			break;
 
@@ -348,8 +347,9 @@ function updateLockScreen(){
 function main(){
 	post.draw(localStorage.getItem("currentPost"));
 	swipe.enable(document.getElementById("post"),["left","right"],[post.loadNext,post.loadPrev]);
-	document.getElementById("mainCamera").addEventListener("click",()=>{unload("main");load("quickPostImagePick");});
-	document.getElementById("postLikes").addEventListener("click", ()=>{post.like(localStorage.getItem("currentPost"))});
+	document.getElementById("mainCamera").addEventListener("click",() => {unload("main"); load("quickPostImagePick");});
+	document.getElementById("postLikes").addEventListener("click", () => {post.like(localStorage.getItem("currentPost"))});
+	document.getElementById("postComments").addEventListener("click", () => {unload("main"); load("commentsScreen")});
 }
 
 function loadNotifications(){

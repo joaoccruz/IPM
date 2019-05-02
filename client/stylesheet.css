@@ -424,21 +424,29 @@ button{
 	margin: 0;
 }
 
-
-	#commentTemplate{
+	#commentsContainer{
+		height: 90%;
 		width: 100%;	
 	}
-
-		#commentHandle{
-			font-size: 9px;
-		}
-
-		#commentText{
-			left: 0;
-			top: 5%;
+		#commentTemplate{
 			width: 100%;
-			font-size: 12px;
+			height: 30%;	
+			visibility: hidden;
 		}
+
+			#commentHandle{
+				font-size: 10px;
+			}
+
+			#commentText{
+				left: 4%;
+				top: 40%;
+				max-height: 31px;
+				width: 96%;
+				font-size: 11px;
+				word-wrap: break-word;
+				overflow-y: auto;
+			}
 
 	#commentWrite{ 
 		bottom: 0;
