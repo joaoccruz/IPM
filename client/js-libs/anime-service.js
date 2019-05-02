@@ -14,7 +14,7 @@ anime({
 });
 
 function popHeart(){
-	var dd = 250;
+	var dd = 200;
 	anime({
 		targets: '#postLikes',
 		height: '70%',

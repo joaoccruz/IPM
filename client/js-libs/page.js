@@ -118,6 +118,7 @@ function load(screen,f = null, swiped = false){
 			var f = function(){
 				var sel = opt.options[opt.selectedIndex].value;
 				img.src = "cameraSim/"+sel+".png";
+				console.log(sel);
 			}
 
 			var nextScreen = function(){
@@ -131,6 +132,9 @@ function load(screen,f = null, swiped = false){
 			var sel = opt.options[opt.selectedIndex].value;
 			img.src = "cameraSim/"+sel+".png";
 
+			//const cropper = new Cropper.Cropper(img2, {
+			//	aspectration: 16/9
+			//});
 			opt.addEventListener("change",f);
 			document.getElementById("quickPostNextArrow").addEventListener("click", nextScreen);
 			break;
