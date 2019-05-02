@@ -154,7 +154,7 @@ function load(screen,f = null, swiped = false){
 			break;
 
 		case "commentsScreen":
-			post.loadComments(localStorage.getItem("currentPost");
+			post.loadComments(localStorage.getItem("currentPost"));
 			break;
 		case "cameraCrop":
 			break;

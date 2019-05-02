@@ -117,7 +117,17 @@ function like(id){
 }
 
 
-function loadComments(){
-	
+function loadComments(id){
+	var POST_LIST = JSON.parse(localStorage.getItem("postlist"));
+	console.log(id);
+	var comments = POST_LIST[id][6];
+	if(comments == []){
+		var noComments = document.createElement("p");
+		noComments.innerHTML = "This post has no comments yet, add one!";
+		noComments.style.display = "flex";
+		noComments.style.alignItems = "center";
+		noComments.style.color = "black";
+		document.getElementById("commentsScreen").appendChild(noComments);
+	}
 }
 export {add,loadPrev, loadNext, draw, newPost, like, loadComments}	
