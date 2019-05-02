@@ -14,7 +14,15 @@ if (!String.prototype.format) {
   };
 }
 
-
+if (!Element.prototype.getElementById) {
+  Element.prototype.getElementById = function(id) {
+    for(var i = 0; i < this.childNodes.length; i++){
+    	if(id == this.childNodes[i].id)
+    		return this.childNodes[i];
+    }
+    return null;
+  };
+}
 
 
 function add(src, desc, location, user, date, likes=[], comments=[]){
@@ -133,13 +141,28 @@ function loadComments(id){
 	}else{
 		for(var i = 0; i < comments.length; i++){
 			var nc = document.getElementById("commentTemplate").cloneNode(true);
+			nc.id = "post"
+			var post = JSON.parse(localStorage.getItem("postlist"))[id];
 			nc.style.top = i * 37 + "%";
+			nc.style.visibility = "visible"
 
-			nc.style.visibility = "visibile"
-
-
+			nc.getElementById("commentHandle").innerHTML = comments[i][0];
+			nc.getElementById("commentText").innerHTML = post[i][1];
 
 			document.getElementById("commentsContainer").appendChild(nc);
+		}
+	}
+}
+
+function unloadComments(){
+	var comments = JSON.parse(localStorage.getItem("postlist"))[localStorage.getItem("currentPost")][6];
+	if(comments.length == 0){
+		document.getElementById("noComments").remove();
+	}else{
+		var container = document.getElementById("commentsContainer");
+		for(var i = container.childNodes.length - 1 ; i > 0; i--){
+			if(container.childNodes[i].id != "commentTemplate")
+				container.childNodes[i].remove();
 		}
 	}
 }
@@ -148,12 +171,9 @@ function newComment(handle, message, likes = []){
 	// TODO: add likes
 	var currentPost = localStorage.getItem("currentPost");
 	var postlist = JSON.parse(localStorage.getItem("postlist"));
-	var postComments = postlist[currentPost][6];
-
-	postComments.push([handle,message,likes]);
-
+	postlist[currentPost][6].push([handle,message,likes]);
 	localStorage.setItem("postlist", JSON.stringify(postlist));	
 
 
 }
-export {newComment, add,loadPrev, loadNext, draw, newPost, like, loadComments}	
+export {newComment, add,loadPrev, loadNext, draw, newPost, like, loadComments, unloadComments}	

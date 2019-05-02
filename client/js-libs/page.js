@@ -71,9 +71,10 @@ function enableSwipeBack(){
 
 
 function kbStdd(key, msg, div, toLoad){
+	alert("Key: " + key + ", Msg:"+ msg);
 	localStorage.setItem(key, msg);
 	unload(div);
-	load("main");
+	load(toLoad);
 }
 
 
@@ -229,8 +230,10 @@ function unload(screen){
 	    	break;
 
 	    case "commentsScreen":
+	    	post.unloadComments();
 			break;
-			
+		
+
 	    default:
 	    	alert("Defaulted at unload: " + screen);
 	    	break;
