@@ -104,24 +104,41 @@ function renderRow(keys, pos, specials =[], sizes=[]){
 
 function main(div, f = null, chatlimit){
 	CONTAINER = div;
+	CONTAINER.className = "normalScreen"; 
+	CONTAINER.style.visibility = "visible";
+	CONTAINER.style.display = "block";
+
 	content = "";
 	
-	var kbContainer = document.createElement("div");
-	kbContainer.style.top = "35%";
-	kbContainer.style.height = "65%";
-	kbContainer.style.width = "100%";
-	kbContainer.id = "kbContainer";
-	CONTAINER.appendChild(kbContainer);
+	if(document.getElementById("kbContainer") == null){
+		var kbContainer = document.createElement("div");
+		kbContainer.style.top = "35%";
+		kbContainer.style.height = "65%";
+		kbContainer.style.width = "100%";
+		kbContainer.id = "kbContainer";
+		CONTAINER.appendChild(kbContainer);		
+	}else{
+		var kbContainer = document.getElementById("kbContainer");
+	}	
 
-	var charsLeft = document.createElement("p");
-	charsLeft.id = "charsLeft";
-	kbContainer.appendChild(charsLeft);
-	charsLeft.setAttribute("style", "top: 0; right:0; margin: 0; font-size: 10px");
+	if(document.getElementById("charsLeft") == null){
+		var charsLeft = document.createElement("p");
+		charsLeft.id = "charsLeft";
+		charsLeft.setAttribute("style", "top: 0; right:0; margin: 0; font-size: 10px");		
+		kbContainer.appendChild(charsLeft);
+	}else{
+		var charsLeft = document.getElementById("charsLeft");
+	}
 
-	textbox = document.createElement("p");
-	textbox.id = "textbox";
-	CONTAINER.appendChild(textbox);
-	textbox.setAttribute("style", "margin-top: 0;	font-size: 12px; left: 1%; height: 35;	width: 98%; word-wrap: break-word;");
+	if(document.getElementById("textbox") == null){
+		textbox = document.createElement("p");
+		textbox.innerHTML = "";
+		textbox.id = "textbox";
+		textbox.setAttribute("style", "margin-top: 0;	font-size: 12px; left: 1%; height: 35;	width: 98%; word-wrap: break-word;");
+		CONTAINER.appendChild(textbox);		
+	}else{
+		var kbContainer = document.getElementById("textbox");
+	}
 
 
 	if(chatlimit != undefined){
@@ -138,7 +155,7 @@ function main(div, f = null, chatlimit){
 	renderRow(["⇧"," ","←","↩"],83,["⇧","←","↩"],[20,60,10,10]);
 
 	updateTxtIn();
-	CONTAINER.addEventListener("Enter", (event) => f(content));
+	CONTAINER.addEventListener("Enter", (event) => {f(content)});
 }
 
 export {main};

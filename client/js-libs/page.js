@@ -70,6 +70,14 @@ function enableSwipeBack(){
 }
 
 
+function kbStdd(key, msg, div, toLoad){
+	localStorage.setItem(key, msg);
+	unload(div);
+	load("main");
+}
+
+
+
 function load(screen,f = null, swiped = false){
 	// For top tier divs(Lockscreen, tutorial, main, quickpost)
 	
@@ -147,15 +155,19 @@ function load(screen,f = null, swiped = false){
 			break;
 
 		case "quickPostTextAdd":	
-				kb.main(document.getElementById("quickPostTextAdd"), function(msg){
-					localStorage.setItem("textForPost", msg);
-					document.getElementById("quickPostTextAdd").getElementsByTagName("p")[0].innerHTML = "";
-					post.newPost(localStorage.getItem("imgForPost"),localStorage.getItem("textForPost"));
-					unload("quickPostTextAdd");
-					load("main");
-				},90);
+			kb.main(document.getElementById("quickPostTextAdd"), function(msg){
+				kbStdd("textForPost", msg, "quickPostTextAdd", "main");
+				post.newPost(localStorage.getItem("imgForPost"),localStorage.getItem("textForPost"));
+				
+			},90);
 			break;
 
+
+		case "commentTextAdd":
+			enableSwipeBack();
+			kb.main(document.getElementById("commentTextAdd"), (msg) => {kbStdd("textForComment", msg, "commentTextAdd", "commentsScreen"); post.newComment("user", localStorage.getItem("textForComment"));}, 130);
+			
+		
 		case "cameraSimulation":
 			//load("cameraCrop")
 			break;
@@ -166,6 +178,8 @@ function load(screen,f = null, swiped = false){
 
 		case "commentsScreen":
 			post.loadComments(localStorage.getItem("currentPost"));
+			var commentWrite = document.getElementById("commentWrite");
+			commentWrite.addEventListener("click", () => {unload(screen); load("commentTextAdd");})
 			enableSwipeBack();
 			break;
 		case "cameraCrop":

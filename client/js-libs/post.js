@@ -90,6 +90,7 @@ function draw(ID){
 	document.getElementById("postTimestamp").innerHTML = generateDate(new Date(POST_LIST[ID][4]));
 	document.getElementById("postLikes").src = (POST_LIST[ID][5].includes("user") ? "img/likedIcon.png" : "img/heart.png");
 	document.getElementById("postLikesNumber").innerHTML = POST_LIST[ID][5].length;
+	document.getElementById("postCommentsNumber").innerHTML = POST_LIST[ID][6].length;
 }
 
 function newPost(img,text){
@@ -119,7 +120,7 @@ function like(id){
 
 function loadComments(id){
 	var comments = JSON.parse(localStorage.getItem("postlist"))[id][6];
-	if(JSON.stringify(comments) == JSON.stringify([])){
+	if(comments.length == 0){
 		var noComments = document.createElement("p");
 		noComments.innerHTML = "This post has no comments yet, add one!";
 		noComments.style.display = "block";
@@ -129,6 +130,30 @@ function loadComments(id){
 		noComments.style.fontSize = "12px"
 		noComments.style.color = "black";
 		document.getElementById("commentsScreen").appendChild(noComments);
+	}else{
+		for(var i = 0; i < comments.length; i++){
+			var nc = document.getElementById("commentTemplate").cloneNode(true);
+			nc.style.top = i * 37 + "%";
+
+			nc.style.visibility = "visibile"
+
+
+
+			document.getElementById("commentsContainer").appendChild(nc);
+		}
 	}
 }
-export {add,loadPrev, loadNext, draw, newPost, like, loadComments}	
+
+function newComment(handle, message, likes = []){
+	// TODO: add likes
+	var currentPost = localStorage.getItem("currentPost");
+	var postlist = JSON.parse(localStorage.getItem("postlist"));
+	var postComments = postlist[currentPost][6];
+
+	postComments.push([handle,message,likes]);
+
+	localStorage.setItem("postlist", JSON.stringify(postlist));	
+
+
+}
+export {newComment, add,loadPrev, loadNext, draw, newPost, like, loadComments}	

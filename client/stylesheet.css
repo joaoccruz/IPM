@@ -177,10 +177,11 @@ button{
 			}
 
 			#postLikesNumber{
-				font-size: 70%;
+				font-size: 9px;
 				margin-top: 0;
 				margin-bottom: 0;
 				bottom: 0;
+				color: red;
 			}
 
 		#postCommentsContainer{
@@ -197,7 +198,7 @@ button{
 				}
 
 			#postCommentsNumber{
-				font-size: 70%;
+				font-size: 9px;
 				margin-top: 0;
 				margin-bottom: 0;
 				bottom: 0;
@@ -283,15 +284,6 @@ button{
 	height: 100%;
 	width: 100%;
 }
-	
-	#postText{
-		margin-top: 0;
-		font-size: 12px; 
-		left: 1%;
-		height: 35;
-		width: 98%;
-		word-wrap: break-word;
-	}
 
 
 #cameraSimulation{
@@ -414,9 +406,24 @@ button{
 			height: 30%;	
 			visibility: hidden;
 		}
+			#commentHeart{
+				left: 92%;
+				visibility: visible;
+				width: 8%;
+			}
+
+			#commentLikes{
+				left: 92%;
+				top: 40%;
+				color: red;
+				width: 8%;
+				visibility: visible;
+				font-size: 8px;
+			}
 
 			#commentHandle{
 				font-size: 10px;
+				visibility: visible;
 			}
 
 			#commentText{
@@ -424,9 +431,10 @@ button{
 				top: 40%;
 				max-height: 31px;
 				width: 96%;
-				font-size: 11px;
+				font-size: 9px;
 				word-wrap: break-word;
 				overflow-y: auto;
+				visibility: visible;
 			}
 
 	#commentWrite{ 
