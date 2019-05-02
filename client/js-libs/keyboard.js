@@ -108,7 +108,7 @@ function main(div, f = null, chatlimit){
 	renderRow(["q","w","e","r","t","y","u","i","o","p"], 40);
 	renderRow(["a","s","d","f","g","h","j","k","l"], 55);
 	renderRow(["z","x","c","v","b","n","m",",","."], 70);
-	renderRow(["⇧"," ","←","↩"],85,["⇧","←","↩"],[1,1,1,1]);
+	renderRow(["⇧"," ","←","↩"],85,["⇧","←","↩"],[20,60,10,10]);
 
 	updateTxtIn();
 	CONTAINER.addEventListener("Enter", (event) => f(content));

@@ -160,6 +160,8 @@ function load(screen,f = null, swiped = false){
 		case "cameraCrop":
 			break;
 
+		case "commentsScreen":
+			break;
 
 	    default: 
 	    	alert("Defaulted at load: " + screen);
@@ -204,6 +206,9 @@ function unload(screen){
 	    case "cameraCrop":
 	    	break;
 
+	    case "commentsScreen":
+			break;
+			
 	    default:
 	    	alert("Defaulted at unload: " + screen);
 	    	break;
