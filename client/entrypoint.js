@@ -1,4 +1,5 @@
 import * as page  from "./js-libs/page.js";
+import "./js-libs/anime-service.js";
 
 localStorage.setItem("user", "user");
 var DEBUG_MODE = false;

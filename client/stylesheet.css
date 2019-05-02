@@ -168,10 +168,10 @@ button{
 			left: 1%;
 			width: 100%;
 			height: 33%;
-			border: 1px solid gray;
+			border: 1px solid white; /* gray */
 		}
 			#postLikes{
-				height: 70%;
+				height: 60%;
 			}
 
 			#postLikesNumber{
@@ -187,11 +187,11 @@ button{
 			width: 100%;
 			height: 33%;
 			top: 35%;
-			border: 1px solid gray;
+			border: 1px solid white; /* gray */
 		}
 			#postComments{
 				top: 2%	;
-				height: 70%;
+				height: 55%;
 				}
 
 			#postCommentsNumber{
@@ -204,10 +204,10 @@ button{
 		#postShareIcon{
 			text-align: center;	
 			left: 1%;
-			width: 100%;
-			height: 33%;
+			width: 60%;
+			height: 20%;
 			top: 70%;
-			border: 1px solid gray;
+			border: 1px solid white; /* gray */
 		}
 	#postLocationContainer{
 		margin-top: 45%;
