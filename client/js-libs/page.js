@@ -3,6 +3,7 @@ import * as post  from "./post.js";
 import * as pin   from "./pin.js" ;
 import * as date  from "./date.js";
 import * as kb    from "./keyboard.js";
+import { colors } from "./_colors.js";
 
 var HISTORY = [];
 function historyAdd(screen){
@@ -343,8 +344,6 @@ function loadNotifications(){
 	
 }
 
-
-
-
+document.getElementById("notifications").style.backgroundColor = colors["nearBlack"];
 
 export {load, unload, loadLastScreen,update};
