@@ -99,9 +99,9 @@ function load(screen,f = null, swiped = false){
 
 	
 	
-	var noSwipe = ["tutorial","lockscreen","cameraSimulation","numpadScreen"];
+	var noSwipe = ["tutorial","lockscreen","cameraSimulation","numpadScreen", "commentTextAdd"];
 
-	if(!swiped && !noSwipe.includes(screen))
+	if(!screen.includes("textAdd") && !swiped && !noSwipe.includes(screen))
 		historyAdd(screen);
 
 	switch(screen){
@@ -166,7 +166,7 @@ function load(screen,f = null, swiped = false){
 
 		case "commentTextAdd":
 			enableSwipeBack();
-			kb.main(document.getElementById("commentTextAdd"), (msg) => {kbStdd("textForComment", msg, "commentTextAdd", "commentsScreen"); post.newComment("user", localStorage.getItem("textForComment"));}, 130);
+			kb.main(document.getElementById("commentTextAdd"), (msg) => {kbStdd("textForComment", msg, "commentTextAdd", "commentsScreen"); post.newComment("user", msg);}, 130);
 			
 		
 		case "cameraSimulation":
@@ -222,7 +222,7 @@ function unload(screen){
 	    case "quickPostTextAdd":
 	    	break;
 
-	    case "commentPostTextAdd":	
+	    case "commentTextAdd":	
 	    	break;
 
 	    case "cameraSimulation":

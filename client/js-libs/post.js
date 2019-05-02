@@ -139,19 +139,34 @@ function loadComments(id){
 		noComments.style.color = "black";
 		document.getElementById("commentsScreen").appendChild(noComments);
 	}else{
+		var dist = 0;
 		for(var i = 0; i < comments.length; i++){
 			var nc = document.getElementById("commentTemplate").cloneNode(true);
 			var post = JSON.parse(localStorage.getItem("postlist"))[id];
 			nc.id = "commentPosted";
 			nc.style.width = "90%";
-			nc.style.height = "30%";
-			nc.style.top = i * 37 + "%";
+			nc.style.top = dist + "px";
 			nc.style.visibility = "visible";
+			document.getElementById("commentsContainer").appendChild(nc)
 
-			nc.getElementById("commentHandle").innerHTML = comments[i][0];
-			nc.getElementById("commentText").innerHTML = post[i][1];
+			var handle = nc.getElementById("commentHandle");
+			var text = nc.getElementById("commentText");
+			text.style.top = handle.clientHeight + 2 + "px";
 
-			document.getElementById("commentsContainer").appendChild(nc);
+			handle.innerHTML = comments[i][0];
+			text.innerHTML = comments[i][1];
+
+
+			var h = text.clientHeight + handle.clientHeight;
+			console.log(dist);
+			if(h < 40)
+				h = 40;
+			else if(h > 80)
+				h = 80;
+			
+			dist += h + 2;
+			h = h  + "px";
+			nc.style.height = h;
 		}
 	}
 }
