@@ -7,13 +7,16 @@ import { colors } from "./_colors.js";
 //import Cropper from "./node_modules/cropperjs/src/index.js"
 
 
-var HISTORY = [];
+
 function historyAdd(screen){
+	var HISTORY = JSON.parse(localStorage.getItem("history"));
 	if(HISTORY.length > 50){
 		HISTORY.shift();
 	}
-
-	HISTORY.push(screen);
+	
+	if(HISTORY[HISTORY.length-1] != screen)
+		HISTORY.push(screen);
+	localStorage.setItem("history", JSON.stringify(HISTORY));
 }
 
 String.prototype.format = function () {
@@ -45,10 +48,13 @@ function unlock(){
 
 function enableSwipeBack(){
 	var f = function(){
+		var HISTORY = JSON.parse(localStorage.getItem("history"));
 		swipe.disable(document.getElementById("container"));
 		HISTORY.pop();
-		var lastScreen = HISTORY.pop();
-		console.log("unloading "+ localStorage.getItem("currScreen"));
+		localStorage.setItem("history", JSON.stringify(HISTORY));
+		var lastScreen = HISTORY.pop();	
+		if(HISTORY[HISTORY.length-1] != screen)
+		console.log(	"unloading "+ localStorage.getItem("currScreen"));
 		console.log("loading" + lastScreen);
 		if(lastScreen != undefined){
 			unload(localStorage.getItem("currScreen"));
