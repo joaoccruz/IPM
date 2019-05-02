@@ -102,19 +102,21 @@ function newPost(img,text){
 
 
 function like(id){
-	var removeLike = POST_LIST[id].likes.includes("user");
+	var POST_LIST = JSON.parse(localStorage.getItem("postlist"));
+	var removeLike = POST_LIST[id][5].includes("user");
 	if(removeLike){
-		var index = POST_LIST[id].likes.indexOf("user");
+		var index = POST_LIST[id][5].indexOf("user");
 		if (index > -1) {
-		  POST_LIST[id].likes.splice(index, 1);
+		  POST_LIST[id][5].splice(index, 1);
 		}
 		
 	}else{
-		POST_LIST[id].likes.push("user");
+		POST_LIST[id][5].push("user");
 	}
 			
 	draw(id); 
 	if(!removeLike){popHeart();};
+	localStorage.setItem("postlist", JSON.stringify(POST_LIST));
 }
 
 export {add,loadPrev, loadNext, draw, newPost, like}	

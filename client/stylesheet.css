@@ -321,7 +321,14 @@ button{
 
 }
 
-
+#cameraCrop{
+	visibility: hidden;
+	width: 2.4in; 
+	height: 1.8in; 
+}
+	#cameraCropSelected{
+		max-width: 100%;
+	}
 
 #clickType{
 	width: 200px;

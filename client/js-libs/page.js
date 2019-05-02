@@ -4,6 +4,8 @@ import * as pin   from "./pin.js" ;
 import * as date  from "./date.js";
 import * as kb    from "./keyboard.js";
 import { colors } from "./_colors.js";
+//import Cropper from "./node_modules/cropperjs/src/index.js"
+
 
 var HISTORY = [];
 function historyAdd(screen){
@@ -69,7 +71,8 @@ function load(screen,f = null, swiped = false){
 		screen = "tutorial";
 	}
 
-	(screen != "lockscreen" && screen != "numpadScreen" && screen != "cameraSimulation") ? localStorage.setItem("lastScreen",screen) : null;
+	var noHistory = ["lockscreen", "numpadScreen", "cameraSimulation", "cameraCrop"];
+	(!noHistory.includes(screen)) ? localStorage.setItem("lastScreen",screen) : null;
 	
 	if(screen != "cameraSimulation")
 		localStorage.setItem("currScreen",screen);
@@ -110,6 +113,7 @@ function load(screen,f = null, swiped = false){
 	    
 	    case "quickPostImagePick":
 			var img = document.getElementById("quickPostCameraImage");
+			var img2 = document.getElementById("cameraCropSelected");
 	    	enableSwipeBack();
 			var f = function(){
 				var sel = opt.options[opt.selectedIndex].value;
@@ -126,7 +130,11 @@ function load(screen,f = null, swiped = false){
 			var opt = document.getElementById("cameraSelected");
 			var sel = opt.options[opt.selectedIndex].value;
 			img.src = "cameraSim/"+sel+".png";
+			img2.src = "cameraSim/"+sel+".png";
 
+			const cropper = new Cropper.Cropper(img2, {
+				aspectration: 16/9
+			});
 			opt.addEventListener("change",f);
 			document.getElementById("quickPostNextArrow").addEventListener("click", nextScreen);
 			break;
@@ -142,11 +150,16 @@ function load(screen,f = null, swiped = false){
 			break;
 
 		case "cameraSimulation":
+			load("cameraCrop")
 			break;
 
 		case "quickPostImagePick":
 			enableSwipeBack();
 			break;
+
+		case "cameraCrop":
+			break;
+
 
 	    default: 
 	    	alert("Defaulted at load: " + screen);
@@ -185,6 +198,10 @@ function unload(screen){
 	    	break;
 
 	    case "cameraSimulation":
+	    	unload("cameraCrop")
+	    	break;
+
+	    case "cameraCrop":
 	    	break;
 
 	    default:
