@@ -1,19 +1,6 @@
 import * as date  from "./date.js";
 import {popHeart} from "./anime-service.js";
-class myPost{
-	constructor(image, description, location, handle, timestamp, likes, comments){
-		this.image = image;
-		this.description = description;
-		this.location = location;
-		this.handle = handle;
-		this.timestamp = timestamp;
-		this.likes = likes;
-		this.comments = comments;
-	}
-}
 
-
-var POST_LIST = [];
 
 if (!String.prototype.format) {
   String.prototype.format = function() {
@@ -28,12 +15,20 @@ if (!String.prototype.format) {
 }
 
 
-POST_LIST.push(new myPost("img/beach.jpeg", "Nada como o ar da montanha, na praia", {x: 40.3218825, y: -7.6217218, description: "Serra da Estrela"}, "Senhor_Malaquias", new Date(), ["Senhor_António","Senhor_Malaquias"], []));
-POST_LIST.push(new myPost("img/montanha.jpg", "Imagem genérica de uma montanha", {x: 40.3218825, y: -7.6217218, description: "Montanha"}, "Senhor_José", new Date(new Date()-604800000), [], []));
-POST_LIST.push(new myPost("img/gil.jpg", "Grande Gil! 👌", {x: 40.3218825, y: -7.6217218, description: "Parque das Nações"}, "Senhor_António", new Date(2019, 3, 18), [], []));
 
+
+function add(src, desc, location, user, date, likes=[], comments=[]){
+	var posts = JSON.parse(localStorage.getItem("postlist"));
+	if(posts == null){
+		posts = [];
+	}
+
+	posts.push([src, desc, location, user, date.toString(), likes, comments]);
+	localStorage.setItem("postlist", JSON.stringify(posts))
+}
 
 function loadNext(){
+	var POST_LIST = JSON.parse(localStorage.getItem("postlist"));
 	var cp = localStorage.getItem("currentPost");
 	if(localStorage.getItem("currentPost") == POST_LIST.length-1){
 		return;
@@ -43,6 +38,7 @@ function loadNext(){
 }
 
 function loadPrev(){
+	var POST_LIST = JSON.parse(localStorage.getItem("postlist"));
 	var cp = localStorage.getItem("currentPost");
 	if(localStorage.getItem("currentPost") == 0)
 		return;
@@ -53,7 +49,9 @@ function loadPrev(){
 
 function draw(ID){
 	// TODO: CHANGE TO OTHER FILE
+	var POST_LIST = JSON.parse(localStorage.getItem("postlist"));
 	function generateDate(d){
+
 		var min = d.getMinutes().toString();
 		var hr  = d.getHours().toString();
 		var day = d.getDate();
@@ -85,20 +83,21 @@ function draw(ID){
 		localStorage.setItem("currentPost",0); 
 	}
 
-	document.getElementById("mainImage").src = POST_LIST[ID].image;
-	document.getElementById("postDescription").innerHTML = POST_LIST[ID].description;
-	document.getElementById("postLocation").innerHTML = POST_LIST[ID].location.description;
-	document.getElementById("postHandle").innerHTML = "@" + POST_LIST[ID].handle;
-	document.getElementById("postTimestamp").innerHTML = generateDate(POST_LIST[ID].timestamp);
-	document.getElementById("postLikes").src = (POST_LIST[ID].likes.includes("user") ? "img/likedIcon.png" : "img/heart.png");
-	document.getElementById("postLikesNumber").innerHTML = POST_LIST[ID].likes.length;
+	document.getElementById("mainImage").src = POST_LIST[ID][0];
+	document.getElementById("postDescription").innerHTML = POST_LIST[ID][1];
+	document.getElementById("postLocation").innerHTML = POST_LIST[ID][2][2];
+	document.getElementById("postHandle").innerHTML = "@" + POST_LIST[ID][3];
+	document.getElementById("postTimestamp").innerHTML = generateDate(new Date(POST_LIST[ID][4]));
+	document.getElementById("postLikes").src = (POST_LIST[ID][5].includes("user") ? "img/likedIcon.png" : "img/heart.png");
+	document.getElementById("postLikesNumber").innerHTML = POST_LIST[ID][5].length;
 }
 
 function newPost(img,text){
 	function getGPSData(){
-		return {x: 40.3218825, y: -7.6217218, description: "Needs maps integration"};
+		return [40.3218825, -7.6217218, "Needs maps integration"];
 	}
-	POST_LIST.push(new myPost(img, text, getGPSData(), "user", new Date(), [], []));
+
+	add(img, text, getGPSData(),"user", new Date());
 }
 
 
@@ -118,4 +117,4 @@ function like(id){
 	if(!removeLike){popHeart();};
 }
 
-export {loadPrev, loadNext, draw, newPost, like}	
+export {add,loadPrev, loadNext, draw, newPost, like}	

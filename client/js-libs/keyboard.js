@@ -46,7 +46,7 @@ function renderRow(keys, pos, specials =[], sWidtH=[]){
 			w = buttonSize;
 		}
 
-		btn.style.display = "inline-block";
+		
 		btn.style.height = "14%";
 		btn.style.width = w + "%";
 		btn.style.left = left + "%";
@@ -69,10 +69,10 @@ function main(div, f = null, chatlimit){
 	}
 
 	renderRow(["1","2","3","4","5","6","7","8","9","0"],25);
-	renderRow(["q","w","e","r","t","y","u","i","o","p"], 40);
-	renderRow(["a","s","d","f","g","h","j","k","l"], 55);
-	renderRow(["z","x","c","v","b","n","m",",","."], 70);
-	renderRow(["⇧"," ","←","↩"],85,["⇧","←","↩"],[1,1,1,1]);
+	renderRow(["q","w","e","r","t","y","u","i","o","p"], 39);
+	renderRow(["a","s","d","f","g","h","j","k","l"], 53);
+	renderRow(["z","x","c","v","b","n","m",",","."], 67);
+	renderRow(["⇧"," ","←","↩"],81,["⇧","←","↩"],[1,1,1,1]);
 
 	CONTAINER.addEventListener("Enter", f);
 }
