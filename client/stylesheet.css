@@ -292,7 +292,8 @@ button{
 	}
 
 	#charsLeft{
-		bottom: 45%;
+		font-size: 8pt;
+		bottom: 55%;
 		right: 0;
 	}
 

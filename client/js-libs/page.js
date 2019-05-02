@@ -131,8 +131,8 @@ function load(screen,f = null, swiped = false){
 			break;
 
 		case "quickPostTextAdd":	
-				kb.main(document.getElementById("quickPostTextAdd"), function(){
-					localStorage.setItem("textForPost",document.getElementById("quickPostTextAdd").getElementsByTagName("p")[0].innerHTML);
+				kb.main(document.getElementById("quickPostTextAdd"), function(msg){
+					localStorage.setItem("textForPost", msg);
 					document.getElementById("quickPostTextAdd").getElementsByTagName("p")[0].innerHTML = "";
 					post.newPost(localStorage.getItem("imgForPost"),localStorage.getItem("textForPost"));
 					unload("quickPostTextAdd");
