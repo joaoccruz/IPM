@@ -145,7 +145,6 @@ button{
 }
 
 #post{
-	border: 1px black solid;
 	z-index: 1;
 	top: 3%;
 	width: 80%;
@@ -297,7 +296,7 @@ button{
 	}
 
 	#charsLeft{
-		top: 10% !important;
+		top:0% !important;
 		right: 0;
 	}
 

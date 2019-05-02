@@ -20,6 +20,14 @@ function updateTxtOut(){
 	tOut = setTimeout(updateTxtIn, tp);
 }
 
+function press(b){
+	b.style.backgroundColor = colors["white"];
+	b.style.color = colors["nearBlack"];
+}
+function release(b){
+	b.style.backgroundColor = colors['nearBlack'];
+	b.style.color = colors["white"];
+}
 function addE(btn,key,specials){
 	var charsLeft = CONTAINER.getElementsByTagName("p")[1];
 
@@ -41,14 +49,12 @@ function addE(btn,key,specials){
 		}else if(key == "⇧"){
 			shiftEnabled = !shiftEnabled;
 			if (shiftEnabled){
-				btn.style.backgroundColor = colors["white"];
-				btn.style.color = colors["nearBlack"];
+				press(btn);
 				for(var i = 0; buttonCollection[i]; i++){
 					buttonCollection[i].innerHTML = buttonCollection[i].innerHTML.toUpperCase();
 				}
 			}else{
-				btn.style.backgroundColor = colors['nearBlack'];
-				btn.style.color = colors["white"];
+				release(btn);
 				for(var i = 0; buttonCollection[i]; i++){
 					buttonCollection[i].innerHTML = buttonCollection[i].innerHTML.toLowerCase();
 				}
@@ -59,6 +65,9 @@ function addE(btn,key,specials){
 		charsLeft.innerHTML = "(" + cl + " remaining)"; 
 	}
 	btn.addEventListener("click", (event) => f(event, key));
+	btn.addEventListener("mousedown", (event) => press(btn));
+	btn.addEventListener("mouseup", (event) => release(btn));
+	btn.addEventListener("mouseleave", (event) => release(btn));
 }
 
 function renderRow(keys, pos, specials =[], sizes=[]){
@@ -80,7 +89,7 @@ function renderRow(keys, pos, specials =[], sizes=[]){
 		}
 
 		
-		btn.style.height = "14%";
+		btn.style.height = "16%";
 		btn.style.width = w + "%";
 		btn.style.left = left + "%";
 		btn.style.top = pos + "%";
@@ -104,11 +113,11 @@ function main(div, f = null, chatlimit){
 		CHARLIMIT = Math.max();
 	}
 
-	renderRow(["1","2","3","4","5","6","7","8","9","0"],25);
-	renderRow(["q","w","e","r","t","y","u","i","o","p"], 40);
-	renderRow(["a","s","d","f","g","h","j","k","l"], 55);
-	renderRow(["z","x","c","v","b","n","m",",","."], 70);
-	renderRow(["⇧"," ","←","↩"],85,["⇧","←","↩"],[1,1,1,1]);
+	renderRow(["1","2","3","4","5","6","7","8","9","0"],15);
+	renderRow(["q","w","e","r","t","y","u","i","o","p"], 32);
+	renderRow(["a","s","d","f","g","h","j","k","l"], 49);
+	renderRow(["z","x","c","v","b","n","m",",","."], 66);
+	renderRow(["⇧"," ","←","↩"],83,["⇧","←","↩"],[20,60,10,10]);
 
 	updateTxtIn();
 	CONTAINER.addEventListener("Enter", (event) => f(content));
