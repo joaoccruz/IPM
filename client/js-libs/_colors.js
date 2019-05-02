@@ -1,8 +1,9 @@
 // Defines a set of colors.
 
 const colors = {
-    "white": "#F0F0F0",
-    "nearBlack": "#121D26",
+    "white": "#f0f0f0",
+    "blackishGrey": "#3a3a3a",
+    "nearBlack": "#121616",
 };
 
 export {colors};

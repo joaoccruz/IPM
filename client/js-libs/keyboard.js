@@ -1,5 +1,5 @@
 import * as page from "./page.js";
-import * as colors from "./_colors.js";
+import {colors} from "./_colors.js";
 
 var CONTAINER;
 var CHARLIMIT;
@@ -12,11 +12,11 @@ function addE(btn,key,specials){
 			textbox.innerHTML = textbox.innerHTML + key;
 		else if(key == "←")
 			textbox.innerHTML = textbox.innerHTML.slice(0,-1); 
-		else if(key == "Enter"){
+		else if(key == "↩"){
 			CONTAINER.dispatchEvent(new Event("Enter"));
 		}
 		var cl = CHARLIMIT - textbox.innerHTML.length;
-		charsLeft.innerHTML = "(" + cl + ")"; 
+		charsLeft.innerHTML = "(" + cl + " remaining)"; 
 	}
 	btn.addEventListener("click", (event) => f(event, key));
 }
@@ -34,8 +34,9 @@ function renderRow(keys, pos, specials =[], sWidtH=[]){
 	var cont = CONTAINER.getElementsByTagName("div")[0];
 	for(var i = 0; i < keys.length; i++){
 		var btn = document.createElement("p");   
-		btn.style.backgroundColor = "white";
-		btn.style.border = "black solid 1px";
+		btn.style.backgroundColor = colors['nearBlack'];
+		btn.style.border = colors["blackishGrey"] + " solid 0.5px";
+		btn.style.color = colors["white"];
 		btn.innerHTML = keys[i];                   
 		var w;
 
@@ -61,21 +62,19 @@ function renderRow(keys, pos, specials =[], sWidtH=[]){
 function main(div, f = null, chatlimit){
 	CONTAINER = div;
 	if(chatlimit != undefined){
-		CONTAINER.getElementsByTagName("p")[1].innerHTML = "(90)";
 		CHARLIMIT = 90;
+		CONTAINER.getElementsByTagName("p")[1].innerHTML = "(" + CHARLIMIT + " remaining)";
 	}else{
 		CHARLIMIT = Math.max();
 	}
 
-	
-	renderRow(["Shift","←","Enter"],25,["Shift","←","Enter"],[1,1,1]);
-	renderRow(["1","2","3","4","5","6","7","8","9","0"],41);
-	renderRow(["q","w","e","r","t","y","u","i","o","p"], 56);
-	renderRow(["a","s","d","f","g","h","j","k","l"], 71);
-	renderRow(["z","x","c","v","b","n","m",",","."], 86);
+	renderRow(["1","2","3","4","5","6","7","8","9","0"],25);
+	renderRow(["q","w","e","r","t","y","u","i","o","p"], 40);
+	renderRow(["a","s","d","f","g","h","j","k","l"], 55);
+	renderRow(["z","x","c","v","b","n","m",",","."], 70);
+	renderRow(["⇧"," ","←","↩"],85,["⇧","←","↩"],[1,1,1,1]);
 
 	CONTAINER.addEventListener("Enter", f);
-	
 }
 
 export {main};

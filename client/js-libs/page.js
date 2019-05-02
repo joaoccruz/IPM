@@ -132,12 +132,12 @@ function load(screen,f = null, swiped = false){
 
 		case "quickPostTextAdd":	
 				kb.main(document.getElementById("quickPostTextAdd"), function(){
-				localStorage.setItem("textForPost",document.getElementById("quickPostTextAdd").getElementsByTagName("p")[0].innerHTML);
-				document.getElementById("quickPostTextAdd").getElementsByTagName("p")[0].innerHTML = "";
-				post.newPost(localStorage.getItem("imgForPost"),localStorage.getItem("textForPost"));
-				unload("quickPostTextAdd");
-				load("main");
-			},90);
+					localStorage.setItem("textForPost",document.getElementById("quickPostTextAdd").getElementsByTagName("p")[0].innerHTML);
+					document.getElementById("quickPostTextAdd").getElementsByTagName("p")[0].innerHTML = "";
+					post.newPost(localStorage.getItem("imgForPost"),localStorage.getItem("textForPost"));
+					unload("quickPostTextAdd");
+					load("main");
+				},90);
 			break;
 
 		case "cameraSimulation":
