@@ -116,4 +116,8 @@ function like(id){
 	draw(id); 
 }
 
-export {add,loadPrev, loadNext, draw, newPost, like}	
+
+function loadComments(){
+	
+}
+export {add,loadPrev, loadNext, draw, newPost, like, loadComments}	
