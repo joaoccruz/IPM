@@ -141,10 +141,12 @@ function loadComments(id){
 	}else{
 		for(var i = 0; i < comments.length; i++){
 			var nc = document.getElementById("commentTemplate").cloneNode(true);
-			nc.id = "post"
 			var post = JSON.parse(localStorage.getItem("postlist"))[id];
+			nc.id = "commentPosted";
+			nc.style.width = "90%";
+			nc.style.height = "30%";
 			nc.style.top = i * 37 + "%";
-			nc.style.visibility = "visible"
+			nc.style.visibility = "visible";
 
 			nc.getElementById("commentHandle").innerHTML = comments[i][0];
 			nc.getElementById("commentText").innerHTML = post[i][1];

@@ -222,6 +222,9 @@ function unload(screen){
 	    case "quickPostTextAdd":
 	    	break;
 
+	    case "commentPostTextAdd":	
+	    	break;
+
 	    case "cameraSimulation":
 	    	unload("cameraCrop")
 	    	break;
