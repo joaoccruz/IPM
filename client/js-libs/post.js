@@ -103,20 +103,17 @@ function newPost(img,text){
 
 function like(id){
 	var POST_LIST = JSON.parse(localStorage.getItem("postlist"));
-	var removeLike = POST_LIST[id][5].includes("user");
-	if(removeLike){
+	if(POST_LIST[id][5].includes("user")){
 		var index = POST_LIST[id][5].indexOf("user");
-		if (index > -1) {
-		  POST_LIST[id][5].splice(index, 1);
-		}
-		
+		POST_LIST[id][5].splice(index, 1);
 	}else{
+		popHeart();
 		POST_LIST[id][5].push("user");
+		console.log("liked");
 	}
+	localStorage.setItem("postlist", JSON.stringify(POST_LIST));
 			
 	draw(id); 
-	if(!removeLike){popHeart();};
-	localStorage.setItem("postlist", JSON.stringify(POST_LIST));
 }
 
 export {add,loadPrev, loadNext, draw, newPost, like}	

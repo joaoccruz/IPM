@@ -150,7 +150,7 @@ function load(screen,f = null, swiped = false){
 			break;
 
 		case "cameraSimulation":
-			load("cameraCrop")
+			//load("cameraCrop")
 			break;
 
 		case "quickPostImagePick":
