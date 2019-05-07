@@ -71,7 +71,6 @@ function enableSwipeBack(){
 
 
 function kbStdd(key, msg, div, toLoad){
-	alert("Key: " + key + ", Msg:"+ msg);
 	localStorage.setItem(key, msg);
 	unload(div);
 	load(toLoad);

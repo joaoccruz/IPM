@@ -13,17 +13,17 @@ anime({
 	direction: 'alternate',
 });
 
-function popHeart(){
+function popHeart(target){
 	var dd = 200;
 	anime({
-		targets: '#postLikes',
+		targets: "#" + target,
 		height: '70%',
 		easing: 'easeOutQuart',
 		duration: dd,
 		endDelay: 125,
 		complete: function(){
 			anime({
-				targets: '#postLikes',
+				targets: "#" + target,
 				height: '60%',
 				easing: 'easeInQuad',
 				duration: dd,

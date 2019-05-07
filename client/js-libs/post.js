@@ -17,6 +17,13 @@ if (!String.prototype.format) {
 if (!Element.prototype.getElementById) {
   Element.prototype.getElementById = function(id) {
     for(var i = 0; i < this.childNodes.length; i++){
+    	if(this.childNodes[i].nodeName === "DIV"){
+    		var rec = this.childNodes[i].getElementById(id);
+    		if(rec){
+    			return rec;
+    		}
+    	} 
+
     	if(id == this.childNodes[i].id)
     		return this.childNodes[i];
     }
@@ -110,24 +117,48 @@ function newPost(img,text){
 }
 
 
-function like(id){
+function like(id = localStorage.getItem("currentPost"), type = "post"){
 	var POST_LIST = JSON.parse(localStorage.getItem("postlist"));
-	if(POST_LIST[id][5].includes("user")){
+	var currentPost = POST_LIST[localStorage.getItem("currentPost")];
+	if(type == "post"){
 		var index = POST_LIST[id][5].indexOf("user");
-		POST_LIST[id][5].splice(index, 1);
-	}else{
-		popHeart();
-		POST_LIST[id][5].push("user");
-		console.log("liked");
-	}
-	localStorage.setItem("postlist", JSON.stringify(POST_LIST));
+		if(POST_LIST[id][5].includes("user")){
+			POST_LIST[id][5].splice(index, 1);
+		}else{
+			POST_LIST[id][5].push("user");
+			popHeart("postLikes");
+		}
+		localStorage.setItem("postlist", JSON.stringify(POST_LIST));
+				
+		draw(id);	
+	}else if(type == "comment"){
+		var comments = getComments(currentPost);
+		console.log(id)
+		if(index != -1){
+			comments[id][2].splice(index, 1);
+		}else{
+			comments[id][2].push("user")
+			popHeart("commentPostedU"+id+"P"+i);
+		}
+
 			
-	draw(id); 
+		
+		POST_LIST[localStorage.getItem("currentPost")][6] = comments;
+		localStorage.setItem("postlist", JSON.stringify(POST_LIST));
+		loadComments(localStorage.getItem("currentPost"));
+	}		 
 }
 
 
+
+function getComments(post){
+	return post[6];
+}
+
 function loadComments(id){
-	var comments = JSON.parse(localStorage.getItem("postlist"))[id][6];
+	var POST_LIST = JSON.parse(localStorage.getItem("postlist"));
+
+	var comments = POST_LIST[id][6];
 	if(comments.length == 0){
 		var noComments = document.createElement("p");
 		noComments.innerHTML = "This post has no comments yet, add one!";
@@ -139,11 +170,16 @@ function loadComments(id){
 		noComments.style.color = "black";
 		document.getElementById("commentsScreen").appendChild(noComments);
 	}else{
+		var noCommentsMessage = document.getElementById("noComments"); 
+		if(noCommentsMessage){
+			noCommentsMessage.remove();
+		}
+
 		var dist = 0;
 		for(var i = 0; i < comments.length; i++){
 			var nc = document.getElementById("commentTemplate").cloneNode(true);
 			var post = JSON.parse(localStorage.getItem("postlist"))[id];
-			nc.id = "commentPosted";
+			nc.id = "commentPostedU" + id + "P" + i;
 			nc.style.width = "90%";
 			nc.style.top = dist + "px";
 			nc.style.visibility = "visible";
@@ -151,6 +187,12 @@ function loadComments(id){
 
 			var handle = nc.getElementById("commentHandle");
 			var text = nc.getElementById("commentText");
+
+			var heart = nc.getElementById("commentHeart");
+			
+			heart.src = (comments[i][2].includes("user") ? "img/likedIcon.png" : "img/heart.png");
+
+
 			text.style.top = handle.clientHeight + 2 + "px";
 
 			handle.innerHTML = comments[i][0];
@@ -159,14 +201,14 @@ function loadComments(id){
 
 			var h = text.clientHeight + handle.clientHeight;
 			console.log(dist);
-			if(h < 40)
-				h = 40;
-			else if(h > 80)
+			if(h > 80)
 				h = 80;
 			
-			dist += h + 2;
-			h = h  + "px";
+
+			dist += h + 5;
+			h = h  + 4 + "px";
 			nc.style.height = h;
+			heart.addEventListener("click", () => {like(i, "comment"); })
 		}
 	}
 }
@@ -185,12 +227,12 @@ function unloadComments(){
 }
 
 function newComment(handle, message, likes = []){
-	// TODO: add likes
+	// TODO: PREVENT EMPTY
 	var currentPost = localStorage.getItem("currentPost");
 	var postlist = JSON.parse(localStorage.getItem("postlist"));
 	postlist[currentPost][6].push([handle,message,likes]);
 	localStorage.setItem("postlist", JSON.stringify(postlist));	
-
+	loadComments();
 
 }
 export {newComment, add,loadPrev, loadNext, draw, newPost, like, loadComments, unloadComments}	

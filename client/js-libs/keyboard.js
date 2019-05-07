@@ -78,7 +78,7 @@ function renderRow(keys, pos, specials =[], sizes=[]){
 		var btn = document.createElement("p");   
 		btn.setAttribute("style", "font-size: 10pt; display: flex;	align-items: center; margin: 0 !important; 	justify-content: center; top: 0%;");               
 		btn.style.backgroundColor = colors['nearBlack'];
-		btn.style.border = colors["blackishGrey"] + " solid 0.5px";
+		btn.style.border =  "solid grey 1px";
 		btn.style.color = colors["white"];
 		btn.innerHTML = keys[i];    
 		var w;

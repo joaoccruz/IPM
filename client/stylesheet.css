@@ -400,24 +400,27 @@ button{
 	#commentsContainer{
 		height: 90%;
 		width: 100%;	
+		overflow-x: auto;
 	}
 		#commentTemplate{
 			width: 100%;
 			height: 30%;	
 			visibility: hidden;
 		}
-			#commentHeart{
-				left: 92%;
-				width: 8%;
-			}
 
-			#commentLikes{
-				left: 92%;
-				top: 40%;
-				color: red;
+			#commentHeartContainer{
+				left: 92%;	
 				width: 8%;
-				font-size: 8px;
+				height: 100%;
 			}
+				#commentHeart{
+					width: 100%;
+				}				
+				#commentLikes{
+					top: 60%;
+					color: red;
+					font-size: 8px;
+				}
 
 			#commentHandle{
 				font-size: 10px;
