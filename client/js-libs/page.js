@@ -5,14 +5,13 @@ import * as date  from "./date.js";
 import * as kb    from "./keyboard.js";
 import { colors } from "./_colors.js";
 import {unloadEventListeners} from "./utilities.js";
-import {}
 
 
 //import Cropper from "./node_modules/cropperjs/src/index.js"
 
 
 function loadGallery(){
-	var container = document.getElementById("gallery"); 
+	/*var container = document.getElementById("gallery"); 
 	var imageList = JSON.parse(localStorage.getItem("images"));
 	
 	for(var i = 0; i < imageList.length; i++){
@@ -23,7 +22,9 @@ function loadGallery(){
 		newImage.left = (i % 5);
 
 		container.appendChild(newImage);
-	}
+	}*/
+
+
 }
 
 
@@ -166,8 +167,8 @@ function load(screen,f = null, swiped = false){
 			}
 
 			gallery: {
-				unload(screen);
-				load("gallery");
+				/*unload(screen);
+				load("gallery");*/
 			}
 
 

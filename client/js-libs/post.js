@@ -171,7 +171,8 @@ function loadComments(id = localStorage.getItem("currentPost")){
 			var text = nc.getElementById("commentText");
 
 			var heart = nc.getElementById("commentHeart");
-			
+			var heartNum = nc.getElementById("commentLikes");
+			heartNum.innerHTML = comments[i][2].length;
 			heart.src = (comments[i][2].includes("user") ? "img/likedIcon.png" : "img/heart.png");
 
 
@@ -192,7 +193,7 @@ function loadComments(id = localStorage.getItem("currentPost")){
 			nc.style.height = h;
 			let curr = i;
 			let h1 = heart;
-			h1.addEventListener("click", () => {var pl = JSON.parse(localStorage.getItem("postlist")); pl[currentPost()][6][curr][2] = like(h1,pl[currentPost()][6][curr][2]); localStorage.setItem("postlist", JSON.stringify(pl));})
+			h1.addEventListener("click", () => {var pl = JSON.parse(localStorage.getItem("postlist")); pl[currentPost()][6][curr][2] = like(h1,pl[currentPost()][6][curr][2]); heartNum.innerHTML = pl[currentPost()][6][curr][2].length; localStorage.setItem("postlist", JSON.stringify(pl));})
 		}
 	}
 }
