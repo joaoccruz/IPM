@@ -165,7 +165,7 @@ function load(screen,f = null, swiped = false){
 
 		case "commentTextAdd":
 			enableSwipeBack();
-			kb.main(document.getElementById("commentTextAdd"), (msg) => {kbStdd("textForComment", msg, "commentTextAdd", "commentsScreen"); post.newComment("user", msg);}, 130);
+			kb.main(document.getElementById("commentTextAdd"), (msg) => {kbStdd("textForComment", msg, "commentTextAdd", "commentsScreen"); post.newComment("user", msg); }, 130);
 			
 		
 		case "cameraSimulation":
@@ -177,9 +177,9 @@ function load(screen,f = null, swiped = false){
 			break;
 
 		case "commentsScreen":
-			post.loadComments(localStorage.getItem("currentPost"));
+			post.loadComments();
 			var commentWrite = document.getElementById("commentWrite");
-			commentWrite.addEventListener("click", () => {unload(screen); load("commentTextAdd");})
+			commentWrite.addEventListener("click", () => {unload(screen); load("commentTextAdd"); unload(commentsScreen)})
 			enableSwipeBack();
 			break;
 		case "cameraCrop":
@@ -219,9 +219,11 @@ function unload(screen){
 	    	break;
 
 	    case "quickPostTextAdd":
+	    	//kb.unload(document.getElementById("quickPostTextAdd"));
 	    	break;
 
-	    case "commentTextAdd":	
+	    case "commentTextAdd":
+	    	//kb.unload(document.getElementById("commentTextAdd"))	
 	    	break;
 
 	    case "cameraSimulation":
@@ -359,6 +361,9 @@ function tutorial(){
 	
 }
 
+function currentPost(){
+	return localStorage.getItem("currentPost");
+}
 
 function updateLockScreen(){
 	var d = new Date();
@@ -376,7 +381,11 @@ function main(){
 	post.draw(localStorage.getItem("currentPost"));
 	swipe.enable(document.getElementById("post"),["left","right"],[post.loadNext,post.loadPrev]);
 	document.getElementById("mainCamera").addEventListener("click",() => {unload("main"); load("quickPostImagePick");});
-	document.getElementById("postLikes").addEventListener("click", () => {post.like(localStorage.getItem("currentPost"))});
+
+	var heart = document.getElementById("postLikes");
+	var pl = JSON.parse(localStorage.getItem("postlist"));
+	
+	document.getElementById("postLikes").addEventListener("click", () => {pl[currentPost()][5] = post.like(heart, pl[currentPost()][5]); localStorage.setItem("postlist", JSON.stringify(pl)); post.draw()});
 	document.getElementById("postComments").addEventListener("click", () => {unload("main"); load("commentsScreen")});
 }
 

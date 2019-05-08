@@ -102,6 +102,16 @@ function renderRow(keys, pos, specials =[], sizes=[]){
 	}
 }
 
+
+function unload(target){
+	while(target.childNodes.length > 0 ){
+		target.childNodes[0].remove();
+	}
+	var clone = target.cloneNode(true);
+	target.parentNode.replaceChild(clone, target);
+	
+}
+
 function main(div, f = null, chatlimit){
 	CONTAINER = div;
 	CONTAINER.className = "normalScreen"; 
@@ -118,7 +128,7 @@ function main(div, f = null, chatlimit){
 		kbContainer.id = "kbContainer";
 		CONTAINER.appendChild(kbContainer);		
 	}else{
-		var kbContainer = document.getElementById("kbContainer");
+		var kbContainer = CONTAINER.getElementById("kbContainer");
 	}	
 
 	if(document.getElementById("charsLeft") == null){
@@ -155,7 +165,7 @@ function main(div, f = null, chatlimit){
 	renderRow(["⇧"," ","←","↩"],83,["⇧","←","↩"],[20,60,10,10]);
 
 	updateTxtIn();
-	CONTAINER.addEventListener("Enter", (event) => {f(content)});
+	CONTAINER.addEventListener("Enter", (event) => {f(content), unload(div)}, {once : true});
 }
 
-export {main};
+export {main,unload};

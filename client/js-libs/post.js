@@ -117,36 +117,17 @@ function newPost(img,text){
 }
 
 
-function like(id = localStorage.getItem("currentPost"), type = "post"){
-	var POST_LIST = JSON.parse(localStorage.getItem("postlist"));
-	var currentPost = POST_LIST[localStorage.getItem("currentPost")];
-	if(type == "post"){
-		var index = POST_LIST[id][5].indexOf("user");
-		if(POST_LIST[id][5].includes("user")){
-			POST_LIST[id][5].splice(index, 1);
-		}else{
-			POST_LIST[id][5].push("user");
-			popHeart("postLikes");
-		}
-		localStorage.setItem("postlist", JSON.stringify(POST_LIST));
-				
-		draw(id);	
-	}else if(type == "comment"){
-		var comments = getComments(currentPost);
-		console.log(id)
-		if(index != -1){
-			comments[id][2].splice(index, 1);
-		}else{
-			comments[id][2].push("user")
-			popHeart("commentPostedU"+id+"P"+i);
-		}
+function like(target, list){
+	var index = list.indexOf("user");
+	console.log(list);
+	if(index != -1){
+		list.splice(index, 1);
+	}else{
+		list.push("user");
+		popHeart(target.id);
+	}
 
-			
-		
-		POST_LIST[localStorage.getItem("currentPost")][6] = comments;
-		localStorage.setItem("postlist", JSON.stringify(POST_LIST));
-		loadComments(localStorage.getItem("currentPost"));
-	}		 
+	return list;		 
 }
 
 
@@ -155,9 +136,8 @@ function getComments(post){
 	return post[6];
 }
 
-function loadComments(id){
+function loadComments(id = localStorage.getItem("currentPost")){
 	var POST_LIST = JSON.parse(localStorage.getItem("postlist"));
-
 	var comments = POST_LIST[id][6];
 	if(comments.length == 0){
 		var noComments = document.createElement("p");
@@ -199,16 +179,17 @@ function loadComments(id){
 			text.innerHTML = comments[i][1];
 
 
+			
 			var h = text.clientHeight + handle.clientHeight;
-			console.log(dist);
+
 			if(h > 80)
 				h = 80;
 			
-
 			dist += h + 5;
 			h = h  + 4 + "px";
 			nc.style.height = h;
-			heart.addEventListener("click", () => {like(i, "comment"); })
+			let curr = i;
+			heart.addEventListener("click", () => {POST_LIST[id][6][2] = like(heart,comments[curr][2]); unloadComments(); loadComments(); localStorage.setItem("postlist", JSON.stringify(POST_LIST))})
 		}
 	}
 }
