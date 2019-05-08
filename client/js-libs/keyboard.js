@@ -1,6 +1,6 @@
 import * as page from "./page.js";
 import {colors} from "./_colors.js";
-
+import {unloadEventListeners} from "./utilities.js";
 var CONTAINER;
 var CHARLIMIT;
 
@@ -107,8 +107,7 @@ function unload(target){
 	while(target.childNodes.length > 0 ){
 		target.childNodes[0].remove();
 	}
-	var clone = target.cloneNode(true);
-	target.parentNode.replaceChild(clone, target);
+	unloadEventListeners(target);
 	
 }
 

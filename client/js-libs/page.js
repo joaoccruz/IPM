@@ -4,6 +4,7 @@ import * as pin   from "./pin.js" ;
 import * as date  from "./date.js";
 import * as kb    from "./keyboard.js";
 import { colors } from "./_colors.js";
+import {unloadEventListeners} from "./utilities.js";
 //import Cropper from "./node_modules/cropperjs/src/index.js"
 
 
@@ -179,7 +180,7 @@ function load(screen,f = null, swiped = false){
 		case "commentsScreen":
 			post.loadComments();
 			var commentWrite = document.getElementById("commentWrite");
-			commentWrite.addEventListener("click", () => {unload(screen); load("commentTextAdd"); unload(commentsScreen)})
+			commentWrite.addEventListener("click", () => {unload(screen); load("commentTextAdd"); unload("commentsScreen")}, {once: true})
 			enableSwipeBack();
 			break;
 		case "cameraCrop":
@@ -196,7 +197,10 @@ function unload(screen){
 	if(screen == null)
 		return;
 
+
 	var ele = document.getElementById(screen);
+	if(ele == null)
+		console.log(screen);
 	ele.style.visibility = "hidden";
 	ele.style.display = "none"
 	switch(screen){
@@ -219,11 +223,13 @@ function unload(screen){
 	    	break;
 
 	    case "quickPostTextAdd":
-	    	//kb.unload(document.getElementById("quickPostTextAdd"));
+	    	kb.unload(document.getElementById("quickPostTextAdd"));
+	    	
 	    	break;
 
 	    case "commentTextAdd":
-	    	//kb.unload(document.getElementById("commentTextAdd"))	
+	    	kb.unload(document.getElementById("commentTextAdd"))
+	    	
 	    	break;
 
 	    case "cameraSimulation":

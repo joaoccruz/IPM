@@ -62,7 +62,7 @@ function loadPrev(){
 	localStorage.setItem("currentPost",cp);
 }
 
-function draw(ID){
+function draw(ID = localStorage.getItem("currentPost")){
 	// TODO: CHANGE TO OTHER FILE
 	var POST_LIST = JSON.parse(localStorage.getItem("postlist"));
 	function generateDate(d){
@@ -160,7 +160,7 @@ function loadComments(id = localStorage.getItem("currentPost")){
 			var nc = document.getElementById("commentTemplate").cloneNode(true);
 			var post = JSON.parse(localStorage.getItem("postlist"))[id];
 			nc.id = "commentPostedU" + id + "P" + i;
-			nc.style.width = "90%";
+			nc.style.width = "100%";
 			nc.style.top = dist + "px";
 			nc.style.visibility = "visible";
 			document.getElementById("commentsContainer").appendChild(nc)
