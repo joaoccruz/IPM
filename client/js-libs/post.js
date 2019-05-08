@@ -125,7 +125,7 @@ function like(target, list){
 	}else{
 		list.push("user");
 		target.src = "img/likedIcon.png";
-		popHeart(target);
+		popHeart(target, 60);
 	}
 
 	return list;		 

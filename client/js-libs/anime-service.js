@@ -13,19 +13,19 @@ anime({
 	direction: 'alternate',
 });
 
-function popHeart(target){
+function popHeart(target, original){
 	var dd = 200;
 	
 	anime({
 		targets: target,
-		height: '70%',
+		height: (original + 10) + "%",
 		easing: 'easeOutQuart',
 		duration: dd,
 		endDelay: 125,
 		complete: function(){
 			anime({
 				targets: target,
-				height: '60%',
+				height: original + "%",
 				easing: 'easeInQuad',
 				duration: dd,
 			});
