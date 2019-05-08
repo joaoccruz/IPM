@@ -5,8 +5,34 @@ import * as date  from "./date.js";
 import * as kb    from "./keyboard.js";
 import { colors } from "./_colors.js";
 import {unloadEventListeners} from "./utilities.js";
+import {}
+
+
 //import Cropper from "./node_modules/cropperjs/src/index.js"
 
+
+function loadGallery(){
+	var container = document.getElementById("gallery"); 
+	var imageList = JSON.parse(localStorage.getItem("images"));
+	
+	for(var i = 0; i < imageList.length; i++){
+		var newImage = document.createElement("img");
+		newImage.src = imageList[i];
+		newImage.width = "20%";
+		newImage.height = "20%";
+		newImage.left = (i % 5);
+
+		container.appendChild(newImage);
+	}
+}
+
+
+function unloadGallery(){
+	var container = document.getElementById("gallery");
+	while(container.childNodes > 0){
+		container.childNodes[0].remove();
+	}
+}
 
 
 function historyAdd(screen){
@@ -87,7 +113,7 @@ function load(screen,f = null, swiped = false){
 		screen = "tutorial";
 	}
 
-	var noHistory = ["lockscreen", "numpadScreen", "cameraSimulation", "cameraCrop"];
+	var noHistory = ["lockscreen", "numpadScreen", "cameraSimulation"];
 	(!noHistory.includes(screen)) ? localStorage.setItem("lastScreen",screen) : null;
 	
 	if(screen != "cameraSimulation")
@@ -128,13 +154,9 @@ function load(screen,f = null, swiped = false){
 	    	break;
 	    
 	    case "quickPostImagePick":
-			var img = document.getElementById("quickPostCameraImage");
-			var img2 = document.getElementById("cameraCropSelected");
-	    	enableSwipeBack();
 			var f = function(){
 				var sel = opt.options[opt.selectedIndex].value;
 				img.src = "cameraSim/"+sel+".png";
-				console.log(sel);
 			}
 
 			var nextScreen = function(){
@@ -142,6 +164,17 @@ function load(screen,f = null, swiped = false){
 				unload(screen);
 				load("quickPostTextAdd");
 			}
+
+			gallery: {
+				unload(screen);
+				load("gallery");
+			}
+
+
+			var img = document.getElementById("quickPostCameraImage");
+			
+
+	    	enableSwipeBack();
 
 			load("cameraSimulation");
 			var opt = document.getElementById("cameraSelected");
@@ -151,8 +184,11 @@ function load(screen,f = null, swiped = false){
 			//const cropper = new Cropper.Cropper(img2, {
 			//	aspectration: 16/9
 			//});
+			
+
 			opt.addEventListener("change",f);
-			document.getElementById("quickPostNextArrow").addEventListener("click", nextScreen);
+			document.getElementById("quickPostNextArrow").addEventListener("click", nextScreen, {once: true});
+			document.getElementById("quickPostGallery").addEventListener("click",gallery ,{once: true})
 			break;
 
 		case "quickPostTextAdd":	
@@ -183,7 +219,10 @@ function load(screen,f = null, swiped = false){
 			commentWrite.addEventListener("click", () => {unload(screen); load("commentTextAdd"); unload("commentsScreen")}, {once: true})
 			enableSwipeBack();
 			break;
-		case "cameraCrop":
+		
+
+		case "gallery":
+			loadGallery();
 			break;
 
 	    default: 
@@ -233,10 +272,7 @@ function unload(screen){
 	    	break;
 
 	    case "cameraSimulation":
-	    	unload("cameraCrop")
-	    	break;
-
-	    case "cameraCrop":
+	    	
 	    	break;
 
 	    case "commentsScreen":
