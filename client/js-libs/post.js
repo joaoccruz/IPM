@@ -119,12 +119,13 @@ function newPost(img,text){
 
 function like(target, list){
 	var index = list.indexOf("user");
-	console.log(list);
 	if(index != -1){
+		target.src = "img/heart.png"
 		list.splice(index, 1);
 	}else{
 		list.push("user");
-		popHeart(target.id);
+		target.src = "img/likedIcon.png";
+		popHeart(target);
 	}
 
 	return list;		 
@@ -157,6 +158,7 @@ function loadComments(id = localStorage.getItem("currentPost")){
 
 		var dist = 0;
 		for(var i = 0; i < comments.length; i++){
+			console.log(i);
 			var nc = document.getElementById("commentTemplate").cloneNode(true);
 			var post = JSON.parse(localStorage.getItem("postlist"))[id];
 			nc.id = "commentPostedU" + id + "P" + i;
@@ -189,7 +191,8 @@ function loadComments(id = localStorage.getItem("currentPost")){
 			h = h  + 4 + "px";
 			nc.style.height = h;
 			let curr = i;
-			heart.addEventListener("click", () => {POST_LIST[id][6][2] = like(heart,comments[curr][2]); unloadComments(); loadComments(); localStorage.setItem("postlist", JSON.stringify(POST_LIST))})
+			let h1 = heart;
+			h1.addEventListener("click", () => {var pl = JSON.parse(localStorage.getItem("postlist")); pl[currentPost()][6][curr][2] = like(h1,pl[currentPost()][6][curr][2]); localStorage.setItem("postlist", JSON.stringify(pl));})
 		}
 	}
 }
@@ -216,4 +219,9 @@ function newComment(handle, message, likes = []){
 	loadComments();
 
 }
+
+function currentPost(){
+	return localStorage.getItem("currentPost");
+}
+
 export {newComment, add,loadPrev, loadNext, draw, newPost, like, loadComments, unloadComments}	

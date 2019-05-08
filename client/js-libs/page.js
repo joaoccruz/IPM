@@ -389,9 +389,10 @@ function main(){
 	document.getElementById("mainCamera").addEventListener("click",() => {unload("main"); load("quickPostImagePick");});
 
 	var heart = document.getElementById("postLikes");
+
 	var pl = JSON.parse(localStorage.getItem("postlist"));
 	
-	document.getElementById("postLikes").addEventListener("click", () => {pl[currentPost()][5] = post.like(heart, pl[currentPost()][5]); localStorage.setItem("postlist", JSON.stringify(pl)); post.draw()});
+	document.getElementById("postLikes").addEventListener("click", () => {console.log(heart); pl[currentPost()][5] = post.like(heart, pl[currentPost()][5]); localStorage.setItem("postlist", JSON.stringify(pl)); post.draw()});
 	document.getElementById("postComments").addEventListener("click", () => {unload("main"); load("commentsScreen")});
 }
 

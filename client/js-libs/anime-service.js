@@ -15,21 +15,23 @@ anime({
 
 function popHeart(target){
 	var dd = 200;
+	
 	anime({
-		targets: "#" + target,
+		targets: target,
 		height: '70%',
 		easing: 'easeOutQuart',
 		duration: dd,
 		endDelay: 125,
 		complete: function(){
 			anime({
-				targets: "#" + target,
+				targets: target,
 				height: '60%',
 				easing: 'easeInQuad',
 				duration: dd,
 			});
 		}
 	});
+
 }
 
 export{popHeart};
