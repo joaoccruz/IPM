@@ -211,7 +211,7 @@ function loadComments(id = localStorage.getItem("currentPost")){
 }
 
 function unloadComments(){
-	var comments = JSON.parse(localStorage.getItem("postlist"))[localStorage.getItem("currentPost")][6];
+	var comments = JSON.parse(localStorage.getItem("postlist"))[localStorage.getItem("currentPost")].comments;
 	if(comments.length == 0){
 		document.getElementById("noComments").remove();
 	}else{
@@ -227,7 +227,7 @@ function newComment(handle, message, likes = []){
 	// TODO: PREVENT EMPTY
 	var currentPost = localStorage.getItem("currentPost");
 	var postlist = JSON.parse(localStorage.getItem("postlist"));
-	postlist[currentPost][6].push([handle,message,likes]);
+	postlist[currentPost]comments.push([handle,message,likes]);
 	localStorage.setItem("postlist", JSON.stringify(postlist));	
 	loadComments();
 
