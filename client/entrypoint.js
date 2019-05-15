@@ -1,5 +1,6 @@
 import * as page  from "./js-libs/page.js";
-import * as post  from "./js-libs/post.js"
+import * as post  from "./js-libs/post.js";
+import * as server from "./js-libs/server.js";
 import "./js-libs/anime-service.js";
 
 localStorage.setItem("user", "user");

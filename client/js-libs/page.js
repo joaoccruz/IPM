@@ -80,7 +80,7 @@ function kbStdd(key, msg, div, toLoad){
 
 
 
-function load(screen,f = null, swiped = false){
+function load(screen, f = null, swiped = false){
 	// For top tier divs(Lockscreen, tutorial, main, quickpost)
 	
 	var tut = localStorage.getItem("tutorial");
@@ -187,6 +187,31 @@ function load(screen,f = null, swiped = false){
 		case "cameraCrop":
 			break;
 
+		case "contactSelector":
+			var parent = document.getElementById("contactSelector")
+			var sample = document.getElementById("contactDivSample")
+			var useWhite = true
+			var count = 0;
+			server.get("getContacts", function(response){
+				console.log(response);
+				var contacts = JSON.parse(response)
+				for (const contact of contacts) {
+					console.log("LOADING " + contact);
+					var c = sample.cloneNode(true);
+					c.style.backgroundColor = useWhite ? colors["white"] : colors["nearwhite"]
+					c.style.visibility = "visible"
+					c.childNodes[0].innerHTML = contact
+					c.id = "contact";
+					c.style.top = (str)(20*count) + "%"
+
+					parent.appendChild(c)
+					useWhite = !useWhite
+				}
+			}
+			);
+			enableSwipeBack();
+			break;
+
 	    default: 
 	    	alert("Defaulted at load: " + screen);
 	    	break;
@@ -244,6 +269,14 @@ function unload(screen){
 	    	post.unloadComments();
 			break;
 		
+			case "contactSelector":
+				var parent = document.getElementById("contactSelector")
+				for (const c of parent) {
+					if (c.id != "contactDivSample") {
+						c.remove();
+					}
+				}
+			break;
 
 	    default:
 	    	alert("Defaulted at unload: " + screen);
@@ -260,9 +293,6 @@ function loadLastScreen(){
 	unload(localStorage.getItem("currScreen"));
 	load(lastScreen);
 }
-
-
-
 
 function tutorial(){
 	const tut = document.getElementById("tutorial");
@@ -450,6 +480,7 @@ function main(){
 	
 	document.getElementById("postLikes").addEventListener("click", () => {console.log(heart); pl[currentPost()][5] = post.like(heart, pl[currentPost()][5]); localStorage.setItem("postlist", JSON.stringify(pl)); post.draw()});
 	document.getElementById("postComments").addEventListener("click", () => {unload("main"); load("commentsScreen")});
+	document.getElementById("mainContacts").addEventListener("click", () => {unload("main"); load("contactSelector")});
 }
 
 function loadNotifications(){
