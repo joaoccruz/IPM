@@ -38,6 +38,12 @@ function drawContacts(contactList){
 			document.getElementById("contactsContainer").appendChild(nc)
 			var text = nc.getElementById("contactTemplateName");
 
+			var img = nc.getElementById("templateSendMessage");
+
+
+			img.addEventListener("click", ()=>{
+				loadChat(localStorage.getItem("userHandle"), contactList[i])
+			})
 			text.innerHTML = contactList[i];
 			text.style.top = nc.clientHeight + 2 + "px";
 

@@ -43,7 +43,7 @@ class User:
 		self.username = username
 		self.contacts = set()
 		self.contactsRequests = set()
-		self.messageList = []
+		self.messageList = {}
 
 	def equals(user):
 		if(user.username == self.username):
@@ -94,9 +94,16 @@ def message():
 			USER_LIST[sender].messageList.pop(0)
 			USER_LIST[receiver].messageList.pop(0)
 
+		try:
+			USER_LIST[sender].messageList[receiver].append(m)
+		except:
+			USER_LIST[sender].messageList[receiver] = [m]
 
-		USER_LIST[sender].messageList.append(m)
-		USER_LIST[receiver].messageList.append(m)
+		try:
+			USER_LIST[receiver].messageList[sender].append(m)
+		except:
+			USER_LIST[receiver].messageList[sender] = [m]
+		
 		return "OK"
 
 	else:
@@ -172,15 +179,18 @@ def denyContactRequest():
 @app.route("/getMessages", methods=["POST"])
 def getMessages():
 	try:
-		u = request.form["username"]
+		u = request.form["loggedIn"]
+		u2 = request.form["otherUser"]
 	except:
 		return "Missing header", 400
 
-	if(not userExists(u)):
+	if(not userExists(u) || not userExists(u2)):
 		return "User doesn't exist", 403
-
-	return str(USER_LIST[u].messageList)
-
+	
+	try:
+		return json.dumps(USER_LIST[u].messageList[u2])
+	except:
+		return []
 
 @app.route("/getContacts", methods=["POST"])
 def getContactList():
