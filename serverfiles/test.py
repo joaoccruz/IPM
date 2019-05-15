@@ -9,6 +9,7 @@ def testPost(val1, val2 = {}, p = False):
 
 
 
+testPost("getPosts", {}, True)
 
 """
 testPost("register", {"username": "BobbyJeans"})

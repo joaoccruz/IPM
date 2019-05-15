@@ -53,7 +53,7 @@ function updatePostList(func){
 	}
 
 	function f(e){
-		localStorage.setItem("postlist", e);
+		JSON.stringify(localStorage.setItem("postlist", e));
 		next();
 	}
 
@@ -237,7 +237,7 @@ function loadComments(id = localStorage.getItem("currentPost")){
 }
 
 function unloadComments(){
-	var comments = JSON.parse(localStorage.getItem("postlist"))[localStorage.getItem("currentPost")].likes;
+	var comments = JSON.parse(localStorage.getItem("postlist"))[localStorage.getItem("currentPost")].comments;
 	if(comments.length == 0){
 		document.getElementById("noComments").remove();
 	}else{
@@ -257,11 +257,11 @@ function newComment(handle, message, likes = []){
 	postlist[currentPost].comments.push(comment);
 	localStorage.setItem("postlist", JSON.stringify(postlist));	
 
-	data = {
+	var data = {
 		"comment": comment,
-		"user" = currentPost
+		"user": localStorage.getItem("userHandle")
 	}
-	server.post("addComment", comment)
+	server.post("addComment", JSON.stringify(comment))
 	loadComments();
 
 }

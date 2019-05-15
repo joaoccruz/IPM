@@ -4,16 +4,16 @@ import os
 import queue
 import requests
 import json
-
+import time
 
 app = Flask(__name__,template_folder='web',static_folder="web/static")
 CORS(app)
 
 USER_LIST = {}
-POST_LIST = {}
+POST_LIST = []
 
 class Post:
-	def __init___(self, src, desc, location, user, date, likes=[], comments=[]):
+	def __init__(self, src, desc, location, user, date, likes=[], comments=[]):
 		self.src = src
 		self.desc = desc
 		self.location = location
@@ -21,6 +21,7 @@ class Post:
 		self.date = date
 		self.likes = likes
 		self.comments = comments
+
 
 class Message:
 	def __init__(self, sender, receiver, message):
@@ -44,9 +45,6 @@ class User:
 		self.contactsRequests = set()
 		self.messageList = []
 
-	def __str__(self):
-		return self.username;
-
 	def equals(user):
 		if(user.username == self.username):
 			return True 
@@ -67,13 +65,13 @@ def register():
 	try:
 		u = request.form["username"]
 	except:
-		return "No username", 404 # Not Found (Original: 400/Bad Request)
+		return "No username", 400
 
 	if(userExists(u)):
-		return "User already found", 409 # Conflict (Original: 403/Forbidden)
+		return "User already found", 403
 
 	USER_LIST[u] = User(u)
-	return "OK", 200 #OK
+	return "OK"
 
 
 
@@ -102,7 +100,7 @@ def message():
 		return "OK"
 
 	else:
-		return "User not found", 404 # Not Found (Original: 403/Forbidden)
+		return "User not found", 403
 
 # CONTACTS
 
@@ -114,7 +112,7 @@ def getContactRequests():
 		return "Missing header", 400
 
 	if(not userExists(u)):
-		return "User not found", 404 # Not Found (Original: 403/Forbidden)
+		return "User not found", 403
 
 	return str(list(USER_LIST[u].contactsRequests))
 
@@ -133,7 +131,7 @@ def sendRequest():
 		else:
 			return "Already contacts", 403	
 	else:
-		return "User not found", 404 # Not Found (Original: 403/Forbidden)
+		return "User not found", 403
 
 
 @app.route("/approveContactRequest", methods=["POST"])
@@ -147,7 +145,7 @@ def acceptContactRequest():
 
 	contactsRequests = USER_LIST[sender].contactsRequests 
 	if(receiver not in contactsRequests ):
-		return "%s not found in %s's contacts requests" % (receiver, sender), 404 # Not Found (Original: 403/Forbidden)
+		return "%s not found in %s's contacts requests" % (receiver, sender), 403
 
 	USER_LIST[sender].contactsRequests.remove(receiver)
 	USER_LIST[sender].contacts.add(receiver)
@@ -165,7 +163,7 @@ def denyContactRequest():
 
 	contactsRequests = USER_LIST[sender].contactsRequests 
 	if(receiver not in contactsRequests ):
-		return "%s not found in %s's contacts requests" % (receiver, sender), 404 # Not Found (Original: 403/Forbidden)
+		return "%s not found in %s's contacts requests" % (receiver, sender), 403
 
 	USER_LIST[sender].contactsRequests.remove(receiver)
 	return "OK"
@@ -179,7 +177,7 @@ def getMessages():
 		return "Missing header", 400
 
 	if(not userExists(u)):
-		return "User doesn't exist", 404 # Not Found (Original: 403/Forbidden)
+		return "User doesn't exist", 403
 
 	return str(USER_LIST[u].messageList)
 
@@ -203,20 +201,72 @@ def addPost():
 		location = request.form["location"]
 		user = request.form["user"]
 		date = request.form["date"]
-		likes = request.form["likes"]
-		comments = request.form["comments"]
-		return "OK", 200
+		likes = json.loads(request.form["likes"])
+		comments = json.loads(request.form["comments"])
 	except:
 		return "Missing header", 400
 
 
+	np = Post(src,desc,location,user,date,likes,comments)
+	POST_LIST.append(np)
+	return "OK"
+
+
+@app.route("/likePost", methods=["POST"])
+def likePost():
+	# VALIDATE BOUNDARIES
+	try:
+		pid = request.form["postId"]
+		u = request.form["user"]
+	except:
+		return "Missing header", 400
+
+	l = POST_LIST[int(pid)].likes
+	
+
+	if(u in l):
+		l.remove(u)
+	else:
+		l.append(u)
+
+	return "OK"
+
+@app.route("/likeComment", methods=["POST"])
+def likeComment():
+	try:
+		u = request.form["user"]
+		pid = request.form["postId"]
+		commentId = request.form["commentId"]
+	except:
+		return "Missing header", 400
+
+	l = POST_LIST[int(pid)].comments[int(commentId)].likes
+	
+	if(u in l):
+		l.remove(u)
+	else:
+		l.append(u)
+
+	return "OK"
+
+@app.route("/addComment", methods=["POST"])
+def addComment():
+	try:
+		pid = request.form["postId"]
+		comment = request.form["comment"]
+	except:
+		return "Missing header", 400
+
+	POST_LIST[int(pid)].comments.append(json.loads(comment))
+	return "OK"
+
 
 @app.route("/getPosts", methods=["POST"])
 def getPosts():
-	return str(POST_LIST)
 
-@app.route("/getContacts", methods=["GET"])
-def getContacts():
-	return str(USER_LIST)
+	return json.dumps(POST_LIST, default = lambda x: x.__dict__)
 
+POST_LIST.append(Post("img/beach.jpeg", "Nada como o ar da montanha, na praia", "Serra da Estrela", "Senhor_Malaquias", time.time(), ["Senhor_António","Senhor_Malaquias"], []));
+POST_LIST.append(Post("img/montanha.jpg", "Imagem genérica de uma montanha", "Montanha", "Senhor_José", time.ctime(time.time()-604800000), [], []));
+POST_LIST.append(Post("img/gil.jpg", "Grande Gil! 👌", "Parque das Nações", "Senhor_António", time.time(), [], []));
 app.run(host="0.0.0.0",port=5000)

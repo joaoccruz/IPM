@@ -15,7 +15,7 @@ import {unloadEventListeners} from "./utilities.js";
 function loadGallery(){
 	/*var container = document.getElementById("gallery"); 
 	var imageList = JSON.parse(localStorage.getItem("images"));
-
+	
 	for(var i = 0; i < imageList.length; i++){
 		var newImage = document.createElement("img");
 		newImage.src = imageList[i];
@@ -143,7 +143,7 @@ function load(screen,f = null, swiped = false){
 
 		case "main":
 			swipe.disable(document.getElementById("container"));
-			main();
+			post.updatePostList(main);
 			break;
 
 		case "tutorial":
@@ -194,18 +194,25 @@ function load(screen,f = null, swiped = false){
 			document.getElementById("quickPostGallery").addEventListener("click",gallery ,{once: true})
 			break;
 
-		case "quickPostTextAdd":	
-			kb.main(document.getElementById("quickPostTextAdd"), function(msg){
+		case "quickPostTextAdd":
+
+			var ele = document.getElementById("quickPostTextAdd");
+			kb.main(ele, function(msg){
 				kbStdd("textForPost", msg, "quickPostTextAdd", "main");
 				post.newPost(localStorage.getItem("imgForPost"),localStorage.getItem("textForPost"));
-				
+				kb.unload(ele)
 			},90);
 			break;
 
 
 		case "commentTextAdd":
-			enableSwipeBack();
-			kb.main(document.getElementById("commentTextAdd"), (msg) => {kbStdd("textForComment", msg, "commentTextAdd", "commentsScreen"); post.newComment("user", msg); }, 130);
+			var ele = document.getElementById("commentTextAdd");
+			kb.main(ele, (msg) => {
+					kbStdd("textForComment", msg, "commentTextAdd", "commentsScreen"); 
+					post.newComment(localStorage.getItem("userHandle"), msg);
+					kb.unload(ele)
+				},
+				130);
 			
 			break;	
 		
@@ -218,10 +225,15 @@ function load(screen,f = null, swiped = false){
 			break;
 
 		case "commentsScreen":
+			enableSwipeBack();
 			post.loadComments();
 			var commentWrite = document.getElementById("commentWrite");
-			commentWrite.addEventListener("click", () => {unload(screen); load("commentTextAdd"); unload("commentsScreen")}, {once: true})
-			enableSwipeBack();
+			
+			commentWrite.addEventListener("click", () => {
+				unload(screen);
+				load("commentTextAdd");
+				unload("commentsScreen")},
+				{once: true})
 			break;
 		
 
@@ -233,12 +245,12 @@ function load(screen,f = null, swiped = false){
 			var parent = document.getElementById("contactSelector")
 			var sample = document.getElementById("contactDivSample")
 			var useWhite = true
-			var contacts; server.get("contacts", (response) => {contacts = response});
+			var contacts = getContacts();
 			for (contact in contacts) {
 				var c = sample.cloneNode(true);
 				c.style.backgroundColor = useWhite ? colors["white"] : colors["nearwhite"]
 				c.style.visibility = true
-				c.childNodes[0].innerHTML = contact
+				//c.get
 				parent.appendChild(c)
 				useWhite = !useWhite
 			}
@@ -447,9 +459,11 @@ function updateLockScreen(){
     var dayW = date.getWeek(d);
    
 	document.getElementById("lockscreenText").innerHTML = date.getTime(d);
-	document.getElementById("lockscreenDate").innerHTML = "{0}, {1} {2}".format(dayW, month, day);
+	document.getElementById("lockscreenDate").innerHTML = "{0}, {1} {2}".format(dayW, 
+		month, day);
 
 }
+
 
 
 function main(){
@@ -461,8 +475,19 @@ function main(){
 
 	var pl = JSON.parse(localStorage.getItem("postlist"));
 	
-	document.getElementById("postLikes").addEventListener("click", () => {console.log(heart); pl[currentPost()][5] = post.like(heart, pl[currentPost()][5]); localStorage.setItem("postlist", JSON.stringify(pl)); post.draw()});
+
+	document.getElementById("postLikes").addEventListener("click", () => {
+		pl[currentPost()].likes = post.like(heart, pl[currentPost()].likes);
+		localStorage.setItem("postlist", JSON.stringify(pl)); post.draw()
+		var data = {
+			"postId": currentPost(),
+			"user": localStorage.getItem("userHandle")
+		}
+		server.post("likePost", data)
+	});
+
 	document.getElementById("postComments").addEventListener("click", () => {unload("main"); load("commentsScreen")});
+
 }
 
 function loadNotifications(){
