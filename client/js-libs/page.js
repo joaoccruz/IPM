@@ -5,14 +5,14 @@ import * as date  		from "./date.js";
 import * as kb    		from "./keyboard.js";
 import * as server		from "./server.js"
 import { colors } 		from "./_colors.js";
-import {contacts} 	from "./contacts.js";
 import {unloadEventListeners} from "./utilities.js";
 
 
 //import Cropper from "./node_modules/cropperjs/src/index.js"
 function drawContacts(contactList){
-	
-	if(contactList.length == 2){
+	console.log(contactList)
+	contactList = JSON.parse(contactList)
+	if(contactList.length == 0){
 		var noContacts = document.createElement("p");
 		noContacts.innerHTML = "You have no contacts yet";
 		noContacts.style.display = "block";
@@ -29,25 +29,21 @@ function drawContacts(contactList){
 		}
 
 		var dist = 0;
-		for(var i = 0; i < contacts.length; i++){
+		for(var i = 0; i < contactList.length; i++){
 			var nc = document.getElementById("contactTemplate").cloneNode(true);
 			nc.id = "contactNumber" + i;
 			nc.style.width = "100%";
 			nc.style.top = dist + "px";
 			nc.style.visibility = "visible";
 			document.getElementById("contactsContainer").appendChild(nc)
+			var text = nc.getElementById("contactTemplateName");
 
-			var handle = nc.getElementById("commentHandle");
-			var text = nc.getElementById("commentText");
-			
-			text.style.top = handle.clientHeight + 2 + "px";
-
-			handle.innerHTML = comments[i].user;
-			text.innerHTML = comments[i].message;
+			text.innerHTML = contactList[i];
+			text.style.top = nc.clientHeight + 2 + "px";
 
 
 			
-			var h = text.clientHeight + handle.clientHeight;
+			var h = text.clientHeight;
 
 			if(h > 80)
 				h = 80;
@@ -55,22 +51,6 @@ function drawContacts(contactList){
 			dist += h + 5;
 			h = h  + 4 + "px";
 			nc.style.height = h;
-			let curr = i;
-			let h1 = heart;
-			h1.addEventListener("click", () => 
-				{var pl = JSON.parse(localStorage.getItem("postlist"));
-				 pl[currentPost()].comments[curr].likes = like(h1,pl[currentPost()].comments[curr].likes);
-				 heartNum.innerHTML = pl[currentPost()].comments[curr].likes.length;
-				 localStorage.setItem("postlist", JSON.stringify(pl));
-				 var data = {
-				 	"postId": currentPost(),
-				 	"commentId": curr,
-				 	"user": localStorage.getItem("userHandle")
-				 }
-				 server.post("likeComment", data);
-				});
-		
-
 		}
 	}
 }

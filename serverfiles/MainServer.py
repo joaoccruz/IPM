@@ -191,8 +191,8 @@ def getContactList():
 
 	if(not userExists(u)):
 		return "User %s doesn't exist" % u
-		
-	return str(list(USER_LIST[u].contacts))
+
+	return json.dumps(list(USER_LIST[u].contacts))
 
 @app.route("/addPost", methods=["POST"])
 def addPost():

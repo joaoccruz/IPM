@@ -8,17 +8,23 @@ def testPost(val1, val2 = {}, p = False):
 		print(val1 + ": " , r.reason, r.content.decode("utf-8"))
 
 
+def addFriend(loggedIn, friend):
+	testPost("sendContactRequest", {"sender": loggedIn, "receiver": friend})
+	testPost("approveContactRequest", {"sender": friend, "receiver": loggedIn})
+
+
+
 
 testPost("getPosts", {}, True)
 
 
-#testPost("register", {"username": "BobbyJeans"})
+testPost("register", {"username": "BobbyJeans"})
 testPost("register", {"username": "BobbyBans"})
+testPost("register", {"username": "AA"})
 
+addFriend("BobbyJeans", "BobbyBans")
+addFriend("BobbyJeans", "AA")
 
-testPost("sendContactRequest", {"sender": "BobbyJeans", "receiver": "BobbyBans"})
-testPost("getContactRequests", {"username": "BobbyBans"})
-testPost("approveContactRequest", {"sender": "BobbyBans", "receiver": "BobbyJeans"})
 
 """
 testPost("addMessage", {"sender": "BobbyJeans", "receiver": "BobbyBans", "message": "Olá"})
