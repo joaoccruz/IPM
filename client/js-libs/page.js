@@ -397,30 +397,11 @@ function tutorial(){
 				t1.innerHTML = "Be welcome, " + newHandle + "! We'll now explore the features of your iGo.";
 				t2.innerHTML = "Tap to continue.";
 
-				localStorage.setItem("tutorial", "tutorial1");
+				localStorage.setItem("tutorial", "complete");
 			}
 
 		tut.addEventListener("click", tutorial, {once: true});
 		break;
-
-		case "tutorial1":
-			t1.style.top = "05%"
-			t1.innerHTML = "The next few screens will be a tutorial on how to use the device";
-			t2.innerHTML = "You can skip them if you have used this before"
-			i3.src = "";
-			skip.innerHTML = "skip";
-			tut.style.zIndex = 300;
-			skip.style.zIndex = 400;
-			unload("numpadScreen");
-			skip.addEventListener("click", function(){
-				// SKIP
-				localStorage.setItem("tutorial", "complete");
-				post.style.outline = "none";
-				swipe.disable(tut);
-				unload("tutorial");
-				unload(localStorage.getItem("currScreen"));
-				load("main");
-			}, {once : true});
 
 		case "complete":
 			unload("tutorial");
