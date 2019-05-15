@@ -39,20 +39,31 @@ function add(src, desc, location, user, date, likes=[], comments=[]){
 		"location": location,
 		"user": 	user,
 		"date": 	date,
-		"likes": 	likes,
-		"comments":  comments
+		"likes": 	JSON.stringify(likes),
+		"comments":  JSON.stringify(comments)
 	} 
 
 	server.post("addPost", data);
 
-	var posts = JSON.parse(localStorage.getItem("postlist"));
-	if(posts == null){
-		posts = [];
+}
+
+function updatePostList(func){
+	function next(){
+		func();
 	}
 
-	posts.push([src, desc, location, user, date.toString(), likes, comments]);
-	localStorage.setItem("postlist", JSON.stringify(posts))
+	function f(e){
+		localStorage.setItem("postlist", e);
+		next();
+	}
+
+	function g(){
+		next();
+	}
+
+	server.post("getPosts", {}, f, g);
 }
+
 
 function loadNext(){
 	var POST_LIST = JSON.parse(localStorage.getItem("postlist"));
@@ -77,6 +88,8 @@ function loadPrev(){
 function draw(ID = localStorage.getItem("currentPost")){
 	// TODO: CHANGE TO OTHER FILE
 	var POST_LIST = JSON.parse(localStorage.getItem("postlist"));
+	if(!POST_LIST)
+		return;
 	function generateDate(d){
 
 		var min = d.getMinutes().toString();
@@ -110,19 +123,19 @@ function draw(ID = localStorage.getItem("currentPost")){
 		localStorage.setItem("currentPost",0); 
 	}
 
-	document.getElementById("mainImage").src = POST_LIST[ID][0];
-	document.getElementById("postDescription").innerHTML = POST_LIST[ID][1];
-	document.getElementById("postLocation").innerHTML = POST_LIST[ID][2][2];
-	document.getElementById("postHandle").innerHTML = "@" + POST_LIST[ID][3];
-	document.getElementById("postTimestamp").innerHTML = generateDate(new Date(POST_LIST[ID][4]));
-	document.getElementById("postLikes").src = (POST_LIST[ID][5].includes(localStorage.getItem("userHandle")) ? "img/likedIcon.png" : "img/heart.png");
-	document.getElementById("postLikesNumber").innerHTML = POST_LIST[ID][5].length;
-	document.getElementById("postCommentsNumber").innerHTML = POST_LIST[ID][6].length;
+	document.getElementById("mainImage").src = POST_LIST[ID].src;
+	document.getElementById("postDescription").innerHTML = POST_LIST[ID].desc;
+	document.getElementById("postLocation").innerHTML = POST_LIST[ID].location;
+	document.getElementById("postHandle").innerHTML = "@" + POST_LIST[ID].user;
+	document.getElementById("postTimestamp").innerHTML = generateDate(new Date(POST_LIST[ID].date));
+	document.getElementById("postLikes").src = (POST_LIST[ID].likes.includes(localStorage.getItem("userHandle")) ? "img/likedIcon.png" : "img/heart.png");
+	document.getElementById("postLikesNumber").innerHTML = POST_LIST[ID].likes.length;
+	document.getElementById("postCommentsNumber").innerHTML = POST_LIST[ID].comments.length;
 }
 
 function newPost(img,text){
 	function getGPSData(){
-		return [40.3218825, -7.6217218, "Needs maps integration"];
+		return "Needs maps integration";
 	}
 
 	add(img, text, getGPSData(),localStorage.getItem("userHandle"), new Date());
@@ -146,12 +159,12 @@ function like(target, list){
 
 
 function getComments(post){
-	return post[6];
+	return post.comments;
 }
 
 function loadComments(id = localStorage.getItem("currentPost")){
 	var POST_LIST = JSON.parse(localStorage.getItem("postlist"));
-	var comments = POST_LIST[id][6];
+	var comments = POST_LIST[id].comments;
 	if(comments.length == 0){
 		var noComments = document.createElement("p");
 		noComments.innerHTML = "This post has no comments yet, add one!";
@@ -184,14 +197,14 @@ function loadComments(id = localStorage.getItem("currentPost")){
 
 			var heart = nc.getElementById("commentHeart");
 			var heartNum = nc.getElementById("commentLikes");
-			heartNum.innerHTML = comments[i][2].length;
-			heart.src = (comments[i][2].includes(localStorage.getItem("userHandle")) ? "img/likedIcon.png" : "img/heart.png");
+			heartNum.innerHTML = comments[i].likes.length;
+			heart.src = (comments[i].likes.includes(localStorage.getItem("userHandle")) ? "img/likedIcon.png" : "img/heart.png");
 
 
 			text.style.top = handle.clientHeight + 2 + "px";
 
-			handle.innerHTML = comments[i][0];
-			text.innerHTML = comments[i][1];
+			handle.innerHTML = comments[i].user;
+			text.innerHTML = comments[i].message;
 
 
 			
@@ -205,13 +218,26 @@ function loadComments(id = localStorage.getItem("currentPost")){
 			nc.style.height = h;
 			let curr = i;
 			let h1 = heart;
-			h1.addEventListener("click", () => {var pl = JSON.parse(localStorage.getItem("postlist")); pl[currentPost()][6][curr][2] = like(h1,pl[currentPost()][6][curr][2]); heartNum.innerHTML = pl[currentPost()][6][curr][2].length; localStorage.setItem("postlist", JSON.stringify(pl));})
+			h1.addEventListener("click", () => 
+				{var pl = JSON.parse(localStorage.getItem("postlist"));
+				 pl[currentPost()].comments[curr].likes = like(h1,pl[currentPost()].comments[curr].likes);
+				 heartNum.innerHTML = pl[currentPost()].comments[curr].likes.length;
+				 localStorage.setItem("postlist", JSON.stringify(pl));
+				 var data = {
+				 	"postId": currentPost(),
+				 	"commentId": curr,
+				 	"user": localStorage.getItem("userHandle")
+				 }
+				 server.post("likeComment", data);
+				});
+		
+
 		}
 	}
 }
 
 function unloadComments(){
-	var comments = JSON.parse(localStorage.getItem("postlist"))[localStorage.getItem("currentPost")].comments;
+	var comments = JSON.parse(localStorage.getItem("postlist"))[localStorage.getItem("currentPost")].likes;
 	if(comments.length == 0){
 		document.getElementById("noComments").remove();
 	}else{
@@ -227,8 +253,15 @@ function newComment(handle, message, likes = []){
 	// TODO: PREVENT EMPTY
 	var currentPost = localStorage.getItem("currentPost");
 	var postlist = JSON.parse(localStorage.getItem("postlist"));
-	postlist[currentPost]comments.push([handle,message,likes]);
+	var comment = {"user":handle,"message": message, "likes": likes};
+	postlist[currentPost].comments.push(comment);
 	localStorage.setItem("postlist", JSON.stringify(postlist));	
+
+	data = {
+		"comment": comment,
+		"user" = currentPost
+	}
+	server.post("addComment", comment)
 	loadComments();
 
 }
@@ -237,4 +270,4 @@ function currentPost(){
 	return localStorage.getItem("currentPost");
 }
 
-export {newComment, add,loadPrev, loadNext, draw, newPost, like, loadComments, unloadComments}	
+export {updatePostList, newComment, add,loadPrev, loadNext, draw, newPost, like, loadComments, unloadComments}	
