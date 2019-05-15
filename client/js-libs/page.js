@@ -7,10 +7,20 @@ import * as server		from "./server.js"
 import { colors } 		from "./_colors.js";
 import {unloadEventListeners} from "./utilities.js";
 
+function loadChat(u1, u2){
+	function f(r){
+		messageList = JSON.parse(r);
+	}
+	function fail(){
+		console.log("Fail with " + u1 + ":" + u2)		
+	}
+	var data = {"u1": u1, "u2": u2}
+	server.post("getMessages", data, f, fail)
+}
+
 
 //import Cropper from "./node_modules/cropperjs/src/index.js"
 function drawContacts(contactList){
-	console.log(contactList)
 	contactList = JSON.parse(contactList)
 	if(contactList.length == 0){
 		var noContacts = document.createElement("p");
@@ -40,9 +50,9 @@ function drawContacts(contactList){
 
 			var img = nc.getElementById("templateSendMessage");
 
-
+			let curr = contactList[i];
 			img.addEventListener("click", ()=>{
-				loadChat(localStorage.getItem("userHandle"), contactList[i])
+				loadChat(localStorage.getItem("userHandle"), curr)
 			})
 			text.innerHTML = contactList[i];
 			text.style.top = nc.clientHeight + 2 + "px";
@@ -62,12 +72,30 @@ function drawContacts(contactList){
 }
 
 
+function addContact(){
+	function executeKb(msg){
+		kbStdd("contactAddText", msg, "contactsSendRequest", "contactsScreen");
+		server.post("sendContactRequest",{"sender": localStorage.getItem("userHandle"), "receiver": msg},
+			(a)=>{console.log("success")},
+			(a)=>{console.log("fail")})
+
+		kb.unload(document.getElementById("contactsSendRequest"))
+	}
+
+	unload("contactsScreen");
+	load("contactsSendRequest");
+	var ele = document.getElementById("contactsSendRequest");
+	kb.main(ele, executeKb)
+}
+
 function loadContacts(){
-	function f(contactList){
+	function success(contactList){
 		drawContacts(contactList);
 	}
 
-	server.post("getContacts", {"username": localStorage.getItem("userHandle")}, f)
+	document.getElementById("addContactButton").addEventListener("click", addContact)
+
+	server.post("getContacts", {"username": localStorage.getItem("userHandle")}, success)
 }
 
 
@@ -144,9 +172,7 @@ function enableSwipeBack(){
 		localStorage.setItem("history", JSON.stringify(HISTORY));
 		var lastScreen = HISTORY.pop();	
 		if(HISTORY[HISTORY.length-1] != screen)
-		console.log(	"unloading "+ localStorage.getItem("currScreen"));
-		console.log("loading" + lastScreen);
-		
+		;
 		if(lastScreen != undefined){
 			unload(localStorage.getItem("currScreen"));
 			load(lastScreen, undefined,  true);
@@ -325,7 +351,7 @@ function load(screen,f = null, swiped = false){
 			break;
 
 	    default: 
-	    	alert("Defaulted at load: " + screen);
+	    	//alert("Defaulted at load: " + screen);
 	    	break;
 	}
 	
@@ -383,7 +409,7 @@ function unload(screen){
 		
 
 	    default:
-	    	alert("Defaulted at unload: " + screen);
+	    	//alert("Defaulted at unload: " + screen);
 	    	break;
 	}
 }
@@ -490,7 +516,7 @@ function tutorial(){
 			break;
 
 		case "username_check":
-			console.log("RHERE");	
+		//	console.log("RHERE");	
 			tut.style.zIndex = 100;
 			var newHandle = localStorage.getItem("userHandle");
 			t1.style.visibility = "visible";

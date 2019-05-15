@@ -1,10 +1,12 @@
 function post(dir, data, f = ()=>{}, g = ()=>{}){
 	const http = new XMLHttpRequest();
 	function parseResponse(){
-		if(http.status == 200){
-			f(http.response);
+		let stat = http.status; 
+		let resp = http.response;
+		if(stat == 200){
+			f(resp);
 		}else{
-			g(http.response)
+			g(resp)
 		}
 	}
 

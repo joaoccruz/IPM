@@ -12,6 +12,8 @@ CORS(app)
 USER_LIST = {}
 POST_LIST = []
 
+defaultJson = lambda x: x.__dict__ 
+
 class Post:
 	def __init__(self, src, desc, location, user, date, likes=[], comments=[]):
 		self.src = src
@@ -179,18 +181,16 @@ def denyContactRequest():
 @app.route("/getMessages", methods=["POST"])
 def getMessages():
 	try:
-		u = request.form["loggedIn"]
-		u2 = request.form["otherUser"]
+		u = request.form["u1"]
+		u2 = request.form["u2"]
 	except:
 		return "Missing header", 400
 
-	if(not userExists(u) || not userExists(u2)):
+	if(not userExists(u) or not userExists(u2)):
 		return "User doesn't exist", 403
-	
-	try:
-		return json.dumps(USER_LIST[u].messageList[u2])
-	except:
-		return []
+
+	return json.dumps(list(USER_LIST[u].messageList[u2]), default=defaultJson)
+
 
 @app.route("/getContacts", methods=["POST"])
 def getContactList():
@@ -280,7 +280,7 @@ def addComment():
 @app.route("/getPosts", methods=["POST"])
 def getPosts():
 
-	return json.dumps(POST_LIST, default = lambda x: x.__dict__)
+	return json.dumps(POST_LIST, default=defaultJson)
 
 POST_LIST.append(Post("img/beach.jpeg", "Nada como o ar da montanha, na praia", "Serra da Estrela", "Senhor_Malaquias", time.time(), ["Senhor_António","Senhor_Malaquias"], []));
 POST_LIST.append(Post("img/montanha.jpg", "Imagem genérica de uma montanha", "Montanha", "Senhor_José", time.ctime(time.time()-604800000), [], []));

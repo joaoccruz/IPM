@@ -12,7 +12,8 @@ def addFriend(loggedIn, friend):
 	testPost("sendContactRequest", {"sender": loggedIn, "receiver": friend})
 	testPost("approveContactRequest", {"sender": friend, "receiver": loggedIn})
 
-
+def sendMessage(u1, u2, message):
+	testPost("addMessage", {"sender": u1, "receiver": u2, "message": message})
 
 
 testPost("getPosts", {}, True)
@@ -21,10 +22,14 @@ testPost("getPosts", {}, True)
 testPost("register", {"username": "BobbyJeans"})
 testPost("register", {"username": "BobbyBans"})
 testPost("register", {"username": "AA"})
+testPost("register", {"username": "BB"})
+
+
 
 addFriend("BobbyJeans", "BobbyBans")
 addFriend("BobbyJeans", "AA")
 
+sendMessage("AA", "BobbyJeans", "hiii")
 
 """
 testPost("addMessage", {"sender": "BobbyJeans", "receiver": "BobbyBans", "message": "Olá"})
