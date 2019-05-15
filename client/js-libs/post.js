@@ -257,11 +257,8 @@ function newComment(handle, message, likes = []){
 	postlist[currentPost].comments.push(comment);
 	localStorage.setItem("postlist", JSON.stringify(postlist));	
 
-	var data = {
-		"comment": comment,
-		"user": localStorage.getItem("userHandle")
-	}
-	server.post("addComment", JSON.stringify(comment))
+	comment["postId"] = localStorage.getItem("currentPost");
+	server.post("addComment", comment)
 	loadComments();
 
 }

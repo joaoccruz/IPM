@@ -240,7 +240,7 @@ def likeComment():
 	except:
 		return "Missing header", 400
 
-	l = POST_LIST[int(pid)].comments[int(commentId)].likes
+	l = POST_LIST[int(pid)].comments[int(commentId)]["likes"]
 	
 	if(u in l):
 		l.remove(u)
@@ -253,11 +253,16 @@ def likeComment():
 def addComment():
 	try:
 		pid = request.form["postId"]
-		comment = request.form["comment"]
+		user = request.form["user"]
+		message = request.form["message"]
+		likes = request.form["likes"]
 	except:
 		return "Missing header", 400
 
-	POST_LIST[int(pid)].comments.append(json.loads(comment))
+	if(likes == ""):
+		likes = []
+
+	POST_LIST[int(pid)].comments.append({"message": message, "user": user, "likes": likes})
 	return "OK"
 
 

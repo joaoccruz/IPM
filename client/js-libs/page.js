@@ -195,7 +195,6 @@ function load(screen,f = null, swiped = false){
 			break;
 
 		case "quickPostTextAdd":
-
 			var ele = document.getElementById("quickPostTextAdd");
 			kb.main(ele, function(msg){
 				kbStdd("textForPost", msg, "quickPostTextAdd", "main");
@@ -206,6 +205,7 @@ function load(screen,f = null, swiped = false){
 
 
 		case "commentTextAdd":
+			unloadEventListeners(document.getElementById("container"))
 			var ele = document.getElementById("commentTextAdd");
 			kb.main(ele, (msg) => {
 					kbStdd("textForComment", msg, "commentTextAdd", "commentsScreen"); 
@@ -230,10 +230,10 @@ function load(screen,f = null, swiped = false){
 			var commentWrite = document.getElementById("commentWrite");
 			
 			commentWrite.addEventListener("click", () => {
-				unload(screen);
 				load("commentTextAdd");
-				unload("commentsScreen")},
-				{once: true})
+				unload("commentsScreen");
+			},
+			{once: true});
 			break;
 		
 

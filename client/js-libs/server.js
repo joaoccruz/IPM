@@ -11,7 +11,7 @@ function post(dir, data, f = ()=>{}, g = ()=>{}){
 	const ip = "http://localhost:5000/" + dir;
 
 	http.open("POST", ip);
-	http.timeout = 200;
+	http.timeout = 2000;
 	
 
 	document.addEventListener("PingSuccess", parseResponse, {once: true})
@@ -34,6 +34,7 @@ function post(dir, data, f = ()=>{}, g = ()=>{}){
  	   fd.append(key, data[key]);
 	}
 
+	
 	http.send(fd);
 }
 
