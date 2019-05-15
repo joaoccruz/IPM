@@ -163,8 +163,10 @@ function main(div, f = null, chatlimit){
 	renderRow(["z","x","c","v","b","n","m",",","."], 66);
 	renderRow(["⇧"," ","←","↩"],83,["⇧","←","↩"],[20,60,10,10]);
 
+	div.style.zIndex = 100;
 	updateTxtIn();
-	CONTAINER.addEventListener("Enter", (event) => {f(content), unload(div)}, {once : true});
+
+	CONTAINER.addEventListener("Enter", (event) => {f(content), unload(div), CONTAINER.dispatchEvent(new Event("SIGKBEXIT")), div.style.zIndex = 0;}, {once : true});
 }
 
 export {main,unload};

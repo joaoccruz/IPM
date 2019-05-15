@@ -326,41 +326,44 @@ function tutorial(){
 
 		case "username_set":
 			tut.style.zIndex = 0;
-			kb.main(document.getElementById("kbContainer"), function(handle) {
+			t1.style.visibility = "hidden";
+			t2.style.visibility = "hidden";
+			var k = document.getElementById("genericKb");
+			kb.main(k, function(handle) {
 				if (contacts.indexOf(handle) >= 0) {
 					console.log("Oops, username taken!");
-					localStorage.setItem("userHandle", "_"+handle);
+					localStorage.setItem("userHandle", "_" + handle);
 				} else {
 					console.log("Yay");
 					localStorage.setItem("userHandle", handle);
 				}
 			}, 16);
-			tut.style.zIndex = 100;
 			localStorage.setItem("tutorial", "username_check");
-			tutorial();
+			k.addEventListener("SIGKBEXIT", tutorial, {once	: true});
 			break;
 
 		case "username_check":
+			console.log("RHERE");	
+			tut.style.zIndex = 100;
 			var newHandle = localStorage.getItem("userHandle");
+			t1.style.visibility = "visible";
+			t2.style.visibility = "visible";
 			if (newHandle[0] == "_") {
 				// Check did not pass
-				t1.style.visibility = "visible";
-				t2.style.visibility = "visible";
 				t1.innerHTML = "Sorry, but the name " + newHandle.substring(1) + " is already taken!";
 				t2.innerHTML = "Please pick another one. Tap to continue.";
 
 				localStorage.setItem("tutorial", "username_set");
 			} else {
 				// Check passed
-				localStorage.setItem("tutorial", "tutorial1");
-				t1.style.visibility = "visible";
-				t2.style.visibility = "visible";
 				t1.innerHTML = "Be welcome, " + newHandle + "! We'll now explore the features of your iGo.";
 				t2.innerHTML = "Tap to continue.";
+
+				localStorage.setItem("tutorial", "tutorial1");
 			}
 
-			tut.addEventListener("click", tutorial, {once: true});
-			break;
+		tut.addEventListener("click", tutorial, {once: true});
+		break;
 
 		case "tutorial1":
 			t1.style.top = "05%"
