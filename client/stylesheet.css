@@ -475,3 +475,50 @@ button{
 	.contactDiv {
 		height: 20%;
 	}
+
+
+#contactsScreen *{
+	margin: 0;
+}
+	#contactsContainer{
+		left:0;
+		top:14%;
+		width: 100%;
+		height: 84%;
+	}
+
+	#contactTemplate{
+		width: 100%;
+		height: 10%;
+		visibility: hidden;
+		display: none;
+	}
+
+		#contactTemplateName{
+			left: 7%;
+			font-size: 9px;			
+		}
+
+		#templateSendMessage{
+			left: 0;
+			top:1%;
+			width: 5%;
+		}
+
+	#contactsOptions{
+		width: 100%;
+		height: 10%;
+	}
+
+		#addContactButton{
+			right: 0;
+			width: 10%;
+		}
+
+		#contactsText{
+			top:2%;
+			font-size: 10px;
+		}
+
+
+

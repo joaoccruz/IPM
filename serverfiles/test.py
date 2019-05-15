@@ -11,8 +11,8 @@ def testPost(val1, val2 = {}, p = False):
 
 testPost("getPosts", {}, True)
 
-"""
-testPost("register", {"username": "BobbyJeans"})
+
+#testPost("register", {"username": "BobbyJeans"})
 testPost("register", {"username": "BobbyBans"})
 
 
@@ -20,6 +20,7 @@ testPost("sendContactRequest", {"sender": "BobbyJeans", "receiver": "BobbyBans"}
 testPost("getContactRequests", {"username": "BobbyBans"})
 testPost("approveContactRequest", {"sender": "BobbyBans", "receiver": "BobbyJeans"})
 
+"""
 testPost("addMessage", {"sender": "BobbyJeans", "receiver": "BobbyBans", "message": "Olá"})
 testPost("getMessages", {"username": "BobbyJeans"}, True)
 """

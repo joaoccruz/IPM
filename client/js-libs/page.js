@@ -10,6 +10,81 @@ import {unloadEventListeners} from "./utilities.js";
 
 
 //import Cropper from "./node_modules/cropperjs/src/index.js"
+function drawContacts(contactList){
+	
+	if(contactList.length == 2){
+		var noContacts = document.createElement("p");
+		noContacts.innerHTML = "You have no contacts yet";
+		noContacts.style.display = "block";
+		noContacts.id = "noContacts";
+		noContacts.className = "textCenter"
+		noContacts.style.top = "36%";
+		noContacts.style.fontSize = "12px"
+		noContacts.style.color = "black";
+		document.getElementById("contactsContainer").appendChild(noContacts);
+	}else{
+		var noContactsMessage = document.getElementById("noContacts"); 
+		if(noContactsMessage){
+			noContactsMessage.remove();
+		}
+
+		var dist = 0;
+		for(var i = 0; i < contacts.length; i++){
+			var nc = document.getElementById("contactTemplate").cloneNode(true);
+			nc.id = "contactNumber" + i;
+			nc.style.width = "100%";
+			nc.style.top = dist + "px";
+			nc.style.visibility = "visible";
+			document.getElementById("contactsContainer").appendChild(nc)
+
+			var handle = nc.getElementById("commentHandle");
+			var text = nc.getElementById("commentText");
+			
+			text.style.top = handle.clientHeight + 2 + "px";
+
+			handle.innerHTML = comments[i].user;
+			text.innerHTML = comments[i].message;
+
+
+			
+			var h = text.clientHeight + handle.clientHeight;
+
+			if(h > 80)
+				h = 80;
+			
+			dist += h + 5;
+			h = h  + 4 + "px";
+			nc.style.height = h;
+			let curr = i;
+			let h1 = heart;
+			h1.addEventListener("click", () => 
+				{var pl = JSON.parse(localStorage.getItem("postlist"));
+				 pl[currentPost()].comments[curr].likes = like(h1,pl[currentPost()].comments[curr].likes);
+				 heartNum.innerHTML = pl[currentPost()].comments[curr].likes.length;
+				 localStorage.setItem("postlist", JSON.stringify(pl));
+				 var data = {
+				 	"postId": currentPost(),
+				 	"commentId": curr,
+				 	"user": localStorage.getItem("userHandle")
+				 }
+				 server.post("likeComment", data);
+				});
+		
+
+		}
+	}
+}
+
+
+function loadContacts(){
+	function f(contactList){
+		drawContacts(contactList);
+	}
+
+	server.post("getContacts", {"username": localStorage.getItem("userHandle")}, f)
+}
+
+
 
 
 function loadGallery(){
@@ -155,6 +230,13 @@ function load(screen,f = null, swiped = false){
 			enableSwipeBack();
 			break;
 	    
+
+		case "contactsScreen":
+			enableSwipeBack();
+			loadContacts();
+			break;
+
+
 		case "quickPostImagePick":
 			var f = function(){
 				var sel = opt.options[opt.selectedIndex].value;
@@ -274,6 +356,10 @@ function unload(screen){
 	ele.style.visibility = "hidden";
 	ele.style.display = "none"
 	switch(screen){
+
+		case "contactsScreen":
+			break;
+
 		case "lockscreen":
 			break;
 
@@ -470,7 +556,10 @@ function main(){
 	post.draw(localStorage.getItem("currentPost"));
 	swipe.enable(document.getElementById("post"),["left","right"],[post.loadNext,post.loadPrev]);
 	document.getElementById("mainCamera").addEventListener("click",() => {unload("main"); load("quickPostImagePick");});
-
+	document.getElementById("mainContacts").addEventListener("click", ()=>{
+		unload("main");
+		load("contactsScreen");
+	});
 	var heart = document.getElementById("postLikes");
 
 	var pl = JSON.parse(localStorage.getItem("postlist"));
