@@ -1,6 +1,6 @@
 import * as date  from "./date.js";
 import {popHeart} from "./anime-service.js";
-
+import * as server from "./server.js"
 
 if (!String.prototype.format) {
   String.prototype.format = function() {
@@ -33,6 +33,18 @@ if (!Element.prototype.getElementById) {
 
 
 function add(src, desc, location, user, date, likes=[], comments=[]){
+	const data = {
+		"src": 		src,
+		"desc": 	desc,
+		"location": location,
+		"user": 	user,
+		"date": 	date,
+		"likes": 	likes,
+		"comments":  comments
+	} 
+
+	server.post("addPost", data);
+
 	var posts = JSON.parse(localStorage.getItem("postlist"));
 	if(posts == null){
 		posts = [];
@@ -103,7 +115,7 @@ function draw(ID = localStorage.getItem("currentPost")){
 	document.getElementById("postLocation").innerHTML = POST_LIST[ID][2][2];
 	document.getElementById("postHandle").innerHTML = "@" + POST_LIST[ID][3];
 	document.getElementById("postTimestamp").innerHTML = generateDate(new Date(POST_LIST[ID][4]));
-	document.getElementById("postLikes").src = (POST_LIST[ID][5].includes("user") ? "img/likedIcon.png" : "img/heart.png");
+	document.getElementById("postLikes").src = (POST_LIST[ID][5].includes(localStorage.getItem("userHandle")) ? "img/likedIcon.png" : "img/heart.png");
 	document.getElementById("postLikesNumber").innerHTML = POST_LIST[ID][5].length;
 	document.getElementById("postCommentsNumber").innerHTML = POST_LIST[ID][6].length;
 }
@@ -113,17 +125,17 @@ function newPost(img,text){
 		return [40.3218825, -7.6217218, "Needs maps integration"];
 	}
 
-	add(img, text, getGPSData(),"user", new Date());
+	add(img, text, getGPSData(),localStorage.getItem("userHandle"), new Date());
 }
 
 
 function like(target, list){
-	var index = list.indexOf("user");
+	var index = list.indexOf(localStorage.getItem("userHandle"));
 	if(index != -1){
 		target.src = "img/heart.png"
 		list.splice(index, 1);
 	}else{
-		list.push("user");
+		list.push(localStorage.getItem("userHandle"));
 		target.src = "img/likedIcon.png";
 		popHeart(target, 60);
 	}
@@ -173,7 +185,7 @@ function loadComments(id = localStorage.getItem("currentPost")){
 			var heart = nc.getElementById("commentHeart");
 			var heartNum = nc.getElementById("commentLikes");
 			heartNum.innerHTML = comments[i][2].length;
-			heart.src = (comments[i][2].includes("user") ? "img/likedIcon.png" : "img/heart.png");
+			heart.src = (comments[i][2].includes(localStorage.getItem("userHandle")) ? "img/likedIcon.png" : "img/heart.png");
 
 
 			text.style.top = handle.clientHeight + 2 + "px";

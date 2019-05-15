@@ -3,6 +3,7 @@ import * as post  		from "./post.js";
 import * as pin   		from "./pin.js" ;
 import * as date  		from "./date.js";
 import * as kb    		from "./keyboard.js";
+import * as server		from "./server.js"
 import { colors } 		from "./_colors.js";
 import {contacts} 	from "./contacts.js";
 import {unloadEventListeners} from "./utilities.js";
@@ -271,7 +272,6 @@ function unload(screen){
 
 	    case "commentTextAdd":
 	    	kb.unload(document.getElementById("commentTextAdd"))
-	    	
 	    	break;
 
 	    case "cameraSimulation":
@@ -368,16 +368,26 @@ function tutorial(){
 			t2.style.visibility = "hidden";
 			var k = document.getElementById("genericKb");
 			kb.main(k, function(handle) {
-				if (contacts.indexOf(handle) >= 0) {
-					console.log("Oops, username taken!");
-					localStorage.setItem("userHandle", "_" + handle);
-				} else {
-					console.log("Yay");
-					localStorage.setItem("userHandle", handle);
+				function next(){
+					localStorage.setItem("tutorial", "username_check");
+					kb.unload(k);
+					tutorial();
 				}
+
+				function succ(_){
+					localStorage.setItem("userHandle", handle);
+					next();
+				}
+
+				function fail(_){
+					localStorage.setItem("userHandle", "_" + handle);
+					next();
+				}
+				server.post("register", {"username": handle}, succ,  fail)
+				
 			}, 16);
-			localStorage.setItem("tutorial", "username_check");
-			k.addEventListener("SIGKBEXIT", tutorial, {once	: true});
+
+
 			break;
 
 		case "username_check":
@@ -386,7 +396,8 @@ function tutorial(){
 			var newHandle = localStorage.getItem("userHandle");
 			t1.style.visibility = "visible";
 			t2.style.visibility = "visible";
-			if (newHandle[0] == "_") {
+
+			if(newHandle[0] == "_") {
 				// Check did not pass
 				t1.innerHTML = "Sorry, but the name " + newHandle.substring(1) + " is already taken!";
 				t2.innerHTML = "Please pick another one. Tap to continue.";

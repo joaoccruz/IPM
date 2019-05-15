@@ -104,6 +104,8 @@ function renderRow(keys, pos, specials =[], sizes=[]){
 
 
 function unload(target){
+	target.style.display = "none";
+	target.style.visibility = "hidden";
 	while(target.childNodes.length > 0 ){
 		target.childNodes[0].remove();
 	}
@@ -166,7 +168,7 @@ function main(div, f = null, chatlimit){
 	div.style.zIndex = 100;
 	updateTxtIn();
 
-	CONTAINER.addEventListener("Enter", (event) => {f(content), unload(div), CONTAINER.dispatchEvent(new Event("SIGKBEXIT")), div.style.zIndex = 0;}, {once : true});
+	CONTAINER.addEventListener("Enter", (event) => {f(content), unload(div), div.style.zIndex = 0;}, {once : true});
 }
 
 export {main,unload};

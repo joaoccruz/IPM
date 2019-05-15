@@ -1,4 +1,4 @@
-function post(dir, data, f, g){
+function post(dir, data, f = ()=>{}, g = ()=>{}){
 	const http = new XMLHttpRequest();
 	function parseResponse(){
 		if(http.status == 200){

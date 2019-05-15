@@ -8,7 +8,19 @@ import json
 
 app = Flask(__name__,template_folder='web',static_folder="web/static")
 CORS(app)
-USER_LIST = {} 
+
+USER_LIST = {}
+POST_LIST = {}
+
+class Post:
+	def __init___(self, src, desc, location, user, date, likes=[], comments=[]):
+		self.src = src
+		self.desc = desc
+		self.location = location
+		self.user = user
+		self.date = date
+		self.likes = likes
+		self.comments = comments
 
 class Message:
 	def __init__(self, sender, receiver, message):
@@ -180,8 +192,23 @@ def getContactList():
 		return "User %s doesn't exist" % u
 	return str(list(USER_LIST[u].contacts))
 
+@app.route("/addPost", methods=["POST"])
+def addPost():
+	try:
+		src = request.form["src"]
+		desc = request.form["desc"]
+		location = request.form["location"]
+		user = request.form["user"]
+		date = request.form["date"]
+		likes = request.form["likes"]
+		comments = request.form["comments"]
+	except:
+		return "Missing header", 400
 
 
 
+@app.route("/getPosts", methods=["POST"])
+def getPosts():
+	return str(POST_LIST)
 
-app.run(host="0.0.0.0",port=5000)
+app.run(host="127.0.0.1",port=5000)

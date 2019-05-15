@@ -7,11 +7,18 @@ def testPost(val1, val2 = {}, p = False):
 	if(p):
 		print(val1 + ": " , r.reason, r.content.decode("utf-8"))
 
+
+
+
+"""
 testPost("register", {"username": "BobbyJeans"})
 testPost("register", {"username": "BobbyBans"})
+
+
 testPost("sendContactRequest", {"sender": "BobbyJeans", "receiver": "BobbyBans"})
 testPost("getContactRequests", {"username": "BobbyBans"})
 testPost("approveContactRequest", {"sender": "BobbyBans", "receiver": "BobbyJeans"})
 
 testPost("addMessage", {"sender": "BobbyJeans", "receiver": "BobbyBans", "message": "Olá"})
 testPost("getMessages", {"username": "BobbyJeans"}, True)
+"""
