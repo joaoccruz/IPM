@@ -394,7 +394,7 @@ function tutorial(){
 				localStorage.setItem("tutorial", "username_set");
 			} else {
 				// Check passed
-				t1.innerHTML = "Be welcome, " + newHandle + "! We'll now explore the features of your iGo.";
+				t1.innerHTML = "Be welcome, " + newHandle + "! It's time to begin using your iGo!";
 				t2.innerHTML = "Tap to continue.";
 
 				localStorage.setItem("tutorial", "complete");
