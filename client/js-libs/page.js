@@ -59,7 +59,6 @@ function update(){
 	switch(localStorage.getItem("currScreen")){
 		case "lockscreen":
 			updateLockScreen();
-
 	}
 }
 
@@ -180,6 +179,7 @@ function load(screen,f = null, swiped = false){
 			load("cameraSimulation");
 			var opt = document.getElementById("cameraSelected");
 			var sel = opt.options[opt.selectedIndex].value;
+
 			img.src = "cameraSim/"+sel+".png";
 
 			//const cropper = new Cropper.Cropper(img2, {
@@ -205,6 +205,7 @@ function load(screen,f = null, swiped = false){
 			enableSwipeBack();
 			kb.main(document.getElementById("commentTextAdd"), (msg) => {kbStdd("textForComment", msg, "commentTextAdd", "commentsScreen"); post.newComment("user", msg); }, 130);
 			
+			break;	
 		
 		case "cameraSimulation":
 			//load("cameraCrop")
@@ -339,69 +340,20 @@ function tutorial(){
 			t1.style.visibility = "hidden";
 			tut.style.zIndex = 0;
 			load("numpadScreen", function(pin){
-	    		localStorage.setItem("pin",pin)	
-				localStorage.setItem("tutorial", "tutorial1");
-				tutorial();
+	    		localStorage.setItem("pin",pin);	
+				localStorage.setItem("tutorial", "complete");
+				unload("numpadScreen");
+				tutorial()
 	    	});
 			break;
-			
 
-		case "tutorial1":
-			t1.style.top = "05%"
-			t1.innerHTML = "The next few screens will be a tutorial on how to use the device";
-			t2.innerHTML = "You can skip them if you have used this before"
-			i3.src = "";
-			skip.innerHTML = "skip";
-			tut.style.zIndex = 300;
-			skip.style.zIndex = 400;
-			unload("numpadScreen");
-			skip.addEventListener("click", function(){
-				// SKIP
-				localStorage.setItem("tutorial", "complete");
-				post.style.outline = "none";
-				swipe.disable(tut);
-				unload("tutorial");
-				unload(localStorage.getItem("currScreen"));
-				load("main");
-			}, {once : true});
+		case ""
 
-
-			tut.addEventListener("click", function(){
-				// CONTINUE
-				if(localStorage.getItem("tutorial") == "complete")
-					return;
-				localStorage.setItem("tutorial", "tutorialPost");
-				tutorial();
-			}, {once : true});
-
-
-			break;
-
-		case "tutorialPost":
-			t1.innerHTML = "This is your main screen";
-			post.style.outline = "1px solid black";
-			t1.style.webkitTextStroke = "0.2px grey";
-			t1.style.right = "25%";
-			t2.innerHTML = ""
-			i3.src = "";
-			skip.innerHTML = "skip";
+		case "complete":
+			unload("tutorial");
 			load("main");
-			tut.addEventListener("click", function(){
-				t1.innerHTML = "It shows the current posts";
-				tut.addEventListener("click", function(){
-					localStorage.setItem("tutorial", "tutorialSwipeMain");
-					tutorial();
-				}, {once : true});
-			}, {once : true});
-
-
 			break;
-
-		case "tutorialSwipeMain":
-			t1.innerHTML = "Try to swipe left";
-			swipe.enable(tut,"left", function(){post.loadNext(); skip.click();});
 	}
-	
 }
 
 function currentPost(){
@@ -442,8 +394,9 @@ function loadNotifications(){
 	}else{
 		document.getElementById("notifications").style.display = "none";
 		document.getElementById("notifications").style.visibility = "hidden";	
-		
 	}
+
+
 	
 }
 

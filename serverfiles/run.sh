@@ -1,1 +1,1 @@
-tmux new-session -d -s server "python MainServer.py"
+python3 MainServer.py &

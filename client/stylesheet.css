@@ -135,7 +135,15 @@ button{
 
 	#mainApps{
 		width: 100%;
-		top: 40%;
+		top: 35%;
+
+	}
+
+	#mainContacts{
+		top: 85%;
+		width: 70%;
+		left: 4%;
+		
 	}
 
 #post2{
@@ -277,6 +285,12 @@ button{
 		width: 10%;
 		right: 0;
 		bottom: 25%;
+		z-index: 1;
+	}
+	#quickPostStorageImages{
+		width: 10%;
+		right: 0;
+		top: 15%;
 		z-index: 1;
 	}
 
