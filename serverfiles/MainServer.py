@@ -44,6 +44,9 @@ class User:
 		self.contactsRequests = set()
 		self.messageList = []
 
+	def __str__(self):
+		return self.username;
+
 	def equals(user):
 		if(user.username == self.username):
 			return True 
@@ -64,13 +67,13 @@ def register():
 	try:
 		u = request.form["username"]
 	except:
-		return "No username", 400
+		return "No username", 404 # Not Found (Original: 400/Bad Request)
 
 	if(userExists(u)):
-		return "User already found", 403
+		return "User already found", 409 # Conflict (Original: 403/Forbidden)
 
 	USER_LIST[u] = User(u)
-	return "OK"
+	return "OK", 200 #OK
 
 
 
@@ -99,7 +102,7 @@ def message():
 		return "OK"
 
 	else:
-		return "User not found", 403
+		return "User not found", 404 # Not Found (Original: 403/Forbidden)
 
 # CONTACTS
 
@@ -111,7 +114,7 @@ def getContactRequests():
 		return "Missing header", 400
 
 	if(not userExists(u)):
-		return "User not found", 403
+		return "User not found", 404 # Not Found (Original: 403/Forbidden)
 
 	return str(list(USER_LIST[u].contactsRequests))
 
@@ -130,7 +133,7 @@ def sendRequest():
 		else:
 			return "Already contacts", 403	
 	else:
-		return "User not found", 403
+		return "User not found", 404 # Not Found (Original: 403/Forbidden)
 
 
 @app.route("/approveContactRequest", methods=["POST"])
@@ -144,7 +147,7 @@ def acceptContactRequest():
 
 	contactsRequests = USER_LIST[sender].contactsRequests 
 	if(receiver not in contactsRequests ):
-		return "%s not found in %s's contacts requests" % (receiver, sender), 403
+		return "%s not found in %s's contacts requests" % (receiver, sender), 404 # Not Found (Original: 403/Forbidden)
 
 	USER_LIST[sender].contactsRequests.remove(receiver)
 	USER_LIST[sender].contacts.add(receiver)
@@ -162,7 +165,7 @@ def denyContactRequest():
 
 	contactsRequests = USER_LIST[sender].contactsRequests 
 	if(receiver not in contactsRequests ):
-		return "%s not found in %s's contacts requests" % (receiver, sender), 403
+		return "%s not found in %s's contacts requests" % (receiver, sender), 404 # Not Found (Original: 403/Forbidden)
 
 	USER_LIST[sender].contactsRequests.remove(receiver)
 	return "OK"
@@ -176,7 +179,7 @@ def getMessages():
 		return "Missing header", 400
 
 	if(not userExists(u)):
-		return "User doesn't exist", 403
+		return "User doesn't exist", 404 # Not Found (Original: 403/Forbidden)
 
 	return str(USER_LIST[u].messageList)
 
@@ -202,6 +205,7 @@ def addPost():
 		date = request.form["date"]
 		likes = request.form["likes"]
 		comments = request.form["comments"]
+		return "OK", 200
 	except:
 		return "Missing header", 400
 
@@ -210,5 +214,9 @@ def addPost():
 @app.route("/getPosts", methods=["POST"])
 def getPosts():
 	return str(POST_LIST)
+
+@app.route("/getContacts", methods=["GET"])
+def getContacts():
+	return str(USER_LIST)
 
 app.run(host="127.0.0.1",port=5000)

@@ -15,7 +15,7 @@ import {unloadEventListeners} from "./utilities.js";
 function loadGallery(){
 	/*var container = document.getElementById("gallery"); 
 	var imageList = JSON.parse(localStorage.getItem("images"));
-	
+
 	for(var i = 0; i < imageList.length; i++){
 		var newImage = document.createElement("img");
 		newImage.src = imageList[i];
@@ -233,12 +233,12 @@ function load(screen,f = null, swiped = false){
 			var parent = document.getElementById("contactSelector")
 			var sample = document.getElementById("contactDivSample")
 			var useWhite = true
-			var contacts = getContacts();
+			var contacts; server.get("contacts", (response) => {contacts = response});
 			for (contact in contacts) {
 				var c = sample.cloneNode(true);
 				c.style.backgroundColor = useWhite ? colors["white"] : colors["nearwhite"]
 				c.style.visibility = true
-				//c.get
+				c.childNodes[0].innerHTML = contact
 				parent.appendChild(c)
 				useWhite = !useWhite
 			}
