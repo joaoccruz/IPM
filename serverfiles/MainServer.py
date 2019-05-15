@@ -1,10 +1,13 @@
 from flask import Flask, request,render_template
+from flask_cors import CORS
 import os
 import queue
 import requests
 import json
-app = Flask(__name__,template_folder='web',static_folder="web/static")
 
+
+app = Flask(__name__,template_folder='web',static_folder="web/static")
+CORS(app)
 USER_LIST = {} 
 
 class Message:
@@ -39,10 +42,13 @@ def userExists(user):
 		return True
 	return False
 
-
+@app.route("/", methods=["GET"])
+def ping():
+	return "Pong", 200
 
 @app.route("/register", methods=["POST"])
 def register():
+	print(request.form)
 	try:
 		u = request.form["username"]
 	except:
