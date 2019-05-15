@@ -3,6 +3,7 @@ import * as post  		from "./post.js";
 import * as pin   		from "./pin.js" ;
 import * as date  		from "./date.js";
 import * as kb    		from "./keyboard.js";
+import * as server		from "./server.js";
 import { colors } 		from "./_colors.js";
 import {contacts} 	from "./contacts.js";
 import {unloadEventListeners} from "./utilities.js";
@@ -149,12 +150,12 @@ function load(screen,f = null, swiped = false){
 			tutorial();	
 			break;
 	    
-	    case "numpadScreen":
-	    	pin.main(f);
-	    	enableSwipeBack();
-	    	break;
+		case "numpadScreen":
+			pin.main(f);
+			enableSwipeBack();
+			break;
 	    
-	    case "quickPostImagePick":
+		case "quickPostImagePick":
 			var f = function(){
 				var sel = opt.options[opt.selectedIndex].value;
 				img.src = "cameraSim/"+sel+".png";
@@ -226,6 +227,21 @@ function load(screen,f = null, swiped = false){
 
 		case "gallery":
 			loadGallery();
+			break;
+
+		case "contacts":
+			var parent = document.getElementById("contactSelector")
+			var sample = document.getElementById("contactDivSample")
+			var useWhite = true
+			var contacts = getContacts();
+			for (contact in contacts) {
+				var c = sample.cloneNode(true);
+				c.style.backgroundColor = useWhite ? colors["white"] : colors["nearwhite"]
+				c.style.visibility = true
+				//c.get
+				parent.appendChild(c)
+				useWhite = !useWhite
+			}
 			break;
 
 	    default: 

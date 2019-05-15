@@ -3,7 +3,7 @@ import * as post  from "./js-libs/post.js"
 import "./js-libs/anime-service.js";
 
 localStorage.setItem("user", "user");
-var DEBUG_MODE = true;
+var DEBUG_MODE = false;
 
 if (DEBUG_MODE) {
 	localStorage.clear();
