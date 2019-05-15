@@ -3,7 +3,11 @@ import * as post  from "./js-libs/post.js"
 import "./js-libs/anime-service.js";
 
 localStorage.setItem("user", "user");
-var DEBUG_MODE = false;
+var DEBUG_MODE = true;
+
+if (DEBUG_MODE) {
+	localStorage.clear();
+}
 
 if(localStorage.getItem("postlist") == null){
 	post.add("img/beach.jpeg", "Nada como o ar da montanha, na praia", [40.3218825,-7.6217218, "Serra da Estrela"], "Senhor_Malaquias", new Date(), ["Senhor_António","Senhor_Malaquias"], []);

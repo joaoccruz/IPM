@@ -342,7 +342,8 @@ button{
 
 
 	#tutorialText2{
-		margin-top: 25%;
+		margin-top: 40%;
+		font-size: 8pt;	
 	}
 
 
@@ -364,6 +365,7 @@ button{
 		top:0;
 		width: 100%;
 		height: 100%;
+		z-index: -1;
 	}
 		#tutText{
 			top: 5%;
@@ -458,3 +460,9 @@ button{
 		color: #C0C0C0;
 		font-size: 10px;
 	}
+
+#genericKb {
+	width: 100% !important;
+	height: 100% !important;
+	z-index: -1;
+}

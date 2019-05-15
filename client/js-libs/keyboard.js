@@ -143,19 +143,19 @@ function main(div, f = null, chatlimit){
 		textbox = document.createElement("p");
 		textbox.innerHTML = "";
 		textbox.id = "textbox";
-		textbox.setAttribute("style", "margin-top: 0;	font-size: 12px; left: 1%; height: 35;	width: 98%; word-wrap: break-word;");
+		textbox.setAttribute("style", "margin-top: 0; font-size: 12px; left: 1%; height: 35; width: 98%; word-wrap: break-word;");
 		CONTAINER.appendChild(textbox);		
 	}else{
 		var kbContainer = document.getElementById("textbox");
 	}
 
 
-	if(chatlimit != undefined){
+	if(chatlimit == undefined){
 		CHARLIMIT = 90;
-		charsLeft.innerHTML = "(" + CHARLIMIT + " remaining)";
 	}else{
-		CHARLIMIT = Math.max();
+		CHARLIMIT = chatlimit;
 	}
+	charsLeft.innerHTML = "(" + CHARLIMIT + " remaining)";
 
 	renderRow(["1","2","3","4","5","6","7","8","9","0"],15);
 	renderRow(["q","w","e","r","t","y","u","i","o","p"], 32);
@@ -163,8 +163,10 @@ function main(div, f = null, chatlimit){
 	renderRow(["z","x","c","v","b","n","m",",","."], 66);
 	renderRow(["⇧"," ","←","↩"],83,["⇧","←","↩"],[20,60,10,10]);
 
+	div.style.zIndex = 100;
 	updateTxtIn();
-	CONTAINER.addEventListener("Enter", (event) => {f(content), unload(div)}, {once : true});
+
+	CONTAINER.addEventListener("Enter", (event) => {f(content), unload(div), CONTAINER.dispatchEvent(new Event("SIGKBEXIT")), div.style.zIndex = 0;}, {once : true});
 }
 
 export {main,unload};

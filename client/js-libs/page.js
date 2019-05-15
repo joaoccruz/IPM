@@ -1,9 +1,10 @@
-import * as swipe from "./swipe.js";
-import * as post  from "./post.js";
-import * as pin   from "./pin.js" ;
-import * as date  from "./date.js";
-import * as kb    from "./keyboard.js";
-import { colors } from "./_colors.js";
+import * as swipe 		from "./swipe.js";
+import * as post  		from "./post.js";
+import * as pin   		from "./pin.js" ;
+import * as date  		from "./date.js";
+import * as kb    		from "./keyboard.js";
+import { colors } 		from "./_colors.js";
+import {contacts} 	from "./contacts.js";
 import {unloadEventListeners} from "./utilities.js";
 
 
@@ -317,8 +318,8 @@ function tutorial(){
 			tut.addEventListener("click", function(){
 				// CONTINUE
 				t1.innerHTML = "Place one of your fingers on the screen to configure the fingerprint sensor";
-				t2.innerHTML = "";
-				skip.innerHTML = ""
+				skip.innerHTML = "";
+				t2.style.visibility = "hidden";
 				i3.src = "img/fingerprint.png";
 				localStorage.setItem("tutorial", "fingerprint");
 				tutorial();
@@ -334,20 +335,92 @@ function tutorial(){
 			break;
 
 		case "tutorialPin":
+			t1.style.marginTop = "0%"
 			i3.src = "";
-			t2.innerHTML = "Enter a pin, don't forget it";
-			t2.style.marginTop = "0%";
-			t1.style.visibility = "hidden";
+			t1.innerHTML = "Enter a pin, don't forget it";
+			t1.style.visibility = "visible";
+			t2.style.visibility = "hidden";
 			tut.style.zIndex = 0;
 			load("numpadScreen", function(pin){
-	    		localStorage.setItem("pin",pin);	
-				localStorage.setItem("tutorial", "complete");
-				unload("numpadScreen");
-				tutorial()
-	    	});
+	    	localStorage.setItem("pin",pin)	
+				localStorage.setItem("tutorial", "username_prompt");
+				tutorial();
+	    });
+			break;
+			
+		case "username_prompt":
+			unload("numpadScreen");
+			tut.style.zIndex = 100;
+			t1.style.top = "5%"
+			t1.innerHTML = "Now choose an username. Pick one you like the most!";
+			t1.style.visibility = "visible"
+			t2.innerHTML = "Tap to continue";
+			t2.style.visibility = "visible"
+			tut.addEventListener("click", function(){
+				localStorage.setItem("tutorial", "username_set");
+				tutorial();
+			}, {once: true})
 			break;
 
-		case ""
+		case "username_set":
+			tut.style.zIndex = 0;
+			t1.style.visibility = "hidden";
+			t2.style.visibility = "hidden";
+			var k = document.getElementById("genericKb");
+			kb.main(k, function(handle) {
+				if (contacts.indexOf(handle) >= 0) {
+					console.log("Oops, username taken!");
+					localStorage.setItem("userHandle", "_" + handle);
+				} else {
+					console.log("Yay");
+					localStorage.setItem("userHandle", handle);
+				}
+			}, 16);
+			localStorage.setItem("tutorial", "username_check");
+			k.addEventListener("SIGKBEXIT", tutorial, {once	: true});
+			break;
+
+		case "username_check":
+			console.log("RHERE");	
+			tut.style.zIndex = 100;
+			var newHandle = localStorage.getItem("userHandle");
+			t1.style.visibility = "visible";
+			t2.style.visibility = "visible";
+			if (newHandle[0] == "_") {
+				// Check did not pass
+				t1.innerHTML = "Sorry, but the name " + newHandle.substring(1) + " is already taken!";
+				t2.innerHTML = "Please pick another one. Tap to continue.";
+
+				localStorage.setItem("tutorial", "username_set");
+			} else {
+				// Check passed
+				t1.innerHTML = "Be welcome, " + newHandle + "! We'll now explore the features of your iGo.";
+				t2.innerHTML = "Tap to continue.";
+
+				localStorage.setItem("tutorial", "tutorial1");
+			}
+
+		tut.addEventListener("click", tutorial, {once: true});
+		break;
+
+		case "tutorial1":
+			t1.style.top = "05%"
+			t1.innerHTML = "The next few screens will be a tutorial on how to use the device";
+			t2.innerHTML = "You can skip them if you have used this before"
+			i3.src = "";
+			skip.innerHTML = "skip";
+			tut.style.zIndex = 300;
+			skip.style.zIndex = 400;
+			unload("numpadScreen");
+			skip.addEventListener("click", function(){
+				// SKIP
+				localStorage.setItem("tutorial", "complete");
+				post.style.outline = "none";
+				swipe.disable(tut);
+				unload("tutorial");
+				unload(localStorage.getItem("currScreen"));
+				load("main");
+			}, {once : true});
 
 		case "complete":
 			unload("tutorial");
