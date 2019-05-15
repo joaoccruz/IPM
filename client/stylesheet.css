@@ -11,7 +11,7 @@ img{
     -khtml-user-drag: none;
     -moz-user-drag: none;
     -o-user-drag: none;
-    user-drag: none;
+    -user-drag: none;
 }
 
 button{
@@ -466,3 +466,12 @@ button{
 	height: 100% !important;
 	z-index: -1;
 }
+
+#contactSelector {
+	width: 100% !important;
+	height: 100%;
+}
+
+	.contactDiv {
+		height: 20%;
+	}
