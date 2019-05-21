@@ -216,6 +216,7 @@ function loadComments(id = localStorage.getItem("currentPost")){
 			dist += h + 5;
 			h = h  + 4 + "px";
 			nc.style.height = h;
+			
 			let curr = i;
 			let h1 = heart;
 			h1.addEventListener("click", () => 

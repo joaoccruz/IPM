@@ -8,6 +8,53 @@ import {popupAnim} 		from "./anime-service.js";
 import { colors } 		from "./_colors.js";
 import {unloadEventListeners} from "./utilities.js";
 
+function ifExistsElse(obj, replace){
+	return obj ? obj : replace;
+}
+
+function render(container, template, toRender, noneInfo, childInfo){
+	/*
+		None info:
+			text
+			style
+
+		Child info:
+			renderFunc(childInfo, childNode, distance)
+			maxHeight per child
+			returns height of div
+	*/
+
+	if(toRender.length == 0){
+		var none = document.createElement("p");
+		none.innerHTML = noneInfo.text;
+		none.style.display = "block";
+		none.id = "none";
+		none.className = "textCenter"
+		none.style = noneInfo.style;
+		container.appendChild(noContacts);
+	}else{
+		var none = container.getElementById("none"); 
+		if(none){
+			none.remove();
+		}
+
+		var dist = 0;
+		for(var i = 0; i < toRender.length; i++){
+			var nc = template.cloneNode(true);
+			nc.id = "autoRendered" + i;
+			
+			container.appendChild(nc)
+			var h = childInfo.renderFunc(toRender[i], child, dist)
+
+			if(h > childInfo.maxHeight)
+				h = childInfo.maxHeight;
+			
+			dist += h + 5;
+			nc.style.height = h + 4 + "px";
+		}
+	}
+}
+
 function loadChat(u1, u2){
 	function f(r){
 		messageList = JSON.parse(r);
@@ -21,6 +68,11 @@ function loadChat(u1, u2){
 
 
 //import Cropper from "./node_modules/cropperjs/src/index.js"
+function drawContact(){
+
+}
+
+
 function drawContacts(contactList){
 	contactList = JSON.parse(contactList)
 	if(contactList.length == 0){
@@ -96,8 +148,8 @@ function addContact(){
 	function executeKb(msg){
 		kbStdd("contactAddText", msg, "contactsSendRequest", "contactsScreen");
 		server.post("sendContactRequest",{"sender": localStorage.getItem("userHandle"), "receiver": msg},
-			(a)=>{popup(document.getElementById("contactsScreen"), "Sent",{x:"center",y:"20%"})},
-			(a)=>{popup(document.getElementById("contactsScreen"), "Couldn't send request",{x:"center",y:"20%"})})
+			()=>{popup(document.getElementById("contactsScreen"), "Sent",{x:"center",y:"20%"})},
+			()=>{popup(document.getElementById("contactsScreen"), "Couldn't send request",{x:"center",y:"20%"})})
 
 		kb.unload(document.getElementById("contactsSendRequest"))
 	}
@@ -108,13 +160,35 @@ function addContact(){
 	kb.main(ele, executeKb)
 }
 
+
+
+function loadRequests(){
+	noneInfo = {
+		text = "You have no open requests",
+		style = "top: 30%; text-align: center; font-size: 11px"
+	}
+
+	function childRender(info, child, dist){
+		child.style.top = dist + "%";
+
+	}
+
+
+	var contactListContainer = document.getElementById("contactListContainer");
+	var template = document.getElementById("contactRequestTemplate")
+	var contactRequestsList = server.post("getContactRequests",
+		()=>{render(contactListContainer, template, )},
+		()=>
+}
+
+
 function loadContacts(){
 	function success(contactList){
 		drawContacts(contactList);
 	}
 
 	document.getElementById("addContactButton").addEventListener("click", addContact)
-
+	document.getElementById("contactsRequests").addEventListener("click", loadRequests)
 	server.post("getContacts", {"username": localStorage.getItem("userHandle")}, success)
 }
 
@@ -222,7 +296,7 @@ function load(screen,f = null, swiped = false){
 		screen = "tutorial";
 	}
 
-	var noHistory = ["lockscreen", "numpadScreen", "cameraSimulation"];
+	var noHistory = ["lockscreen", "numpadScreen", "cameraSimulation", "contactsSendRequest"];
 	(!noHistory.includes(screen)) ? localStorage.setItem("lastScreen",screen) : null;
 	
 	if(screen != "cameraSimulation")

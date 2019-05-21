@@ -42,6 +42,11 @@ button{
 
 }
 
+.wd100{
+	width: 100%;
+	height: 100%;
+}
+
 .absCenter{
 	left:0;
 	right:0;
@@ -509,18 +514,35 @@ button{
 
 	#contactsOptions{
 		width: 100%;
-		height: 10%;
+		height: 15%;
 	}
 
 		#addContactButton{
 			right: 0;
 			width: 10%;
+			height: 100%;
 		}
 
+		#contactsNotifyButton{
+			right: 13%;
+			width: 10%;
+			height: 100%;
+		}
+
+		#contactsNumberRequests{
+			right: 11%;
+			font-size: 9px;
+			z-index: 1;
+			color: red;
+		}
 		#contactsText{
 			top:2%;
 			font-size: 10px;
 		}
+
+#contactRequestsScreen{
+	
+}
 
 
 

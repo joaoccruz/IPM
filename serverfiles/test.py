@@ -28,9 +28,9 @@ testPost("register", {"username": "BB"})
 
 
 
-addFriend("BobbyJeans", "BobbyBans")
-addFriend("BobbyJeans", "AA")
-addFriend("Ze", "AA")
+addFriend("yyy", "BobbyBans")
+addFriend("yyy", "AA")
+addFriend("yyy", "BB")
 
 sendMessage("AA", "BobbyJeans", "hiii")
 

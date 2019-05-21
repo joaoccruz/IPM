@@ -123,7 +123,7 @@ def getContactRequests():
 	if(not userExists(u)):
 		return "User not found", 403
 
-	return str(list(USER_LIST[u].contactsRequests))
+	return json.dumps(list(USER_LIST[u].contactsRequests))
 
 @app.route("/sendContactRequest", methods=["POST"])
 def sendRequest():
