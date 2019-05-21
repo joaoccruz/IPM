@@ -34,4 +34,33 @@ function popHeart(target, original){
 
 }
 
-export{popHeart};
+function fadeIn(target,time=2000, f=null){
+	anime({
+		easing: "linear",
+		targets: target,
+		duration: time,
+		opacity: 1,
+		complete: f
+	})
+}
+
+function fadeOut(target,time=2000, f=null){
+	anime({
+		targets: target,
+		duration: time,
+		opacity: 0,
+		complete: f,
+	})
+}
+function popupAnim(target, time=1000, callback){
+	anime({
+		targets: target,
+		duration: time,
+		easing: "easeInSine",
+		direction: "alternate",
+		endDelay: 500,
+		opacity: [0,1]
+	})
+}
+
+export{popHeart,popupAnim};

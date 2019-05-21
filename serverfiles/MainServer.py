@@ -134,13 +134,13 @@ def sendRequest():
 		return "Missing header", 400	
 
 	if(userExists(sender) & userExists(receiver)):
-		if(sender not in USER_LIST[receiver].contacts):
+		if(sender not in USER_LIST[receiver].contacts and sender not in USER_LIST[receiver].contactsRequests and sender != receiver):
 			USER_LIST[receiver].contactsRequests.add(sender)	
 			return "OK"
 		else:
-			return "Already contacts", 403	
+			return "Already contacts", 409
 	else:
-		return "User not found", 403
+		return "User not found", 409
 
 
 @app.route("/approveContactRequest", methods=["POST"])

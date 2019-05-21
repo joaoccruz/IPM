@@ -4,6 +4,7 @@ import * as pin   		from "./pin.js" ;
 import * as date  		from "./date.js";
 import * as kb    		from "./keyboard.js";
 import * as server		from "./server.js"
+import {popupAnim} 		from "./anime-service.js";
 import { colors } 		from "./_colors.js";
 import {unloadEventListeners} from "./utilities.js";
 
@@ -71,13 +72,32 @@ function drawContacts(contactList){
 	}
 }
 
+function popup(container=document.getElementById("container"), text="bottomtext", pos={x:"center",y:"30%"}, time = 2000){
+	var pop = document.createElement("p");
+	pop.innerHTML = text;
+	pop.style.fontSize = "11px"
+	pop.style.maxWidth = "100%"
+	pop.style.position="fixed"
+	if(pos.x =="center"){
+		pop.style.left = "50%";
+		pop.style.transform = "translateX(-50%)"
+	}
+	pop.style.left = pos.x;
+	pop.style.top = pos.y;
+	pop.style.zIndex = 100;
+	pop.style.opacity = 0;
+	
+	container.appendChild(pop)
+	popupAnim(pop);
+}
+
 
 function addContact(){
 	function executeKb(msg){
 		kbStdd("contactAddText", msg, "contactsSendRequest", "contactsScreen");
 		server.post("sendContactRequest",{"sender": localStorage.getItem("userHandle"), "receiver": msg},
-			(a)=>{console.log("success")},
-			(a)=>{console.log("fail")})
+			(a)=>{popup(document.getElementById("contactsScreen"), "Sent",{x:"center",y:"20%"})},
+			(a)=>{popup(document.getElementById("contactsScreen"), "Couldn't send request",{x:"center",y:"20%"})})
 
 		kb.unload(document.getElementById("contactsSendRequest"))
 	}

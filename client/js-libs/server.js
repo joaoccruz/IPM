@@ -1,6 +1,14 @@
 function post(dir, data, f = ()=>{}, g = ()=>{}){
 	const http = new XMLHttpRequest();
-	function parseResponse(){
+	const ip = "http://localhost:5000/" + dir;
+
+	http.open("POST", ip);
+	http.timeout = 2000;
+	
+
+	
+
+	http.onload = function(){
 		let stat = http.status; 
 		let resp = http.response;
 		if(stat == 200){
@@ -10,22 +18,14 @@ function post(dir, data, f = ()=>{}, g = ()=>{}){
 		}
 	}
 
-	const ip = "http://localhost:5000/" + dir;
-
-	http.open("POST", ip);
-	http.timeout = 2000;
-	
-
-	document.addEventListener("PingSuccess", parseResponse, {once: true})
-	document.addEventListener("PingFail", g, {once: true})
-
-
-	http.onload = function(){
-		document.dispatchEvent(new Event("PingSuccess"));
-	}
-
 	http.ontimeout = function(){
-		document.dispatchEvent(new Event("PingFail"));
+		let stat = http.status; 
+		let resp = http.response;
+		if(stat == 200){
+			f(resp);
+		}else{
+			g(resp)
+		}	
 	}
 
 	http.onerror = (e)=> {document.dispatchEvent(new Event("PingFail"))}; 
