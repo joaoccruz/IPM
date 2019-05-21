@@ -12,7 +12,7 @@ function ifExistsElse(obj, replace){
 	return obj ? obj : replace;
 }
 
-function render(container, template, toRender, noneInfo, childInfo){
+function render(container, template, toRender, noneInfo, renderFunc, maxHeight = 80){
 	/*
 		None info:
 			text
@@ -42,15 +42,16 @@ function render(container, template, toRender, noneInfo, childInfo){
 		for(var i = 0; i < toRender.length; i++){
 			var nc = template.cloneNode(true);
 			nc.id = "autoRendered" + i;
-			
+			nc.style.width = "100%";
 			container.appendChild(nc)
-			var h = childInfo.renderFunc(toRender[i], child, dist)
+			var h = renderFunc(toRender[i], nc, dist)
 
-			if(h > childInfo.maxHeight)
-				h = childInfo.maxHeight;
+			if(h > maxHeight)
+				h = maxHeight;
 			
-			dist += h + 5;
-			nc.style.height = h + 4 + "px";
+			nc.style.top = dist + "px";
+			dist += h + 4;
+			nc.style.height = h + 3 + "px";
 		}
 	}
 }
@@ -68,60 +69,32 @@ function loadChat(u1, u2){
 
 
 //import Cropper from "./node_modules/cropperjs/src/index.js"
-function drawContact(){
-
-}
 
 
 function drawContacts(contactList){
-	contactList = JSON.parse(contactList)
-	if(contactList.length == 0){
-		var noContacts = document.createElement("p");
-		noContacts.innerHTML = "You have no contacts yet";
-		noContacts.style.display = "block";
-		noContacts.id = "noContacts";
-		noContacts.className = "textCenter"
-		noContacts.style.top = "36%";
-		noContacts.style.fontSize = "12px"
-		noContacts.style.color = "black";
-		document.getElementById("contactsContainer").appendChild(noContacts);
-	}else{
-		var noContactsMessage = document.getElementById("noContacts"); 
-		if(noContactsMessage){
-			noContactsMessage.remove();
-		}
+	function drawContact(contactName, node){
+		var text = node.getElementById("contactTemplateName");
+		var img = node.getElementById("templateSendMessage");
 
-		var dist = 0;
-		for(var i = 0; i < contactList.length; i++){
-			var nc = document.getElementById("contactTemplate").cloneNode(true);
-			nc.id = "contactNumber" + i;
-			nc.style.width = "100%";
-			nc.style.top = dist + "px";
-			nc.style.visibility = "visible";
-			document.getElementById("contactsContainer").appendChild(nc)
-			var text = nc.getElementById("contactTemplateName");
+		let curr = contactName;
+		img.addEventListener("click", ()=>{
+			loadChat(localStorage.getItem("userHandle"), curr)
+		})
 
-			var img = nc.getElementById("templateSendMessage");
-
-			let curr = contactList[i];
-			img.addEventListener("click", ()=>{
-				loadChat(localStorage.getItem("userHandle"), curr)
-			})
-			text.innerHTML = contactList[i];
-			text.style.top = nc.clientHeight + 2 + "px";
-
-
-			
-			var h = text.clientHeight;
-
-			if(h > 80)
-				h = 80;
-			
-			dist += h + 5;
-			h = h  + 4 + "px";
-			nc.style.height = h;
-		}
+		text.innerHTML = contactName;
+		return text.clientHeight;
 	}
+
+	contactList = JSON.parse(contactList)
+	var container = document.getElementById("contactsContainer"); 
+	var template = document.getElementById("contactTemplate")
+	var noneInfo = {
+		style: "top: 36%; fontSize: 12px; color: black;",
+		text: "You have no contacts yet"
+	};
+
+	render(container, template, contactList, noneInfo, drawContact)
+	
 }
 
 function popup(container=document.getElementById("container"), text="bottomtext", pos={x:"center",y:"30%"}, time = 2000){
@@ -164,8 +137,8 @@ function addContact(){
 
 function loadRequests(){
 	noneInfo = {
-		text = "You have no open requests",
-		style = "top: 30%; text-align: center; font-size: 11px"
+		text: "You have no open requests",
+		style: "top: 30%; text-align: center; font-size: 11px"
 	}
 
 	function childRender(info, child, dist){
@@ -178,7 +151,8 @@ function loadRequests(){
 	var template = document.getElementById("contactRequestTemplate")
 	var contactRequestsList = server.post("getContactRequests",
 		()=>{render(contactListContainer, template, )},
-		()=>
+		()=>{});
+
 }
 
 
