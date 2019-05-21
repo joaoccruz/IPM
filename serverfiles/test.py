@@ -26,8 +26,11 @@ testPost("register", {"username": "BB"})
 
 
 
+
+
 addFriend("BobbyJeans", "BobbyBans")
 addFriend("BobbyJeans", "AA")
+addFriend("Ze", "AA")
 
 sendMessage("AA", "BobbyJeans", "hiii")
 

@@ -284,5 +284,5 @@ def getPosts():
 
 POST_LIST.append(Post("img/beach.jpeg", "Nada como o ar da montanha, na praia", "Serra da Estrela", "Senhor_Malaquias", time.time(), ["Senhor_António","Senhor_Malaquias"], []));
 POST_LIST.append(Post("img/montanha.jpg", "Imagem genérica de uma montanha", "Montanha", "Senhor_José", time.ctime(time.time()-604800000), [], []));
-POST_LIST.append(Post("img/gil.jpg", "Grande Gil! 👌", "Parque das Nações", "Senhor_António", time.time(), [], []));
+POST_LIST.append(Post("img/gil.jpg", "Grande Gil! ", "Parque das Nações", "Senhor_António", time.time(), [], []));
 app.run(host="0.0.0.0",port=5000)
