@@ -175,8 +175,88 @@ function newComment(handle, message, likes = []){
 
 }
 
+function loadComments(id = localStorage.getItem("currentPost")){
+	var POST_LIST = JSON.parse(localStorage.getItem("postlist"));
+	var comments = POST_LIST[id].comments;
+
+	drawComments(comments);
+}
+
+function unloadComments(){
+	var comments = JSON.parse(localStorage.getItem("postlist"))[localStorage.getItem("currentPost")].comments;
+	var container = document.getElementById("commentsContainer")	
+
+	if(comments.length == 0){
+		container.getElementById("none").remove();
+	}else{
+		for(var i = container.childNodes.length - 1 ; i > 0; i--){
+			if(container.childNodes[i].id != "commentTemplate")
+				container.childNodes[i].remove();
+		}
+	}
+}
+
 function currentPost(){
 	return localStorage.getItem("currentPost");
 }
 
-export {updatePostList, newComment, add,loadPrev, loadNext, draw, newPost, like}	
+
+function drawComments(commentList){
+	function drawComment(comment, nc){
+		nc.style.width = "100%";
+		nc.style.visibility = "visible";
+		
+		var handle = nc.getElementById("commentHandle");
+		var text = nc.getElementById("commentText");
+
+		var heart = nc.getElementById("commentHeart");
+		var heartNum = nc.getElementById("commentLikes");
+		heartNum.innerHTML = comment.likes.length;
+		heart.src = (comment.likes.includes(localStorage.getItem("userHandle")) ? "img/likedIcon.png" : "img/heart.png");
+
+
+		text.style.top = handle.clientHeight + 2 + "px";
+
+		handle.innerHTML = comment.user;
+		text.innerHTML = comment.message;
+		
+		var h = text.clientHeight + handle.clientHeight;
+
+		if(h > 80)
+			h = 80;
+		
+		h += 4;
+		nc.style.height = h+"px";
+		
+		let curr = commentList.indexOf(comment);
+		let h1 = heart;
+		h1.addEventListener("click", () => {
+				var pl = JSON.parse(localStorage.getItem("postlist"));
+				pl[currentPost()].comments[curr].likes = like(h1,pl[currentPost()].comments[curr].likes);
+				heartNum.innerHTML = pl[currentPost()].comments[curr].likes.length;
+				localStorage.setItem("postlist", JSON.stringify(pl));
+				var data = {
+					"postId": currentPost(),
+					"commentId": curr,
+					"user": localStorage.getItem("userHandle")
+				}
+				server.post("likeComment", data);
+			}
+		);
+		return h;
+	}
+
+	//commentList = JSON.parse(commentList);
+	var container = document.getElementById("commentsContainer");
+	var template = document.getElementById("commentTemplate");
+	var noneInfo = {
+		style: "top: 36%; fontSize: 12px; color: black;",
+		text: "There are no comments yet. Why not be the first?"
+	
+	};
+
+	page.render(container, template, commentList, noneInfo, drawComment);
+}
+
+
+export {updatePostList, newComment, add,loadPrev, loadNext, draw, newPost, like, loadComments, unloadComments}	
