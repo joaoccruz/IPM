@@ -20,6 +20,9 @@ def sendMessage(u1, u2, message):
 
 
 newUser = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
+#newUser = "KE2CF"
 print(newUser)
 testPost("register", {"username": newUser})
-testPost("sendContactRequest", {"sender": newUser, "receiver": LOGGED})
+addFriend(newUser, LOGGED)
+sendMessage(newUser,LOGGED, "hey")
+sendMessage(LOGGED,newUser, "sup")

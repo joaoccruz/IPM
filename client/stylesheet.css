@@ -598,9 +598,6 @@ button{
 	overflow-y: auto;
 }
 
-::-webkit-scrollbar{
-	display: none;
-}
 #chatScreen *{
 	margin: 0;
 }

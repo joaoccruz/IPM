@@ -53,7 +53,10 @@ function render(container, template, toRender, noneInfo, renderFunc, maxHeight =
 
 		var dist = 0;
 		for(var i = 0; i < toRender.length; i++){
-			var nc = template.cloneNode(true);
+			var nc = container.getElementById("autoRendered"+i);
+			if(!nc)
+				nc = template.cloneNode(true);
+			 
 			nc.id = "autoRendered" + i;
 			nc.style.width = "100%";
 			container.appendChild(nc)
@@ -69,10 +72,31 @@ function render(container, template, toRender, noneInfo, renderFunc, maxHeight =
 	}
 }
 
+function loadMessages(update = false){
+	function drawSuccess(currMessageList){
+		let curr = update;
+		
+		if(!curr || localStorage.lastMessageList != currMessageList){
+			drawMessages(currMessageList);
+			localStorage.lastMessageList = currMessageList;
+		}
 
-function loadMessages(){
+	}
+	let curr = localStorage.currFriend;
+	var data = {"u1": localStorage.userHandle, "u2": curr}
+	
+	if(!update){
+		var textbox = document.getElementById("chatNewMessage");
+		textbox.addEventListener("click", ()=>{unload("chatScreen"); load("messageTextAdd")})
+	}
+
+	server.post("getMessages", data, drawSuccess)
+}
+
+function drawMessages(currMessageList){
 	document.getElementById("chattingWith").innerHTML = "Chatting with: " + localStorage.currFriend
 	localStorage.lastMessageSender = undefined;
+
 	function renderChild(message, node){	
 		var txt = node.getElementById("chatMessage") 
 		if(message.sender == localStorage.userHandle){
@@ -113,26 +137,13 @@ function loadMessages(){
 
 	var container = document.getElementById("chatContainer");
 	var template = document.getElementById("messageTemplate");
-	var messageList = JSON.parse(localStorage.currMessageList);
+	var messageList = JSON.parse(currMessageList);
 	var noneInfo = null;
 
 	render(container, template, messageList, noneInfo, renderChild);
-
+	container.scrollTop = container.scrollHeight;
 }
 
-function loadChat(u1, u2){
-	function f(r){
-		localStorage.currMessageList = r;
-		localStorage.currFriend = u2;
-		unload("contactsScreen");
-		load("chatScreen");		
-	}
-	function fail(){
-		console.log("Fail with " + u1 + ":" + u2)		
-	}
-	var data = {"u1": u1, "u2": u2}
-	server.post("getMessages", data, f, fail)
-}
 
 
 //import Cropper from "./node_modules/cropperjs/src/index.js"
@@ -145,7 +156,9 @@ function drawContacts(contactList){
 
 		let curr = contactName;
 		img.addEventListener("click", ()=>{
-			loadChat(localStorage.getItem("userHandle"), curr)
+			localStorage.currFriend = curr;
+			unload("contactsScreen")
+			load("chatScreen")
 		})
 
 		text.innerHTML = contactName;
@@ -353,6 +366,9 @@ function update(){
 		case "contactsScreen":
 			loadContacts(true);
 			break;
+		case "chatScreen":
+			loadMessages(true);
+			break;
 	}
 }
 
@@ -513,6 +529,23 @@ function load(screen,f = null, swiped = false){
 				localStorage.globalFallback = "quickPostImagePick";
 			break;	
 		
+		case "messageTextAdd":
+			function nm(msg){
+				let data = {
+					"sender" : localStorage.userHandle,
+					"receiver" : localStorage.currFriend,
+					"message": msg
+				}
+				server.post("addMessage", data)
+			}
+
+			var ele = document.getElementById("messageTextAdd");
+			kb.main(ele, (msg) => {
+					kbStdd("textForMsg", msg, "messageTextAdd", "chatScreen"); 
+					kb.unload(ele)
+					nm(msg)
+				}, 60)
+			break;
 		case "cameraSimulation":
 			//load("cameraCrop")
 			break;
@@ -614,6 +647,10 @@ function unload(screen){
 
 	    case "commentTextAdd":
 	    	kb.unload(document.getElementById("commentTextAdd"))
+	    	break;
+
+	    case "messageTextAdd":
+	    	kb.unload(document.getElementById("messageTextAdd"))
 	    	break;
 
 	    case "cameraSimulation":	    	
