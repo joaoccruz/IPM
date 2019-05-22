@@ -710,13 +710,20 @@ function updateLockScreen(){
 
 
 function main(){
+	
+
 	post.draw(localStorage.getItem("currentPost"));
-	swipe.enable(document.getElementById("post"),["left","right"],[post.loadNext,post.loadPrev]);
+
+
+	swipe.enable(document.getElementById("post"),["left","right", "down"],[post.loadNext,post.loadPrev,()=>{localStorage.currentPost = 0; reload("main"); }]);
+	
 	document.getElementById("mainCamera").addEventListener("click",() => {unload("main"); load("quickPostImagePick");});
 	document.getElementById("mainContacts").addEventListener("click", ()=>{
 		unload("main");
 		load("contactsScreen");
 	});
+
+
 	var heart = document.getElementById("postLikes");
 
 	var pl = JSON.parse(localStorage.getItem("postlist"));

@@ -219,7 +219,7 @@ def addPost():
 
 
 	np = Post(src,desc,location,user,date,likes,comments)
-	POST_LIST.append(np)
+	POST_LIST.insert(0,np)
 	return "OK"
 
 
