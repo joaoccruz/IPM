@@ -218,6 +218,7 @@ button{
 			}
 
 		#postShareIcon{
+			display: none;
 			text-align: center;	
 			left: 1%;
 			width: 60%;
@@ -234,11 +235,13 @@ button{
 
 	}
 		#locationPin{
+			display: none;
 			margin-top: 1%;
 			width: 5%;
 		}
 
 		#postLocation{
+			display: none;
 			vertical-align: top;
 			width: 94%;
 			margin-left: 6%;
@@ -246,7 +249,7 @@ button{
 
 		#postDescription{
 			font-size: 9px;
-			margin-top: 8%;
+			margin-top: 0%;
 			width: 95%;
 			vertical-align: top;
 			word-wrap: break-word;
@@ -278,7 +281,7 @@ button{
 		height: 100%;
 	}
 
-	#quickPostGallery{
+	#quickPostMain{
 		border: 2px solid white;
 		width: 10%;
 		right: 0;
@@ -293,6 +296,7 @@ button{
 		z-index: 1;
 	}
 	#quickPostStorageImages{
+		display: none;
 		width: 10%;
 		right: 0;
 		top: 15%;

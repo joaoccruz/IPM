@@ -497,13 +497,22 @@ function load(screen,f = null, swiped = false){
 
 			img.src = "cameraSim/"+sel+".png";
 
+
 			//const cropper = new Cropper.Cropper(img2, {
 			//	aspectration: 16/9
 			//});
 			
 
 			opt.addEventListener("change",f);
+			
 			document.getElementById("quickPostNextArrow").addEventListener("click", nextScreen, {once: true});
+			document.getElementById("quickPostMain").addEventListener("click", ()=>{
+				post.newPost(img.src, "");
+				unload("quickPostImagePick");
+				load("main");
+			}, {once: true})
+
+
 			//document.getElementById("quickPostGallery").addEventListener("click",gallery ,{once: true})
 			break;
 
