@@ -1,6 +1,6 @@
-import requests
+import requests, random, string
 
-LOGGED = "ll"
+from test import LOGGED
 
 
 def testPost(val1, val2 = {}, p = False):	
@@ -18,3 +18,8 @@ def addFriend(loggedIn, friend):
 def sendMessage(u1, u2, message):
 	testPost("addMessage", {"sender": u1, "receiver": u2, "message": message})
 
+
+newUser = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
+print(newUser)
+testPost("register", {"username": newUser})
+testPost("sendContactRequest", {"sender": newUser, "receiver": LOGGED})

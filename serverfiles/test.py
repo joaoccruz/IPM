@@ -1,6 +1,6 @@
 import requests
 
-LOGGED = "kkkk"
+LOGGED = "i"
 
 
 def testPost(val1, val2 = {}, p = False):	
@@ -18,8 +18,6 @@ def addFriend(loggedIn, friend):
 def sendMessage(u1, u2, message):
 	testPost("addMessage", {"sender": u1, "receiver": u2, "message": message})
 
-
-testPost("getPosts", {}, True)
 
 
 

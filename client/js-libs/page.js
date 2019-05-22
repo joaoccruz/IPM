@@ -12,6 +12,11 @@ function ifExistsElse(obj, replace){
 	return obj ? obj : replace;
 }
 
+function reload(page){
+	unload(page)
+	load(page)
+}
+
 function render(container, template, toRender, noneInfo, renderFunc, maxHeight = 80){
 	/*
 		None info:
@@ -135,7 +140,6 @@ function addContact(){
 }
 
 
-
 function loadRequests(){
 	var noneInfo = {
 		text: "You have no open requests",
@@ -147,9 +151,18 @@ function loadRequests(){
 		load("contactRequestsScreen")
 	}
 
+
 	function acceptContact(name){
 		server.post("approveContactRequest",{"sender": localStorage.userHandle, "receiver": name},
-			 common,
+			 ()=>
+			 	{
+			 		for(let i = 0; i < localStorage.requests.length; i++){
+			 			if(localStorage.requests[i] == name){
+			 				localStorage.requests[i].remove();
+			 			}
+			 		}
+			 		common()
+			 	},
 			 common
 			 )
 	}
@@ -157,7 +170,15 @@ function loadRequests(){
 
 	function denyContact(name){
 		server.post("denyContactRequest",{"sender": localStorage.userHandle, "receiver": name},
-			 common,
+			 ()=>
+			 	{
+			 		for(let i = 0; i < localStorage.requests.length; i++){
+			 			if(localStorage.requests[i] == name){
+			 				localStorage.requests[i].remove();
+			 			}
+			 		}
+			 		common()
+			 	},
 			 common
 			 )	
 	}
@@ -177,12 +198,11 @@ function loadRequests(){
 
 	let contactListContainer = document.getElementById("contactRequestsContainer");
 	let template = document.getElementById("contactRequestTemplate")
-	let contactRequestsList = server.post("getContactRequests",
-		{"username": localStorage.userHandle},
-		(a)=>{render(contactListContainer, template, JSON.parse(a),noneInfo,requestRender)},
-		()=>{});
+	render(contactListContainer, template, JSON.parse(localStorage.requests), noneInfo, requestRender)
 
 }
+
+
 
 
 function loadContacts(){
@@ -195,6 +215,11 @@ function loadContacts(){
 		unload("contactsScreen");
 		load("contactRequestsScreen")
 	})
+
+	server.post("getContactRequests",
+		{"username": localStorage.userHandle},
+		(a)=>{localStorage.requests = a; contactsNumberRequests.innerHTML = JSON.parse(a).length});
+
 	server.post("getContacts", {"username": localStorage.getItem("userHandle")}, success)
 }
 
@@ -267,19 +292,10 @@ function unlock(){
 function enableSwipeBack(){
 	var f = function(){
 		var HISTORY = JSON.parse(localStorage.getItem("history"));
-		swipe.disable(document.getElementById("container"));
-		HISTORY.pop();
-		localStorage.setItem("history", JSON.stringify(HISTORY));
-		var lastScreen = HISTORY.pop();	
-		if(HISTORY[HISTORY.length-1] != screen)
-		;
-		if(lastScreen != undefined){
-			unload(localStorage.getItem("currScreen"));
-			load(lastScreen, undefined,  true);
-		}else{
-			unload(localStorage.getItem("currScreen"));
-			load("main",undefined, true);
-		}
+		while(HISTORY[HISTORY.length-1] == localStorage.currScreen)
+			HISTORY.pop();
+		unload(localStorage.currScreen);
+		load(HISTORY[HISTORY.length-1]);
 	}
 
 	swipe.enable(document.getElementById("container"),["left","right"],[f,f]);
@@ -294,32 +310,39 @@ function kbStdd(key, msg, div, toLoad){
 
 
 
+var noSwipe = ["tutorial","lockscreen","cameraSimulation","numpadScreen"];	
 function load(screen,f = null, swiped = false){
 	// For top tier divs(Lockscreen, tutorial, main, quickpost)
-	
+	console.log("loading " + screen)
+
+
 	var tut = localStorage.getItem("tutorial");
 	if( tut == "fingerprint" || tut == undefined) {
 		screen = "tutorial";
 	}
 
-	var noHistory = ["lockscreen", "numpadScreen", "cameraSimulation", "contactsSendRequest"];
-	(!noHistory.includes(screen)) ? localStorage.setItem("lastScreen",screen) : null;
+	var noHistory = ["lockscreen", "numpadScreen", "cameraSimulation", "contactsSendRequest", "commentTextAdd", "quickPostTextAdd", "tutorial"];
+	if(!noHistory.includes(screen)){
+		historyAdd(screen);
+	}
 	
 	if(screen != "cameraSimulation")
 		localStorage.setItem("currScreen",screen);
-	try{
+	
 	document.getElementById(screen).style.display = "block";
 	document.getElementById(screen).style.visibility = "visible";	
-	}catch{
-		alert(screen)
-	}
+	
 	loadNotifications();
 
 	
 	
-	var noSwipe = ["tutorial","lockscreen","cameraSimulation","numpadScreen", "commentTextAdd"];
+	if(noSwipe.includes(screen)){
+		swipe.disable(document.getElementById("container"));
+	}else{
+		enableSwipeBack();
+	}
 
-	if(!screen.includes("textAdd") && !swiped && !noSwipe.includes(screen))
+	if(!noHistory.includes(screen) && !swiped && !noSwipe.includes(screen))
 		historyAdd(screen);
 
 	switch(screen){
@@ -345,12 +368,10 @@ function load(screen,f = null, swiped = false){
 	    
 		case "numpadScreen":
 			pin.main(f);
-			enableSwipeBack();
 			break;
 	    
 
 		case "contactsScreen":
-			enableSwipeBack();
 			loadContacts();
 			break;
 
@@ -374,10 +395,6 @@ function load(screen,f = null, swiped = false){
 
 
 			var img = document.getElementById("quickPostCameraImage");
-			
-
-	    	enableSwipeBack();
-
 			load("cameraSimulation");
 			var opt = document.getElementById("cameraSelected");
 			var sel = opt.options[opt.selectedIndex].value;
@@ -391,7 +408,7 @@ function load(screen,f = null, swiped = false){
 
 			opt.addEventListener("change",f);
 			document.getElementById("quickPostNextArrow").addEventListener("click", nextScreen, {once: true});
-			document.getElementById("quickPostGallery").addEventListener("click",gallery ,{once: true})
+			//document.getElementById("quickPostGallery").addEventListener("click",gallery ,{once: true})
 			break;
 
 		case "quickPostTextAdd":
@@ -405,7 +422,6 @@ function load(screen,f = null, swiped = false){
 
 
 		case "commentTextAdd":
-			unloadEventListeners(document.getElementById("container"))
 			var ele = document.getElementById("commentTextAdd");
 			kb.main(ele, (msg) => {
 					kbStdd("textForComment", msg, "commentTextAdd", "commentsScreen"); 
@@ -421,17 +437,15 @@ function load(screen,f = null, swiped = false){
 			break;
 
 		case "quickPostImagePick":
-			enableSwipeBack();
 			break;
 
 		case "commentsScreen":
-			enableSwipeBack();
 			post.loadComments();
 			var commentWrite = document.getElementById("commentWrite");
 			
 			commentWrite.addEventListener("click", () => {
-				load("commentTextAdd");
 				unload("commentsScreen");
+				load("commentTextAdd");
 			},
 			{once: true});
 			break;
@@ -471,7 +485,9 @@ function unload(screen){
 	if(screen == null)
 		return;
 
-	console.log("Unloading "+ screen)
+	if(!noSwipe.includes(screen)){
+		swipe.disable(document.getElementById("container"));
+	}
 	var ele = document.getElementById(screen);
 	if(ele == null)
 		console.log(screen);
