@@ -30,6 +30,7 @@ function render(container, template, toRender, noneInfo, renderFunc, maxHeight =
 			maxHeight per child
 			returns height of div
 	*/
+	container.style.overflowY = "auto"
 
 	if(toRender.length == 0){
 		var none = document.createElement("p");
@@ -57,7 +58,6 @@ function render(container, template, toRender, noneInfo, renderFunc, maxHeight =
 				h = maxHeight;
 			
 			nc.style.top = dist + "px";
-			console.log(h)
 			dist += h + 4;
 			nc.style.height = h + 3 + "px";
 		}
@@ -158,11 +158,14 @@ function loadRequests(){
 		server.post("approveContactRequest",{"sender": localStorage.userHandle, "receiver": name},
 			 ()=>
 			 	{
-			 		for(let i = 0; i < localStorage.requests.length; i++){
-			 			if(localStorage.requests[i] == name){
-			 				localStorage.requests[i].remove();
-			 			}
-			 		}
+			 		var requests = JSON.parse(localStorage.requests)
+			 		console.log(requests)
+			 		var index = requests.indexOf(name);
+					if(index > -1) {
+						requests.splice(index, 1);
+					}
+
+					localStorage.requests = JSON.stringify(requests);
 			 		common()
 			 	},
 			 common
@@ -174,11 +177,14 @@ function loadRequests(){
 		server.post("denyContactRequest",{"sender": localStorage.userHandle, "receiver": name},
 			 ()=>
 			 	{
-			 		for(let i = 0; i < localStorage.requests.length; i++){
-			 			if(localStorage.requests[i] == name){
-			 				localStorage.requests[i].remove();
-			 			}
-			 		}
+			 		var requests = JSON.parse(localStorage.requests)
+			 		console.log(requests)
+			 		var index = requests.indexOf(name);
+					if(index > -1) {
+						requests.splice(index, 1);
+					}
+
+					localStorage.requests = JSON.stringify(requests);
 			 		common()
 			 	},
 			 common
