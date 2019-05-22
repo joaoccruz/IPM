@@ -180,9 +180,11 @@ function drawContacts(contactList){
 function popup(container=document.getElementById("container"), text="bottomtext", pos={x:"center",y:"30%"}, time = 2000){
 	var pop = document.createElement("p");
 	pop.innerHTML = text;
-	pop.style.fontSize = "11px"
+	pop.style.fontSize = "14px"
 	pop.style.maxWidth = "100%"
+	pop.style.whiteSpace = "nowrap"
 	pop.style.position="absolute"
+	pop.style.backgroundColor = "white";
 	if(pos.x =="center"){
 		pop.style.left = "50%";
 		pop.style.transform = "translateX(-50%)"

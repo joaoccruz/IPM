@@ -19,7 +19,7 @@ def sendMessage(u1, u2, message):
 	testPost("addMessage", {"sender": u1, "receiver": u2, "message": message})
 
 
-newUser = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
+newUser = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
 #newUser = "KE2CF"
 print(newUser)
 testPost("register", {"username": newUser})

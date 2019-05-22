@@ -1,6 +1,6 @@
 import requests
 
-LOGGED = "9..."
+LOGGED = "6i"
 
 
 def testPost(val1, val2 = {}, p = False):	
