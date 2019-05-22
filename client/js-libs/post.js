@@ -171,7 +171,8 @@ function newComment(handle, message, likes = []){
 
 	comment["postId"] = localStorage.getItem("currentPost");
 	server.post("addComment", comment)
-	page.loadComments();
+	unloadComments();
+	loadComments();
 
 }
 
@@ -189,10 +190,9 @@ function unloadComments(){
 	if(comments.length == 0){
 		container.getElementById("none").remove();
 	}else{
-		for(var i = container.childNodes.length - 1 ; i > 0; i--){
-			if(container.childNodes[i].id != "commentTemplate")
-				container.childNodes[i].remove();
-		}
+		while(container.childNodes.length > 0)
+			container.childNodes[0].remove();
+		
 	}
 }
 

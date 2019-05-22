@@ -458,13 +458,15 @@ button{
 				overflow-y: auto;
 			}
 
-	#commentWrite{ 
+	.addText{ 
 		bottom: 0;
 		height: 10%;
 		width: 98%;
 		border: 1px solid grey;
 		color: #C0C0C0;
 		font-size: 10px;
+		margin:0;
+		bottom: 0
 	}
 
 #genericKb {
@@ -583,3 +585,37 @@ button{
 		}
 
 
+#chattingWith{
+	margin: 0;
+	font-size: 13px;
+}
+
+#chatContainer{
+	left: 0;
+	width: 100%;
+	height: 70%;
+	top: 13%;
+	overflow-y: auto;
+}
+
+::-webkit-scrollbar{
+	display: none;
+}
+#chatScreen *{
+	margin: 0;
+}
+
+#messageTemplate{
+	visibility: hidden;
+	display: none;
+}
+	
+	#chatSender{
+		top: 0;
+		font-size: 12px
+	}
+
+	#chatMessage{
+		left: 13c%;
+		font-size: 12px
+	}

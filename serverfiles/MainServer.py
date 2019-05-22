@@ -186,10 +186,14 @@ def getMessages():
 	except:
 		return "Missing header", 400
 
+
 	if(not userExists(u) or not userExists(u2)):
 		return "User doesn't exist", 403
 
-	return json.dumps(list(USER_LIST[u].messageList[u2]), default=defaultJson)
+	try:
+		return json.dumps(list(USER_LIST[u].messageList[u2]), default=defaultJson)
+	except:
+		return "[]", 200
 
 
 @app.route("/getContacts", methods=["POST"])

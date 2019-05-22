@@ -19,6 +19,8 @@ function reload(page){
 	load(page)
 }
 
+
+
 function render(container, template, toRender, noneInfo, renderFunc, maxHeight = 80){
 	/*
 		None info:
@@ -32,7 +34,10 @@ function render(container, template, toRender, noneInfo, renderFunc, maxHeight =
 	*/
 	container.style.overflowY = "auto"
 
-	if(toRender.length == 0){
+	if(!noneInfo){
+		var noneInfo = {text: "", style: ""};
+	}
+	if(toRender.length == 0 && !container.getElementById("none")){
 		var none = document.createElement("p");
 		none.innerHTML = noneInfo.text;
 		none.style.display = "block";
@@ -58,15 +63,69 @@ function render(container, template, toRender, noneInfo, renderFunc, maxHeight =
 				h = maxHeight;
 			
 			nc.style.top = dist + "px";
-			dist += h + 4;
+			dist += h + 6;
 			nc.style.height = h + 3 + "px";
 		}
 	}
 }
 
+
+function loadMessages(){
+	document.getElementById("chattingWith").innerHTML = "Chatting with: " + localStorage.currFriend
+	localStorage.lastMessageSender = undefined;
+	function renderChild(message, node){	
+		var txt = node.getElementById("chatMessage") 
+		if(message.sender == localStorage.userHandle){
+			node.style.right = 0;
+		}else{
+			node.style.left = 0;
+		}
+
+		node.style.maxWidth = "60%"
+
+
+		var sender = node.getElementById("chatSender")
+		if(localStorage.lastMessageSender != message.sender){
+			sender.innerHTML = message.sender + " says:";
+
+		}else{
+			sender.style.display = "none" 
+		}
+		
+		localStorage.lastMessageSender = message.sender;
+		
+		txt.innerHTML = message.message;
+		
+		txt.style.top = sender.clientHeight + 2 + "px"
+		var h = txt.clientHeight + sender.clientHeight + 3;
+
+		var max = sender.clientWidth;
+		if(max < txt.clientWidth)
+			max = txt.clientWidth;
+
+		if(max > 180){
+			max = 180
+		}
+		node.style.width = max + 10 + "px";
+		node.style.height = h + "px"
+		return h;
+	}
+
+	var container = document.getElementById("chatContainer");
+	var template = document.getElementById("messageTemplate");
+	var messageList = JSON.parse(localStorage.currMessageList);
+	var noneInfo = null;
+
+	render(container, template, messageList, noneInfo, renderChild);
+
+}
+
 function loadChat(u1, u2){
 	function f(r){
-		messageList = JSON.parse(r);
+		localStorage.currMessageList = r;
+		localStorage.currFriend = u2;
+		unload("contactsScreen");
+		load("chatScreen");		
 	}
 	function fail(){
 		console.log("Fail with " + u1 + ":" + u2)		
@@ -213,22 +272,29 @@ function loadRequests(){
 
 
 
-function loadContacts(){
-	function success(contactList){
-		drawContacts(contactList);
+function loadContacts(update = false){
+	function contactFetchSuccess(contactListJSON){
+		if(!update  || localStorage.lastContactList != contactListJSON){
+			drawContacts(contactListJSON);
+			localStorage.lastContactList = contactListJSON;
+		}
 	}
 
-	document.getElementById("addContactButton").addEventListener("click", addContact)
-	document.getElementById("contactsRequests").addEventListener("click", ()=>{
-		unload("contactsScreen");
-		load("contactRequestsScreen")
-	})
+	function requestsFetchSuccess(requestsJSON){
+		localStorage.requests = requestsJSON;
+		contactsNumberRequests.innerHTML = JSON.parse(requestsJSON).length
+	}
 
-	server.post("getContactRequests",
-		{"username": localStorage.userHandle},
-		(a)=>{localStorage.requests = a; contactsNumberRequests.innerHTML = JSON.parse(a).length});
+	if(!update){
+		document.getElementById("addContactButton").addEventListener("click", addContact)
+		document.getElementById("contactsRequests").addEventListener("click", ()=>{
+			unload("contactsScreen");
+			load("contactRequestsScreen")
+		})
+	}
 
-	server.post("getContacts", {"username": localStorage.getItem("userHandle")}, success)
+	server.post("getContactRequests", {"username": localStorage.userHandle},requestsFetchSuccess);
+	server.post("getContacts", {"username": localStorage.userHandle}, contactFetchSuccess)
 }
 
 
@@ -283,6 +349,10 @@ function update(){
 	switch(localStorage.getItem("currScreen")){
 		case "lockscreen":
 			updateLockScreen();
+			break;
+		case "contactsScreen":
+			loadContacts(true);
+			break;
 	}
 }
 
@@ -318,17 +388,17 @@ function kbStdd(key, msg, div, toLoad){
 var noSwipe = ["tutorial","lockscreen","cameraSimulation","numpadScreen"];	
 function load(screen,f = null, swiped = false){
 	// For top tier divs(Lockscreen, tutorial, main, quickpost)
-	console.log("loading " + screen)
-
+	
 
 	var tut = localStorage.getItem("tutorial");
 	if( tut == "fingerprint" || tut == undefined) {
 		screen = "tutorial";
 	}
 
+
 	var noHistory = ["lockscreen", "numpadScreen", "cameraSimulation", "contactsSendRequest", "commentTextAdd", "quickPostTextAdd", "tutorial"];
 	if(!noHistory.includes(screen)){
-		historyAdd(screen);
+		localStorage.lastScreen = screen;
 	}
 	
 	if(screen != "cameraSimulation")
@@ -351,6 +421,11 @@ function load(screen,f = null, swiped = false){
 		historyAdd(screen);
 
 	switch(screen){
+		case "chatScreen":
+			localStorage.globalFallback = "contactsScreen";
+			loadMessages();
+			break;
+
 		case "contactsSendRequest":
 			break;
 
@@ -388,6 +463,7 @@ function load(screen,f = null, swiped = false){
 				var sel = opt.options[opt.selectedIndex].value;
 				img.src = "cameraSim/"+sel+".png";
 			}
+
 			localStorage.globalFallback = "main";
 
 			var nextScreen = function(){
@@ -396,14 +472,10 @@ function load(screen,f = null, swiped = false){
 				load("quickPostTextAdd");
 			}
 
-			gallery: {
-				/*unload(screen);
-				load("gallery");*/
-			}
 
 
-			var img = document.getElementById("quickPostCameraImage");
 			load("cameraSimulation");
+			var img = document.getElementById("quickPostCameraImage");
 			var opt = document.getElementById("cameraSelected");
 			var sel = opt.options[opt.selectedIndex].value;
 
@@ -449,15 +521,14 @@ function load(screen,f = null, swiped = false){
 			//break;
 
 		case "commentsScreen":
+			localStorage.globalFallback = "main";
 			post.loadComments();
 			var commentWrite = document.getElementById("commentWrite");
 			
 			commentWrite.addEventListener("click", () => {
 				unload("commentsScreen");
 				load("commentTextAdd");
-			},
-			{once: true});
-			localStorage.globalFallback = "main";
+			}, {once: true});
 			break;
 		
 
@@ -508,6 +579,7 @@ function unload(screen){
 	switch(screen){
 		case "contactsSendRequest":
 			localStorage.globalFallback = "contactsScreen"
+			kb.unload(document.getElementById("contactsSendRequest"));
 			break;
 
 		case "contactsScreen":
@@ -544,8 +616,7 @@ function unload(screen){
 	    	kb.unload(document.getElementById("commentTextAdd"))
 	    	break;
 
-	    case "cameraSimulation":
-	    	
+	    case "cameraSimulation":	    	
 	    	break;
 
 	    case "commentsScreen":
@@ -559,6 +630,12 @@ function unload(screen){
 			
 			break;
 
+		case "chatScreen":
+			var cont = document.getElementById("chatContainer");
+			while(cont.childNodes.length > 0)
+				cont.childNodes[0].remove();
+			
+			break;
 	    default:
 	    	alert("Defaulted at unload: " + screen);
 	    	break;
