@@ -156,8 +156,6 @@ function like(target, list){
 	return list;		 
 }
 
-
-
 function getComments(post){
 	return post.comments;
 }
@@ -205,8 +203,6 @@ function loadComments(id = localStorage.getItem("currentPost")){
 
 			handle.innerHTML = comments[i].user;
 			text.innerHTML = comments[i].message;
-
-
 			
 			var h = text.clientHeight + handle.clientHeight;
 

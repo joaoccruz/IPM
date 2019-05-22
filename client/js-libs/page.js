@@ -608,7 +608,7 @@ function tutorial(){
 	    	localStorage.setItem("pin",pin)	
 				localStorage.setItem("tutorial", "username_prompt");
 				tutorial();
-	    });
+	    }, false, false);
 			break;
 			
 		case "username_prompt":
