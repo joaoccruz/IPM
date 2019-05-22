@@ -8,6 +8,8 @@ import {popupAnim} 		from "./anime-service.js";
 import { colors } 		from "./_colors.js";
 import {unloadEventListeners} from "./utilities.js";
 
+localStorage.globalFallback = "main";
+
 function ifExistsElse(obj, replace){
 	return obj ? obj : replace;
 }
@@ -96,11 +98,89 @@ function drawContacts(contactList){
 	var template = document.getElementById("contactTemplateDiv")
 	var noneInfo = {
 		style: "top: 36%; fontSize: 12px; color: black;",
-		text: "You have no contacts yet"
+		text: "You have no contacts yet. :("
 	};
 
 	render(container, template, contactList, noneInfo, drawContact)
 	
+}
+
+function drawComments(commentList){
+	function drawComment(comment, nc){
+		nc.style.width = "100%";
+		nc.style.top = dist + "px";
+		nc.style.visibility = "visible";
+		document.getElementById("commentsContainer").appendChild(nc)
+
+		var handle = nc.getElementById("commentHandle");
+		var text = nc.getElementById("commentText");
+
+		var heart = nc.getElementById("commentHeart");
+		var heartNum = nc.getElementById("commentLikes");
+		heartNum.innerHTML = comment.likes.length;
+		heart.src = (comment.likes.includes(localStorage.getItem("userHandle")) ? "img/likedIcon.png" : "img/heart.png");
+
+
+		text.style.top = handle.clientHeight + 2 + "px";
+
+		handle.innerHTML = comment.user;
+		text.innerHTML = comment.message;
+		
+		var h = text.clientHeight + handle.clientHeight;
+
+		if(h > 80)
+			h = 80;
+		
+		dist += h + 5;
+		h = h  + 4 + "px";
+		nc.style.height = h;
+		
+		let curr = i;
+		let h1 = heart;
+		h1.addEventListener("click", () => {
+				var pl = JSON.parse(localStorage.getItem("postlist"));
+				pl[currentPost()].comments[curr].likes = like(h1,pl[currentPost()].comments[curr].likes);
+				heartNum.innerHTML = pl[currentPost()].comments[curr].likes.length;
+				localStorage.setItem("postlist", JSON.stringify(pl));
+				var data = {
+					"postId": currentPost(),
+					"commentId": curr,
+					"user": localStorage.getItem("userHandle")
+				}
+				server.post("likeComment", data);
+			}
+		);
+	}
+
+	//commentList = JSON.parse(commentList);
+	var container = document.getElementById("commentsContainer");
+	var template = document.getElementById("commentTemplate");
+	var noneInfo = {
+		style: "top: 36%; fontSize: 12px; color: black;",
+		text: "There are no comments yet. Why not be the first?"
+	};
+
+	render(container, template, commentList, noneInfo, drawComment);
+}
+
+function loadComments(id = localStorage.getItem("currentPost")){
+	var POST_LIST = JSON.parse(localStorage.getItem("postlist"));
+	var comments = POST_LIST[id].comments;
+
+	drawComments(comments);
+}
+
+function unloadComments(){
+	var comments = JSON.parse(localStorage.getItem("postlist"))[localStorage.getItem("currentPost")].comments;
+	if(comments.length == 0){
+		document.getElementById("noComments").remove();
+	}else{
+		var container = document.getElementById("commentsContainer");
+		for(var i = container.childNodes.length - 1 ; i > 0; i--){
+			if(container.childNodes[i].id != "commentTemplate")
+				container.childNodes[i].remove();
+		}
+	}
 }
 
 function popup(container=document.getElementById("container"), text="bottomtext", pos={x:"center",y:"30%"}, time = 2000){
@@ -291,11 +371,8 @@ function unlock(){
 
 function enableSwipeBack(){
 	var f = function(){
-		var HISTORY = JSON.parse(localStorage.getItem("history"));
-		while(HISTORY[HISTORY.length-1] == localStorage.currScreen)
-			HISTORY.pop();
 		unload(localStorage.currScreen);
-		load(HISTORY[HISTORY.length-1]);
+		load(localStorage.globalFallback);
 	}
 
 	swipe.enable(document.getElementById("container"),["left","right"],[f,f]);
@@ -360,6 +437,7 @@ function load(screen,f = null, swiped = false){
 		case "main":
 			swipe.disable(document.getElementById("container"));
 			post.updatePostList(main);
+			localStorage.globalFallback = "main";
 			break;
 
 		case "tutorial":
@@ -373,6 +451,7 @@ function load(screen,f = null, swiped = false){
 
 		case "contactsScreen":
 			loadContacts();
+			localStorage.globalFallback = "main";
 			break;
 
 
@@ -381,6 +460,7 @@ function load(screen,f = null, swiped = false){
 				var sel = opt.options[opt.selectedIndex].value;
 				img.src = "cameraSim/"+sel+".png";
 			}
+			localStorage.globalFallback = "main";
 
 			var nextScreen = function(){
 				localStorage.setItem("imgForPost",img.src);
@@ -418,6 +498,7 @@ function load(screen,f = null, swiped = false){
 				post.newPost(localStorage.getItem("imgForPost"),localStorage.getItem("textForPost"));
 				kb.unload(ele)
 			},90);
+			localStorage.globalFallback = "quickPostImagePick";
 			break;
 
 
@@ -429,15 +510,15 @@ function load(screen,f = null, swiped = false){
 					kb.unload(ele)
 				},
 				130);
-			
+				localStorage.globalFallback = "quickPostImagePick";
 			break;	
 		
 		case "cameraSimulation":
 			//load("cameraCrop")
 			break;
 
-		case "quickPostImagePick":
-			break;
+		//case "quickPostImagePick":
+			//break;
 
 		case "commentsScreen":
 			post.loadComments();
@@ -448,6 +529,7 @@ function load(screen,f = null, swiped = false){
 				load("commentTextAdd");
 			},
 			{once: true});
+			localStorage.globalFallback = "main";
 			break;
 		
 
@@ -468,10 +550,12 @@ function load(screen,f = null, swiped = false){
 				parent.appendChild(c)
 				useWhite = !useWhite
 			}
+			localStorage.globalFallback = "main";
 			break;
 
 		case "contactRequestsScreen":
 			loadRequests();
+			localStorage.globalFallback = "contacts";
 			break;
 
 	    default: 
@@ -536,7 +620,7 @@ function unload(screen){
 	    	break;
 
 	    case "commentsScreen":
-	    	post.unloadComments();
+	    	unloadComments();
 			break;
 		
 		case "contactRequestsScreen":
@@ -746,4 +830,4 @@ function loadNotifications(){
 
 document.getElementById("notifications").style.backgroundColor = colors["nearBlack"];
 
-export {load, unload, loadLastScreen,update};
+export {load, unload, loadLastScreen, update, loadComments, unloadComments};

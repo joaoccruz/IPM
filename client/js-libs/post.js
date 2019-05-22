@@ -1,6 +1,7 @@
 import * as date  from "./date.js";
 import {popHeart} from "./anime-service.js";
 import * as server from "./server.js"
+import * as page from "./page.js"
 
 if (!String.prototype.format) {
   String.prototype.format = function() {
@@ -160,92 +161,6 @@ function getComments(post){
 	return post.comments;
 }
 
-function loadComments(id = localStorage.getItem("currentPost")){
-	var POST_LIST = JSON.parse(localStorage.getItem("postlist"));
-	var comments = POST_LIST[id].comments;
-	if(comments.length == 0){
-		var noComments = document.createElement("p");
-		noComments.innerHTML = "This post has no comments yet, add one!";
-		noComments.style.display = "block";
-		noComments.id = "noComments";
-		noComments.className = "textCenter"
-		noComments.style.top = "36%";
-		noComments.style.fontSize = "12px"
-		noComments.style.color = "black";
-		document.getElementById("commentsScreen").appendChild(noComments);
-	}else{
-		var noCommentsMessage = document.getElementById("noComments"); 
-		if(noCommentsMessage){
-			noCommentsMessage.remove();
-		}
-
-		var dist = 0;
-		for(var i = 0; i < comments.length; i++){
-			console.log(i);
-			var nc = document.getElementById("commentTemplate").cloneNode(true);
-			var post = JSON.parse(localStorage.getItem("postlist"))[id];
-			nc.id = "commentPostedU" + id + "P" + i;
-			nc.style.width = "100%";
-			nc.style.top = dist + "px";
-			nc.style.visibility = "visible";
-			document.getElementById("commentsContainer").appendChild(nc)
-
-			var handle = nc.getElementById("commentHandle");
-			var text = nc.getElementById("commentText");
-
-			var heart = nc.getElementById("commentHeart");
-			var heartNum = nc.getElementById("commentLikes");
-			heartNum.innerHTML = comments[i].likes.length;
-			heart.src = (comments[i].likes.includes(localStorage.getItem("userHandle")) ? "img/likedIcon.png" : "img/heart.png");
-
-
-			text.style.top = handle.clientHeight + 2 + "px";
-
-			handle.innerHTML = comments[i].user;
-			text.innerHTML = comments[i].message;
-			
-			var h = text.clientHeight + handle.clientHeight;
-
-			if(h > 80)
-				h = 80;
-			
-			dist += h + 5;
-			h = h  + 4 + "px";
-			nc.style.height = h;
-			
-			let curr = i;
-			let h1 = heart;
-			h1.addEventListener("click", () => 
-				{var pl = JSON.parse(localStorage.getItem("postlist"));
-				 pl[currentPost()].comments[curr].likes = like(h1,pl[currentPost()].comments[curr].likes);
-				 heartNum.innerHTML = pl[currentPost()].comments[curr].likes.length;
-				 localStorage.setItem("postlist", JSON.stringify(pl));
-				 var data = {
-				 	"postId": currentPost(),
-				 	"commentId": curr,
-				 	"user": localStorage.getItem("userHandle")
-				 }
-				 server.post("likeComment", data);
-				});
-		
-
-		}
-	}
-}
-
-function unloadComments(){
-	var comments = JSON.parse(localStorage.getItem("postlist"))[localStorage.getItem("currentPost")].comments;
-	if(comments.length == 0){
-		document.getElementById("noComments").remove();
-	}else{
-		var container = document.getElementById("commentsContainer");
-		for(var i = container.childNodes.length - 1 ; i > 0; i--){
-			if(container.childNodes[i].id != "commentTemplate")
-				container.childNodes[i].remove();
-		}
-	}
-}
-
 function newComment(handle, message, likes = []){
 	// TODO: PREVENT EMPTY
 	var currentPost = localStorage.getItem("currentPost");
@@ -256,7 +171,7 @@ function newComment(handle, message, likes = []){
 
 	comment["postId"] = localStorage.getItem("currentPost");
 	server.post("addComment", comment)
-	loadComments();
+	page.loadComments();
 
 }
 
@@ -264,4 +179,4 @@ function currentPost(){
 	return localStorage.getItem("currentPost");
 }
 
-export {updatePostList, newComment, add,loadPrev, loadNext, draw, newPost, like, loadComments, unloadComments}	
+export {updatePostList, newComment, add,loadPrev, loadNext, draw, newPost, like}	
