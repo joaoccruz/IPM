@@ -312,35 +312,6 @@ function loadContacts(update = false){
 	server.post("getContacts", {"username": localStorage.userHandle}, contactFetchSuccess)
 }
 
-
-
-
-function loadGallery(){
-	/*var container = document.getElementById("gallery"); 
-	var imageList = JSON.parse(localStorage.getItem("images"));
-	
-	for(var i = 0; i < imageList.length; i++){
-		var newImage = document.createElement("img");
-		newImage.src = imageList[i];
-		newImage.width = "20%";
-		newImage.height = "20%";
-		newImage.left = (i % 5);
-
-		container.appendChild(newImage);
-	}*/
-
-
-}
-
-
-function unloadGallery(){
-	var container = document.getElementById("gallery");
-	while(container.childNodes > 0){
-		container.childNodes[0].remove();
-	}
-}
-
-
 function historyAdd(screen){
 	var HISTORY = JSON.parse(localStorage.getItem("history"));
 	if(HISTORY.length > 50){
@@ -575,26 +546,6 @@ function load(screen,f = null, swiped = false){
 			}, {once: true});
 			break;
 		
-
-		case "gallery":
-			loadGallery();
-			break;
-
-		case "contacts":
-			var parent = document.getElementById("contactSelector")
-			var sample = document.getElementById("contactDivSample")
-			var useWhite = true
-			var contacts = getContacts();
-			for (contact in contacts) {
-				var c = sample.cloneNode(true);
-				c.style.backgroundColor = useWhite ? colors["white"] : colors["nearwhite"]
-				c.style.visibility = true
-				//c.get
-				parent.appendChild(c)
-				useWhite = !useWhite
-			}
-			localStorage.globalFallback = "main";
-			break;
 
 		case "contactRequestsScreen":
 			loadRequests();
