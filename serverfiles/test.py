@@ -29,7 +29,7 @@ testPost("register", {"username": "BB"})
 
 
 
-testPost("sendContactRequest", {"sender": "BobbyJeans", "receiver": LOGGED})
+testPost("sendContactRequest", {"sender": "BB", "receiver": LOGGED})
 testPost("sendContactRequest", {"sender": "BobbyBans", "receiver": LOGGED})
 
 addFriend(LOGGED, "AA")

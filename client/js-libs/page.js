@@ -286,6 +286,14 @@ function loadRequests(){
 
 
 
+function fetchRequests(){
+	function requestsFetchSuccess(requestsJSON){
+		localStorage.requests = requestsJSON;
+		contactsNumberRequests.innerHTML = JSON.parse(requestsJSON).length
+	}
+	server.post("getContactRequests", {"username": localStorage.userHandle},requestsFetchSuccess);
+}
+
 
 function loadContacts(update = false){
 	function contactFetchSuccess(contactListJSON){
@@ -293,11 +301,6 @@ function loadContacts(update = false){
 			drawContacts(contactListJSON);
 			localStorage.lastContactList = contactListJSON;
 		}
-	}
-
-	function requestsFetchSuccess(requestsJSON){
-		localStorage.requests = requestsJSON;
-		contactsNumberRequests.innerHTML = JSON.parse(requestsJSON).length
 	}
 
 	if(!update){
@@ -308,7 +311,7 @@ function loadContacts(update = false){
 		})
 	}
 
-	server.post("getContactRequests", {"username": localStorage.userHandle},requestsFetchSuccess);
+	fetchRequests();
 	server.post("getContacts", {"username": localStorage.userHandle}, contactFetchSuccess)
 }
 
@@ -827,13 +830,23 @@ function main(){
 
 function loadNotifications(){
 	var screen = localStorage.getItem("currScreen"); 
-	if(screen != "lockscreen" && screen != "tutorial" && screen != "numpadScreen"){
-		document.getElementById("notifications").style.display = "block";
-		document.getElementById("notifications").style.visibility = "visible";	
-		document.getElementById("notificationsTime").innerHTML = date.getTime();	
-	}else{
+	var noNotifications = ["lockscreen", "tutorial", "numpadScreen"];
+
+	if(noNotifications.includes(screen)){
 		document.getElementById("notifications").style.display = "none";
 		document.getElementById("notifications").style.visibility = "hidden";	
+		return;
+	}
+
+	fetchRequests();
+
+
+	document.getElementById("notifications").style.display = "block";
+	document.getElementById("notifications").style.visibility = "visible";
+
+	var time = date.getTime();	
+	if(document.getElementById("notificationsTime").innerHTML != time){
+		document.getElementById("notificationsTime").innerHTML = time;
 	}
 
 
