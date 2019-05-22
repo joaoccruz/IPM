@@ -31,7 +31,7 @@ function render(container, template, toRender, noneInfo, renderFunc, maxHeight =
 		none.id = "none";
 		none.className = "textCenter"
 		none.style = noneInfo.style;
-		container.appendChild(noContacts);
+		container.appendChild(none);
 	}else{
 		var none = container.getElementById("none"); 
 		if(none){
@@ -50,6 +50,7 @@ function render(container, template, toRender, noneInfo, renderFunc, maxHeight =
 				h = maxHeight;
 			
 			nc.style.top = dist + "px";
+
 			dist += h + 4;
 			nc.style.height = h + 3 + "px";
 		}
@@ -136,21 +137,49 @@ function addContact(){
 
 
 function loadRequests(){
-	noneInfo = {
+	var noneInfo = {
 		text: "You have no open requests",
 		style: "top: 30%; text-align: center; font-size: 11px"
 	}
 
-	function childRender(info, child, dist){
-		child.style.top = dist + "%";
+	function common(){
+		unload("contactRequestsScreen");
+		load("contactRequestsScreen")
+	}
 
+	function acceptContact(name){
+		server.post("approveContactRequest",{"sender": localStorage.userHandle, "receiver": name},
+			 common,
+			 common
+			 )
 	}
 
 
-	var contactListContainer = document.getElementById("contactListContainer");
+	function denyContact(name){
+		server.post("denyContactRequest",{"sender": localStorage.userHandle, "receiver": name},
+			 common,
+			 common
+			 )	
+	}
+
+
+	function requestRender(name, child){
+		var txt = child.getElementById("contactRequestName")
+		txt.innerHTML = name;
+		var accept = child.getElementById("acceptContactButton")
+		var deny   = child.getElementById("denyContactButton");
+		let curr = name;
+		accept.addEventListener("click", () =>{acceptContact(curr)}, {once: true})
+		deny.addEventListener("click", (acceptContact(curr), {once: true}))
+		return txt.clientHeight;
+	}
+
+
+	var contactListContainer = document.getElementById("contactRequestsContainer");
 	var template = document.getElementById("contactRequestTemplate")
 	var contactRequestsList = server.post("getContactRequests",
-		()=>{render(contactListContainer, template, )},
+		{"username": localStorage.userHandle},
+		(a)=>{render(contactListContainer, template, JSON.parse(a),noneInfo,requestRender)},
 		()=>{});
 
 }
@@ -162,7 +191,10 @@ function loadContacts(){
 	}
 
 	document.getElementById("addContactButton").addEventListener("click", addContact)
-	document.getElementById("contactsRequests").addEventListener("click", loadRequests)
+	document.getElementById("contactsRequests").addEventListener("click", ()=>{
+		unload("contactsScreen");
+		load("contactRequestsScreen")
+	})
 	server.post("getContacts", {"username": localStorage.getItem("userHandle")}, success)
 }
 
@@ -275,9 +307,12 @@ function load(screen,f = null, swiped = false){
 	
 	if(screen != "cameraSimulation")
 		localStorage.setItem("currScreen",screen);
-
+	try{
 	document.getElementById(screen).style.display = "block";
 	document.getElementById(screen).style.visibility = "visible";	
+	}catch{
+		alert(screen)
+	}
 	loadNotifications();
 
 	
@@ -288,6 +323,9 @@ function load(screen,f = null, swiped = false){
 		historyAdd(screen);
 
 	switch(screen){
+		case "contactsSendRequest":
+			break;
+
 		case "lockscreen":
 			updateLockScreen();
 			swipe.enable(document.getElementById("lockscreen"),"down",function(){
@@ -418,8 +456,12 @@ function load(screen,f = null, swiped = false){
 			}
 			break;
 
+		case "contactRequestsScreen":
+			loadRequests();
+			break;
+
 	    default: 
-	    	//alert("Defaulted at load: " + screen);
+	    	alert("Defaulted at load: " + screen);
 	    	break;
 	}
 	
@@ -436,8 +478,21 @@ function unload(screen){
 	ele.style.visibility = "hidden";
 	ele.style.display = "none"
 	switch(screen){
+		case "contactsSendRequest":
+			break;
 
 		case "contactsScreen":
+			var cont = document.getElementById("contactsContainer");
+			console.log(cont.childNodes)
+			for(let i = 0; i < cont.childNodes.length; i++){
+				if(cont.childNodes[i].id == undefined){
+					continue;
+				}
+				if(cont.childNodes[i].id == "contactTemplate"){
+					cont.childNodes[i].remove();
+				}
+			}
+			
 			break;
 
 		case "lockscreen":
@@ -475,9 +530,17 @@ function unload(screen){
 	    	post.unloadComments();
 			break;
 		
+		case "contactRequestsScreen":
+			var cont = document.getElementById("contactRequestsContainer");
+			for(let i = 0; i < cont.childNodes.length; i++){
+				if(cont.childNodes[i].id != "contactRequestTemplate"){
+					cont.childNodes[i].remove();
+				}
+			}
+			break;
 
 	    default:
-	    	//alert("Defaulted at unload: " + screen);
+	    	alert("Defaulted at unload: " + screen);
 	    	break;
 	}
 }

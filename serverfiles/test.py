@@ -1,5 +1,8 @@
 import requests
 
+LOGGED = "l"
+
+
 def testPost(val1, val2 = {}, p = False):	
 	IP = "http://localhost:5000/"
 
@@ -19,6 +22,7 @@ def sendMessage(u1, u2, message):
 testPost("getPosts", {}, True)
 
 
+
 testPost("register", {"username": "BobbyJeans"})
 testPost("register", {"username": "BobbyBans"})
 testPost("register", {"username": "AA"})
@@ -27,10 +31,11 @@ testPost("register", {"username": "BB"})
 
 
 
+testPost("sendContactRequest", {"sender": "BobbyJeans", "receiver": LOGGED})
+testPost("sendContactRequest", {"sender": "BobbyBans", "receiver": LOGGED})
 
-addFriend("yyy", "BobbyBans")
-addFriend("yyy", "AA")
-addFriend("yyy", "BB")
+addFriend(LOGGED, "AA")
+addFriend(LOGGED, "BB")
 
 sendMessage("AA", "BobbyJeans", "hiii")
 

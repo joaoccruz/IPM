@@ -151,9 +151,9 @@ def acceptContactRequest():
 	except:
 		return "Missing header", 400
 
-
-	contactsRequests = USER_LIST[sender].contactsRequests 
-	if(receiver not in contactsRequests ):
+	contactsRequests = USER_LIST[sender].contactsRequests
+	 
+	if(receiver not in contactsRequests):
 		return "%s not found in %s's contacts requests" % (receiver, sender), 403
 
 	USER_LIST[sender].contactsRequests.remove(receiver)
