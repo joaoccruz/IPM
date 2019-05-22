@@ -44,7 +44,7 @@ function render(container, template, toRender, noneInfo, renderFunc, maxHeight =
 			nc.id = "autoRendered" + i;
 			nc.style.width = "100%";
 			container.appendChild(nc)
-			var h = renderFunc(toRender[i], nc, dist)
+			var h = renderFunc(toRender[i], nc)
 
 			if(h > maxHeight)
 				h = maxHeight;
@@ -88,7 +88,7 @@ function drawContacts(contactList){
 
 	contactList = JSON.parse(contactList)
 	var container = document.getElementById("contactsContainer"); 
-	var template = document.getElementById("contactTemplate")
+	var template = document.getElementById("contactTemplateDiv")
 	var noneInfo = {
 		style: "top: 36%; fontSize: 12px; color: black;",
 		text: "You have no contacts yet"
@@ -103,7 +103,7 @@ function popup(container=document.getElementById("container"), text="bottomtext"
 	pop.innerHTML = text;
 	pop.style.fontSize = "11px"
 	pop.style.maxWidth = "100%"
-	pop.style.position="fixed"
+	pop.style.position="absolute"
 	if(pos.x =="center"){
 		pop.style.left = "50%";
 		pop.style.transform = "translateX(-50%)"
@@ -122,8 +122,8 @@ function addContact(){
 	function executeKb(msg){
 		kbStdd("contactAddText", msg, "contactsSendRequest", "contactsScreen");
 		server.post("sendContactRequest",{"sender": localStorage.getItem("userHandle"), "receiver": msg},
-			()=>{popup(document.getElementById("contactsScreen"), "Sent",{x:"center",y:"20%"})},
-			()=>{popup(document.getElementById("contactsScreen"), "Couldn't send request",{x:"center",y:"20%"})})
+			()=>{popup(document.getElementById("contactsScreen"), "Sent",{x:"center",y:"30%"})},
+			()=>{popup(document.getElementById("contactsScreen"), "Couldn't send request",{x:"center",y:"30%"})})
 
 		kb.unload(document.getElementById("contactsSendRequest"))
 	}
@@ -170,14 +170,14 @@ function loadRequests(){
 		var deny   = child.getElementById("denyContactButton");
 		let curr = name;
 		accept.addEventListener("click", () =>{acceptContact(curr)}, {once: true})
-		deny.addEventListener("click", (acceptContact(curr), {once: true}))
+		deny.addEventListener("click", ()=> {denyContact(curr)}, {once: true})
 		return txt.clientHeight;
 	}
 
 
-	var contactListContainer = document.getElementById("contactRequestsContainer");
-	var template = document.getElementById("contactRequestTemplate")
-	var contactRequestsList = server.post("getContactRequests",
+	let contactListContainer = document.getElementById("contactRequestsContainer");
+	let template = document.getElementById("contactRequestTemplate")
+	let contactRequestsList = server.post("getContactRequests",
 		{"username": localStorage.userHandle},
 		(a)=>{render(contactListContainer, template, JSON.parse(a),noneInfo,requestRender)},
 		()=>{});
@@ -471,7 +471,7 @@ function unload(screen){
 	if(screen == null)
 		return;
 
-
+	console.log("Unloading "+ screen)
 	var ele = document.getElementById(screen);
 	if(ele == null)
 		console.log(screen);
@@ -483,15 +483,8 @@ function unload(screen){
 
 		case "contactsScreen":
 			var cont = document.getElementById("contactsContainer");
-			console.log(cont.childNodes)
-			for(let i = 0; i < cont.childNodes.length; i++){
-				if(cont.childNodes[i].id == undefined){
-					continue;
-				}
-				if(cont.childNodes[i].id == "contactTemplate"){
-					cont.childNodes[i].remove();
-				}
-			}
+			while(cont.childNodes.length > 0)
+				cont.childNodes[0].remove();
 			
 			break;
 
@@ -532,11 +525,9 @@ function unload(screen){
 		
 		case "contactRequestsScreen":
 			var cont = document.getElementById("contactRequestsContainer");
-			for(let i = 0; i < cont.childNodes.length; i++){
-				if(cont.childNodes[i].id != "contactRequestTemplate"){
-					cont.childNodes[i].remove();
-				}
-			}
+			while(cont.childNodes.length > 0)
+				cont.childNodes[0].remove();
+			
 			break;
 
 	    default:
