@@ -57,7 +57,7 @@ function render(container, template, toRender, noneInfo, renderFunc, maxHeight =
 				h = maxHeight;
 			
 			nc.style.top = dist + "px";
-
+			console.log(h)
 			dist += h + 4;
 			nc.style.height = h + 3 + "px";
 		}
@@ -103,84 +103,6 @@ function drawContacts(contactList){
 
 	render(container, template, contactList, noneInfo, drawContact)
 	
-}
-
-function drawComments(commentList){
-	function drawComment(comment, nc){
-		nc.style.width = "100%";
-		nc.style.top = dist + "px";
-		nc.style.visibility = "visible";
-		document.getElementById("commentsContainer").appendChild(nc)
-
-		var handle = nc.getElementById("commentHandle");
-		var text = nc.getElementById("commentText");
-
-		var heart = nc.getElementById("commentHeart");
-		var heartNum = nc.getElementById("commentLikes");
-		heartNum.innerHTML = comment.likes.length;
-		heart.src = (comment.likes.includes(localStorage.getItem("userHandle")) ? "img/likedIcon.png" : "img/heart.png");
-
-
-		text.style.top = handle.clientHeight + 2 + "px";
-
-		handle.innerHTML = comment.user;
-		text.innerHTML = comment.message;
-		
-		var h = text.clientHeight + handle.clientHeight;
-
-		if(h > 80)
-			h = 80;
-		
-		dist += h + 5;
-		h = h  + 4 + "px";
-		nc.style.height = h;
-		
-		let curr = i;
-		let h1 = heart;
-		h1.addEventListener("click", () => {
-				var pl = JSON.parse(localStorage.getItem("postlist"));
-				pl[currentPost()].comments[curr].likes = like(h1,pl[currentPost()].comments[curr].likes);
-				heartNum.innerHTML = pl[currentPost()].comments[curr].likes.length;
-				localStorage.setItem("postlist", JSON.stringify(pl));
-				var data = {
-					"postId": currentPost(),
-					"commentId": curr,
-					"user": localStorage.getItem("userHandle")
-				}
-				server.post("likeComment", data);
-			}
-		);
-	}
-
-	//commentList = JSON.parse(commentList);
-	var container = document.getElementById("commentsContainer");
-	var template = document.getElementById("commentTemplate");
-	var noneInfo = {
-		style: "top: 36%; fontSize: 12px; color: black;",
-		text: "There are no comments yet. Why not be the first?"
-	};
-
-	render(container, template, commentList, noneInfo, drawComment);
-}
-
-function loadComments(id = localStorage.getItem("currentPost")){
-	var POST_LIST = JSON.parse(localStorage.getItem("postlist"));
-	var comments = POST_LIST[id].comments;
-
-	drawComments(comments);
-}
-
-function unloadComments(){
-	var comments = JSON.parse(localStorage.getItem("postlist"))[localStorage.getItem("currentPost")].comments;
-	if(comments.length == 0){
-		document.getElementById("noComments").remove();
-	}else{
-		var container = document.getElementById("commentsContainer");
-		for(var i = container.childNodes.length - 1 ; i > 0; i--){
-			if(container.childNodes[i].id != "commentTemplate")
-				container.childNodes[i].remove();
-		}
-	}
 }
 
 function popup(container=document.getElementById("container"), text="bottomtext", pos={x:"center",y:"30%"}, time = 2000){
@@ -340,7 +262,7 @@ function historyAdd(screen){
 	
 	if(HISTORY[HISTORY.length-1] != screen)
 		HISTORY.push(screen);
-	localStorage.setItem("history", JSON.stringify(HISTORY));
+	//localStorage.setItem("history", JSON.stringify(HISTORY));
 }
 
 String.prototype.format = function () {
@@ -555,7 +477,7 @@ function load(screen,f = null, swiped = false){
 
 		case "contactRequestsScreen":
 			loadRequests();
-			localStorage.globalFallback = "contacts";
+			localStorage.globalFallback = "contactsScreen";
 			break;
 
 	    default: 
@@ -579,6 +501,7 @@ function unload(screen){
 	ele.style.display = "none"
 	switch(screen){
 		case "contactsSendRequest":
+			globalFallback = "contactsScreen"
 			break;
 
 		case "contactsScreen":
@@ -620,7 +543,7 @@ function unload(screen){
 	    	break;
 
 	    case "commentsScreen":
-	    	unloadComments();
+	    	post.unloadComments();
 			break;
 		
 		case "contactRequestsScreen":
@@ -830,4 +753,4 @@ function loadNotifications(){
 
 document.getElementById("notifications").style.backgroundColor = colors["nearBlack"];
 
-export {load, unload, loadLastScreen, update, loadComments, unloadComments};
+export {load, unload, loadLastScreen,render, update};
