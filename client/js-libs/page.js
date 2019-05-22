@@ -294,7 +294,7 @@ function kbStdd(key, msg, div, toLoad){
 
 
 
-function load(screen,f = null, swiped = false){
+function load(screen,f = null, swiped = false, allowSwipe = true){
 	// For top tier divs(Lockscreen, tutorial, main, quickpost)
 	
 	var tut = localStorage.getItem("tutorial");
@@ -315,8 +315,6 @@ function load(screen,f = null, swiped = false){
 	}
 	loadNotifications();
 
-	
-	
 	var noSwipe = ["tutorial","lockscreen","cameraSimulation","numpadScreen", "commentTextAdd"];
 
 	if(!screen.includes("textAdd") && !swiped && !noSwipe.includes(screen))
@@ -345,12 +343,14 @@ function load(screen,f = null, swiped = false){
 	    
 		case "numpadScreen":
 			pin.main(f);
-			enableSwipeBack();
+			if(allowSwipe)
+				enableSwipeBack();
 			break;
 	    
 
 		case "contactsScreen":
-			enableSwipeBack();
+			if(allowSwipe)
+				enableSwipeBack();
 			loadContacts();
 			break;
 
@@ -375,7 +375,7 @@ function load(screen,f = null, swiped = false){
 
 			var img = document.getElementById("quickPostCameraImage");
 			
-
+			if(allowSwipe)
 	    	enableSwipeBack();
 
 			load("cameraSimulation");
@@ -421,11 +421,13 @@ function load(screen,f = null, swiped = false){
 			break;
 
 		case "quickPostImagePick":
-			enableSwipeBack();
+			if(allowSwipe)
+				enableSwipeBack();
 			break;
 
 		case "commentsScreen":
-			enableSwipeBack();
+			if(allowSwipe)
+				enableSwipeBack();
 			post.loadComments();
 			var commentWrite = document.getElementById("commentWrite");
 			
@@ -592,7 +594,7 @@ function tutorial(){
 	    	localStorage.setItem("pin",pin)	
 				localStorage.setItem("tutorial", "username_prompt");
 				tutorial();
-	    });
+	    }, false, false);
 			break;
 			
 		case "username_prompt":
