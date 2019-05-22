@@ -60,7 +60,6 @@ function popupAnim(target, time=1000, callback){
 		direction: "alternate",
 		endDelay: 500,
 		opacity: [0,1]
-		complete: {target.remove();}
 	})
 }
 

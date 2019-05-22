@@ -377,7 +377,7 @@ function kbStdd(key, msg, div, toLoad){
 
 
 
-var noSwipe = ["tutorial","lockscreen","cameraSimulation","numpadScreen"];	
+var noSwipe = ["tutorial","lockscreen","numpadScreen"];	
 function load(screen,f = null, swiped = false){
 	// For top tier divs(Lockscreen, tutorial, main, quickpost)
 	
